@@ -4,12 +4,9 @@ var express = require('express'),
 	cors = require('cors'),
 	path = require('path');
 
-var categoryCtrl = require('./apiControllers/categoryController'),
-	productCtrl = require('./apiControllers/productController'),
-	userCtrl = require('./apiControllers/userController'),
-	orderCtrl = require('./apiControllers/orderController');
+var userCtrl = require('./apiControllers/userController'),
+	staffCtrl = require('./apiControllers/staffController');
 
-var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
 
 var app = express();
 
@@ -29,10 +26,9 @@ app.use(staticDir);
 // 	res.json(ret);
 // });
 
-app.use('/categories', categoryCtrl);
+
 app.use('/users', userCtrl);
-app.use('/products', productCtrl);
-app.use('/orders', verifyAccessToken, orderCtrl);
+app.use('/staff',  staffCtrl);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

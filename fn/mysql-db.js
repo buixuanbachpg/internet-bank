@@ -53,7 +53,21 @@ exports.delete = function(sql) {
             } else {
                 resolve(value.affectedRows);
             }
+            cn.end();
+        });
+    });
+}
 
+exports.update = function(sql) {
+    return new Promise((resolve, reject) => {
+        var cn = createConnection();
+        cn.connect();
+        cn.query(sql, function(error, value) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(value.changedRows);
+            }
             cn.end();
         });
     });
