@@ -1,8 +1,9 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { RecaptchaModule } from 'ng-recaptcha';
 import {
   MatButtonModule,
   MatToolbarModule,
@@ -41,13 +42,9 @@ import { LoginComponent } from './login/login.component';
     HttpClientModule,
     ComponentsModule,
     NgbModule,
+    ReactiveFormsModule,
     RouterModule,
-    AppRoutingModule
-  ],
-  declarations: [
-    AppComponent,
-    AdminLayoutComponent,
-    AuthLayoutComponent,
+    AppRoutingModule,
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
@@ -65,6 +62,13 @@ import { LoginComponent } from './login/login.component';
     MatTooltipModule,
     MatTableModule,
     MatPaginatorModule,
+    RecaptchaModule
+  ],
+  declarations: [
+    AppComponent,
+    AdminLayoutComponent,
+    AuthLayoutComponent,
+    
     LoginComponent
   ],
   exports: [
