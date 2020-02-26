@@ -21,7 +21,9 @@ import {
   MatChipsModule,
   MatTooltipModule,
   MatTableModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatDialogModule,
+  MAT_DIALOG_DEFAULT_OPTIONS
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -32,7 +34,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
-import { LoginComponent } from './login/login.component';
+import { DialogWarningComponent } from './dialog-warning/dialog-warning.component';
+import { StaffService } from './api/staff.service';
 
 
 @NgModule({
@@ -62,14 +65,14 @@ import { LoginComponent } from './login/login.component';
     MatTooltipModule,
     MatTableModule,
     MatPaginatorModule,
-    RecaptchaModule
+    RecaptchaModule,
+    MatDialogModule
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    
-    LoginComponent
+    DialogWarningComponent
   ],
   exports: [
     MatButtonModule,
@@ -89,7 +92,13 @@ import { LoginComponent } from './login/login.component';
     MatTableModule,
     MatPaginatorModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}
+    },
+    StaffService
+  ],
+  entryComponents: [DialogWarningComponent],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
