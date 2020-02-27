@@ -7,6 +7,8 @@ var express = require('express'),
 var userCtrl = require('./apiControllers/userController'),
 	staffCtrl = require('./apiControllers/staffController');
 
+var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
+
 
 var app = express();
 

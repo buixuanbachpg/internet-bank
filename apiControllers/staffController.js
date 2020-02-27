@@ -1,7 +1,8 @@
 var express = require('express'),
     axios = require('axios');
 
-var staffRepo = require('../repos/staffRepo');
+var staffRepo = require('../repos/staffRepo'),
+    authRepo = require('../repos/authRepo');
 
 var router = express.Router();
 
@@ -47,11 +48,6 @@ router.delete('/:id', (req, res) => {
     if (req.params.id) {
         var id = req.params.id;
 
-        if (isNaN(id)) {
-            res.statusCode = 400;
-            res.end();
-            return;
-        }
 
         staffRepo.delete(id).then(affectedRows => {
             res.json({
@@ -70,15 +66,11 @@ router.delete('/:id', (req, res) => {
     }
 });
 
-router.get('/:id', (req, res) => {
-    if (req.params.id) {
-        var id = req.params.id;
-
-        if (isNaN(id)) {
-            res.statusCode = 400;
-            res.end();
-            return;
-        }
+router.get('/:name', (req, res) => {
+    
+    if (req.params.name) {
+        console.log(req.params.name);
+        var id = req.params.name;
 
         staffRepo.load(id).then(rows => {
             if (rows.length > 0) {
@@ -95,11 +87,90 @@ router.get('/:id', (req, res) => {
     } else {
         res.statusCode = 400;
         res.json({
-            msg: 'error'
+            msg: 'error',
+            error: req.params.ten
         });
     }
 });
 
+router.post('/login', (req, res) => {
+    staffRepo.login(req.body.user, req.body.pwd)
+        .then(userObj => {
+            if (userObj) {                
+                var token = authRepo.generateAccessToken(userObj);
+                var refreshToken = authRepo.generateRefreshToken();
+                authRepo.updateRefreshToken(userObj.ten_tai_khoan, refreshToken)
+                    .then(rs => {
+                        res.json({
+                            auth: true,
+                            user: userObj,
+                            access_token: token,
+                            refresh_token: refreshToken
+                        })
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.statusCode = 500;
+                        res.end('View error log on console.');
+                    });
+            } else {
+                res.json({
+                    auth: false
+                });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+});
 
+router.post('/renew-token', (req, res) => {
+    var rToken = req.body.refreshToken;
+    authRepo.verifyRefreshToken(rToken)
+        .then(rows => {
+            if (rows.length === 0) {
+                res.statusCode = 400;
+                res.json({
+                    msg: 'invalid refresh-token'
+                });
 
+                throw new Error('abort-chain'); // break promise chain
+
+            } else {
+                return rows[0].ID;
+            }
+        })
+        .then(id => staffRepo.load(id))
+        .then(rows => {
+            var userObj = rows[0];
+            var token = authRepo.generateAccessToken(userObj);
+            res.json({
+                access_token: token
+            });
+        })
+        .catch(err => {
+            if (err.message !== 'abort-chain') {
+                console.log(err);
+                res.statusCode = 500;
+                res.end('View error log on console.');
+            }
+        });
+});
+router.post('/logout', authRepo.verifyAccessToken, (req, res) => {
+    // var info = req.token_payload.info;
+    var user = req.token_payload.user;
+    authRepo.deleteRefreshToken(user.ten_tai_khoan)
+        .then(affectedRows => {
+            res.json({
+                msg: 'success'
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+});
 module.exports = router;

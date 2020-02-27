@@ -19,7 +19,7 @@ exports.add = function(poco) {
 exports.login = function(userName, password) {
     return new Promise((resolve, reject) => {
         var md5_password = md5(password);
-        var sql = `select * from nhan_vien where ten_tai_khoan = '${userName}' and mat_khau = '${md5_password}'`;
+        var sql = `select ten_tai_khoan,quyen_han from nhan_vien where ten_tai_khoan = '${userName}' and mat_khau = '${md5_password}'`;
         db.load(sql)
             .then(rows => {
                 if (rows.length === 0) {
