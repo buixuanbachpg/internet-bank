@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES } from '../sidebar/sidebar.component';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { Router } from '@angular/router';
+import { DatasharelocalService } from '../../data/datasharelocal.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,26 +10,35 @@ import { Router } from '@angular/router';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  public focus;
-  public listTitles: any[];
-  public location: Location;
-  constructor(location: Location,  private element: ElementRef, private router: Router) {
+  focus;
+  listTitles: any[];
+  location: Location;
+  userId: string;
+  constructor(
+    location: Location,
+    private element: ElementRef,
+    private router: Router,
+    private dataUser: DatasharelocalService
+  ) {
     this.location = location;
   }
 
   ngOnInit() {
+    this.dataUser.currentData.subscribe(data => {
+      this.userId = data;
+    });
     this.listTitles = ROUTES.filter(listTitle => listTitle);
   }
-  getTitle(){
-    var titlee = this.location.prepareExternalUrl(this.location.path());
-    if(titlee.charAt(0) === '#'){
-        titlee = titlee.slice( 1 );
+  getTitle() {
+    let titlee = this.location.prepareExternalUrl(this.location.path());
+    if (titlee.charAt(0) === '#') {
+      titlee = titlee.slice(1);
     }
 
-    for(var item = 0; item < this.listTitles.length; item++){
-        if(this.listTitles[item].path === titlee){
-            return this.listTitles[item].title;
-        }
+    for (let item = 0; item < this.listTitles.length; item++) {
+      if (this.listTitles[item].path === titlee) {
+        return this.listTitles[item].title;
+      }
     }
     return 'Dashboard';
   }

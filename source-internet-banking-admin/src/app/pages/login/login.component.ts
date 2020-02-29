@@ -76,17 +76,18 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.openDialog(mess);
       return;
     }
+    this.router.navigate(['\dashboard'], {queryParams: {userid: 'test'}, skipLocationChange: true});
 
-    this.staffService.getAccountInfoStaff(Email.value).subscribe(
-      result => {
-        if (result && result.mat_khau === Pass.value) {
-    this.router.navigate(['\dashboard']);
-        } else {
-          mess = 'Mật khẩu hoặc email của bạn đã sai!';
-          this.openDialog(mess);
-        }
-      }
-    );
+    // this.staffService.getAccountInfoStaff(Email.value).subscribe(
+    //   result => {
+    //     if (result && result.mat_khau === Pass.value) {
+    // this.router.navigate(['\dashboard']);
+    //     } else {
+    //       mess = 'Mật khẩu hoặc email của bạn đã sai!';
+    //       this.openDialog(mess);
+    //     }
+    //   }
+    // );
 
   }
 
