@@ -39,7 +39,7 @@ exports.delete = function(id) {
 }
 
 exports.load = function(id) {
-    var sql = `select * from nhan_vien where ten_tai_khoan = '${id}'`;
+    var sql = `select * from nhan_vien where email = '${id}'`;
     return db.load(sql);
 }
 

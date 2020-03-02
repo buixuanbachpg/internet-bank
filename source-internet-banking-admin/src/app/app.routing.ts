@@ -10,7 +10,7 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'ADEMlogin',
     pathMatch: 'full',
   },
   {

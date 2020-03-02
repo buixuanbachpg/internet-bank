@@ -35,4 +35,13 @@ export class StaffService {
         catchError(this.handleError)
     );
   }
+
+  getTokenStaff(user: any) {
+    return this.http.post(this.base_path + '/login', JSON.stringify(user), this.httpOptions);
+  }
+
+  getRefeshtTokenStaff(token: any) {
+    return this.http.post(this.base_path + '/renew-token', JSON.stringify(token), this.httpOptions);
+  }
 }
+
