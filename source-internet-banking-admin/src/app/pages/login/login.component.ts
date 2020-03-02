@@ -76,7 +76,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.openDialog(mess);
       return;
     }
-    this.router.navigate(['\dashboard'], {queryParams: {userid: 'test'}, skipLocationChange: true});
+    this.router.navigate(['\dashboard'], {queryParams: {userid: 'test'},
+     fragment: 'x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14', preserveFragment: true});
 
     // this.staffService.getAccountInfoStaff(Email.value).subscribe(
     //   result => {

@@ -36,6 +36,7 @@ import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { DialogWarningComponent } from './dialog-warning/dialog-warning.component';
 import { StaffService } from './api/staff.service';
+import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 
 
 @NgModule({
@@ -72,7 +73,8 @@ import { StaffService } from './api/staff.service';
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    DialogWarningComponent
+    DialogWarningComponent,
+    PagenotfoundComponent
   ],
   exports: [
     MatButtonModule,
