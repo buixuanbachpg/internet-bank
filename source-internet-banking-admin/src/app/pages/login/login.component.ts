@@ -76,30 +76,33 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.openDialog(mess);
       return;
     }
-
-    this.staffService.getAccountInfoStaff(Email.value).subscribe(
-      result => {
-        if (result && result.mat_khau === Pass.value) {
-          this.router.navigate(['\dashboard'], {
-            queryParams: { id: result.ten_tai_khoan, pass: result.mat_khau },
-            fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14'
-          });
-        } else {
-          mess = 'Mật khẩu hoặc email của bạn đã sai!';
-          this.openDialog(mess);
-        }
-      },
-      error => {
-        mess = 'Hệ thống đang bị lỗi!';
-        this.openDialog(mess);
-      }
-    );
+    this.router.navigate(['\dashboard'], {
+              queryParams: { id: 'Bao-LG', pass: '1234' },
+              fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14'
+            });
+    // this.staffService.getAccountInfoStaff(Email.value).subscribe(
+    //   result => {
+    //     if (result && result.mat_khau === Pass.value) {
+    //       this.router.navigate(['\dashboard'], {
+    //         queryParams: { id: result.ten_tai_khoan, pass: result.mat_khau },
+    //         fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14'
+    //       });
+    //     } else {
+    //       mess = 'Mật khẩu hoặc email của bạn đã sai!';
+    //       this.openDialog(mess);
+    //     }
+    //   },
+    //   error => {
+    //     mess = 'Hệ thống đang bị lỗi!';
+    //     this.openDialog(mess);
+    //   }
+    // );
 
   }
 
   private openDialog(mess: string) {
     const dialogRef = this.dialog.open(DialogWarningComponent, {
-      width: '250px',
+      width: '350px',
       hasBackdrop: true,
       data: { Text: mess }
     });

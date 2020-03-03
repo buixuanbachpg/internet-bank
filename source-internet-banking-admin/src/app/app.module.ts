@@ -74,7 +74,7 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
     AdminLayoutComponent,
     AuthLayoutComponent,
     DialogWarningComponent,
-    PagenotfoundComponent
+    PagenotfoundComponent,
   ],
   exports: [
     MatButtonModule,

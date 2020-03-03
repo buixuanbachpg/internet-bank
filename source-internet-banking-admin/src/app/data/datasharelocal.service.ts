@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class DatasharelocalService {
-  private datauser: BehaviorSubject<string> = new BehaviorSubject<string>('NOT REAL USER');
+  private datauser: BehaviorSubject<string> = new BehaviorSubject<string>('FAKED USER');
   currentData = this.datauser.asObservable();
 
   constructor() { }
@@ -15,7 +15,7 @@ export class DatasharelocalService {
   }
 
   clearAll() {
-    this.datauser = new BehaviorSubject<string>('NOT REAL USER');
+    this.datauser = new BehaviorSubject<string>('FAKED USER');
   }
 
 }

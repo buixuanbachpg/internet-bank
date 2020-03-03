@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.queryParam = this.route.queryParamMap.subscribe(params => {
-      this.dataUser.changeData(params.get('userid') || 'FAKED USER');
+      this.dataUser.changeData(params.get('id') || 'FAKED USER');
     });
 
     this.datasets = [
