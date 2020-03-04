@@ -6,6 +6,8 @@ import { MapsComponent } from '../../pages/maps/maps.component';
 import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { EmployeemanagerComponent } from '../../pages/employeemanager/employeemanager.component';
+import { TradereportComponent } from '../../pages/tradereport/tradereport.component';
+
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
@@ -14,5 +16,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'icons', component: IconsComponent },
     { path: 'maps', component: MapsComponent },
     { path: 'manager', component: EmployeemanagerComponent },
+    { path: 'report', component: TradereportComponent },
+
 
 ];
