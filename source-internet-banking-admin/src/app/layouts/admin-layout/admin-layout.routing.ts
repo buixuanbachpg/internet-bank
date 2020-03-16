@@ -6,7 +6,8 @@ import { MapsComponent } from '../../pages/maps/maps.component';
 import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { EmployeemanagerComponent } from '../../pages/employeemanager/employeemanager.component';
-import { TradereportComponent } from '../../pages/tradereport/tradereport.component';
+import { RegistercustomerComponent } from '../../pages/registercustomer/registercustomer.component';
+import { TradereportComponent } from 'src/app/pages/tradereport/tradereport.component';
 
 
 export const AdminLayoutRoutes: Routes = [
@@ -17,6 +18,8 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'maps', component: MapsComponent },
     { path: 'manager', component: EmployeemanagerComponent },
     { path: 'report', component: TradereportComponent },
+    { path: 'registercustomer', component: RegistercustomerComponent },
+
 
 
 ];

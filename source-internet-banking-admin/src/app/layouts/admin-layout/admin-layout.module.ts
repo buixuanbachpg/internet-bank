@@ -22,6 +22,7 @@ import { UserProfileComponent } from '../../pages/user-profile/user-profile.comp
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { EmployeemanagerComponent } from '../../pages/employeemanager/employeemanager.component';
 import { TradereportComponent } from '../../pages/tradereport/tradereport.component';
+import { RegistercustomerComponent } from 'src/app/pages/registercustomer/registercustomer.component';
 
 
 // import { ToastrModule } from 'ngx-toastr';
@@ -51,6 +52,7 @@ import { TradereportComponent } from '../../pages/tradereport/tradereport.compon
     MapsComponent,
     EmployeemanagerComponent,
     TradereportComponent,
+    RegistercustomerComponent,
 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
