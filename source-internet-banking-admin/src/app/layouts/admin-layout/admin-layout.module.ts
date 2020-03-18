@@ -23,6 +23,8 @@ import { TablesComponent } from '../../pages/tables/tables.component';
 import { EmployeemanagerComponent } from '../../pages/employeemanager/employeemanager.component';
 import { TradereportComponent } from '../../pages/tradereport/tradereport.component';
 import { RegistercustomerComponent } from 'src/app/pages/registercustomer/registercustomer.component';
+import { TradeComponent } from '../../pages/trade/trade.component';
+import { ReviewtradeComponent } from '../../pages/reviewtrade/reviewtrade.component';
 
 
 // import { ToastrModule } from 'ngx-toastr';
@@ -53,7 +55,8 @@ import { RegistercustomerComponent } from 'src/app/pages/registercustomer/regist
     EmployeemanagerComponent,
     TradereportComponent,
     RegistercustomerComponent,
-
+    TradeComponent,
+    ReviewtradeComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

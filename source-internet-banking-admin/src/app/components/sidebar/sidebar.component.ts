@@ -18,6 +18,9 @@ export const ROUTES: RouteInfo[] = [
   { path: '/manager', title: 'Employee Manager', icon: 'ni-tv-2 text-primary', class: '' },
   { path: '/report', title: 'Trade Report', icon: 'ni-tv-2 text-primary', class: '' },
   { path: '/registercustomer', title: 'Register Customer', icon: 'ni-tv-2 text-primary', class: '' },
+  { path: '/trade', title: 'Trade', icon: 'ni-tv-2 text-primary', class: '' },
+  { path: '/reviewtrade', title: 'Trade Review', icon: 'ni-tv-2 text-primary', class: '' },
+
 
 
 

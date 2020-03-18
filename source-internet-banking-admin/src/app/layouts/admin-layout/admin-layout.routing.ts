@@ -8,6 +8,8 @@ import { TablesComponent } from '../../pages/tables/tables.component';
 import { EmployeemanagerComponent } from '../../pages/employeemanager/employeemanager.component';
 import { RegistercustomerComponent } from '../../pages/registercustomer/registercustomer.component';
 import { TradereportComponent } from 'src/app/pages/tradereport/tradereport.component';
+import { TradeComponent } from '../../pages/trade/trade.component';
+import { ReviewtradeComponent } from '../../pages/reviewtrade/reviewtrade.component';
 
 
 export const AdminLayoutRoutes: Routes = [
@@ -19,6 +21,9 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'manager', component: EmployeemanagerComponent },
     { path: 'report', component: TradereportComponent },
     { path: 'registercustomer', component: RegistercustomerComponent },
+    { path: 'trade', component: TradeComponent },
+    { path: 'reviewtrade', component: ReviewtradeComponent },
+
 
 
 

@@ -39,6 +39,7 @@ import { StaffService } from './api/staff.service';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 
 
+
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -96,7 +97,7 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
   ],
   providers: [
     {
-      provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}
+      provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false }
     },
     StaffService
   ],
