@@ -16,56 +16,67 @@
         <div class="table-responsive">
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource">
-          
+
               <!-- Position Column -->
               <ng-container matColumnDef="position">
-                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;"> STT </th>
                 <td mat-cell *matCellDef="let element"> {{element.position}} </td>
               </ng-container>
-          
+
               <!-- Name Column -->
               <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <th mat-header-cell *matHeaderCellDef style="width: 25%;"> Họ tên </th>
                 <td mat-cell *matCellDef="let element"> {{element.name}} </td>
               </ng-container>
-          
-              <!-- Weight Column -->
-              <ng-container matColumnDef="weight">
-                <th mat-header-cell *matHeaderCellDef> Weight </th>
-                <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+
+              <!-- Sex Column -->
+              <ng-container matColumnDef="sex">
+                <th mat-header-cell *matHeaderCellDef style="width: 3%;"> Giới tính </th>
+                <td mat-cell *matCellDef="let element"> {{element.sex}} </td>
               </ng-container>
-          
-              <!-- Symbol Column -->
-              <ng-container matColumnDef="symbol">
-                <th mat-header-cell *matHeaderCellDef> Symbol </th>
-                <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef style="width: 22%;"> Email </th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+              </ng-container>
+
+              <!-- Phone Column -->
+              <ng-container matColumnDef="phone" style="width: 12%;">
+                <th mat-header-cell *matHeaderCellDef> Số điện thoại </th>
+                <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+              </ng-container>
+
+              <!-- Address Column -->
+              <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Địa chỉ </th>
+                <td mat-cell *matCellDef="let element"> {{element.address}} </td>
               </ng-container>
 
               <!-- Update Column -->
               <ng-container matColumnDef="update">
-                <th mat-header-cell *matHeaderCellDef> Update </th>
+                <th mat-header-cell *matHeaderCellDef style="width: 8%;"> Chức năng cập nhật </th>
                 <td mat-cell *matCellDef="let element">
-                  <button class="btn btn-main">Update</button>
+                  <button class="btn btn-main" (click)="openDialogUpdate(element)">Cập nhật</button>
                 </td>
               </ng-container>
 
               <!-- Delete Column -->
               <ng-container matColumnDef="delete">
-                <th mat-header-cell *matHeaderCellDef> Delete </th>
+                <th mat-header-cell *matHeaderCellDef style="width: 8%;"> Chức năng xóa </th>
                 <td mat-cell *matCellDef="let element">
-                  <button class="btn btn-primary">Delete</button>
+                  <button class="btn btn-primary">Xóa</button>
                 </td>
               </ng-container>
-          
+
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-          
+
             <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
           </div>
         </div>
-        <button class="btn btn-success">Insert</button>
-
+        <button class="btn btn-success" (click)="openDialogInsert()">Insert</button>
       </div>
     </div>
   </div>

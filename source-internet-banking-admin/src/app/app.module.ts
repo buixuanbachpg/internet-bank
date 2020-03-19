@@ -37,6 +37,9 @@ import { ComponentsModule } from './components/components.module';
 import { DialogWarningComponent } from './dialog-warning/dialog-warning.component';
 import { StaffService } from './api/staff.service';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
+import { DialogEmployeeaddComponent } from './pages/dialog-employeeadd/dialog-employeeadd.component';
+import { DialogEmployeeupdComponent } from './pages/dialog-employeeupd/dialog-employeeupd.component';
+import { DialogComfirmComponent } from './dialog-comfirm/dialog-comfirm.component';
 
 
 
@@ -76,6 +79,9 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
     AuthLayoutComponent,
     DialogWarningComponent,
     PagenotfoundComponent,
+    DialogEmployeeaddComponent,
+    DialogEmployeeupdComponent,
+    DialogComfirmComponent,
   ],
   exports: [
     MatButtonModule,
@@ -101,7 +107,11 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
     },
     StaffService
   ],
-  entryComponents: [DialogWarningComponent],
+  entryComponents: [
+    DialogWarningComponent,
+    DialogEmployeeaddComponent,
+    DialogEmployeeupdComponent
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
