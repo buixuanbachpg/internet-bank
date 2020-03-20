@@ -14,31 +14,36 @@
           <h3 class="text-white mb-0">Danh Sách Giao Dịch</h3>
         </div>
         <div class="table-responsive">
-          <div style="background-color: antiquewhite;">
-            <mat-form-field class="dtepick">
-              <mat-label>Start</mat-label>
-              <input matInput [matDatepicker]="picker1" [formControl]="date">
-              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-              <mat-datepicker #picker1></mat-datepicker>
-            </mat-form-field>
+          <div style="background-color: antiquewhite;" class="row">
+            <div class="col-sm-10">
+              <mat-form-field class="dtepick">
+                <mat-label>Start</mat-label>
+                <input matInput [matDatepicker]="picker1" [formControl]="date">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
 
-            <mat-form-field class="dtepick">
-              <mat-label>End</mat-label>
-              <input matInput [matDatepicker]="picker2" [formControl]="date">
-              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-              <mat-datepicker #picker2></mat-datepicker>
-            </mat-form-field>
+              <mat-form-field class="dtepick">
+                <mat-label>End</mat-label>
+                <input matInput [matDatepicker]="picker2" [formControl]="date">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
 
-            <mat-form-field style="margin-left: 50px; width: 250px;">
-              <mat-label>Hãy chọn ngân hàng</mat-label>
-              <mat-select [formControl]="fBanks">
-                <mat-option>None</mat-option>
-                <mat-option [value]="'All'">Tất cả ngân hàng liên kết</mat-option>
-                <mat-option [value]="'A'">A</mat-option>
-                <!-- <mat-option *ngFor="let state of states" [value]="state">{{state}}</mat-option> -->
-              </mat-select>
-              <mat-error *ngIf="fBanks.hasError('required')">Hãy chọn ngân hàng</mat-error>
-            </mat-form-field>
+              <mat-form-field style="margin-left: 5%; width: 250px;">
+                <mat-label>Hãy chọn ngân hàng</mat-label>
+                <mat-select [formControl]="fBanks">
+                  <mat-option>None</mat-option>
+                  <mat-option [value]="'All'">Tất cả ngân hàng liên kết</mat-option>
+                  <mat-option [value]="'A'">A</mat-option>
+                  <!-- <mat-option *ngFor="let state of states" [value]="state">{{state}}</mat-option> -->
+                </mat-select>
+                <mat-error *ngIf="fBanks.hasError('required')">Hãy chọn ngân hàng</mat-error>
+              </mat-form-field>
+
+              <button class="btn btn-primary" style="margin-left: 5%;">Rà soát</button>
+
+            </div>
 
           </div>
           <div class="mat-elevation-z8">
@@ -46,26 +51,38 @@
 
               <!-- Position Column -->
               <ng-container matColumnDef="position">
-                <th mat-header-cell *matHeaderCellDef> No. </th>
+                <th mat-header-cell *matHeaderCellDef> STT </th>
                 <td mat-cell *matCellDef="let element"> {{element.position}} </td>
               </ng-container>
 
-              <!-- Name Column -->
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              <!-- Time Column -->
+              <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef> Thời gian </th>
+                <td mat-cell *matCellDef="let element"> {{element.time}} </td>
               </ng-container>
 
-              <!-- Weight Column -->
-              <ng-container matColumnDef="weight">
-                <th mat-header-cell *matHeaderCellDef> Weight </th>
-                <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+              <!-- Source Column -->
+              <ng-container matColumnDef="source">
+                <th mat-header-cell *matHeaderCellDef> Tài khoản chuyển </th>
+                <td mat-cell *matCellDef="let element"> {{element.source}} </td>
               </ng-container>
 
-              <!-- Symbol Column -->
-              <ng-container matColumnDef="symbol">
-                <th mat-header-cell *matHeaderCellDef> Symbol </th>
-                <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+              <!-- Destination Column -->
+              <ng-container matColumnDef="destination">
+                <th mat-header-cell *matHeaderCellDef> Tài khoản nhận </th>
+                <td mat-cell *matCellDef="let element"> {{element.destination}} </td>
+              </ng-container>
+
+              <!-- Bank Column -->
+              <ng-container matColumnDef="bank">
+                <th mat-header-cell *matHeaderCellDef> Ngân hàng chuyển </th>
+                <td mat-cell *matCellDef="let element"> {{element.bank}} </td>
+              </ng-container>
+
+              <!-- Money Column -->
+              <ng-container matColumnDef="money">
+                <th mat-header-cell *matHeaderCellDef> Số tiền </th>
+                <td mat-cell *matCellDef="let element"> {{element.money}} </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

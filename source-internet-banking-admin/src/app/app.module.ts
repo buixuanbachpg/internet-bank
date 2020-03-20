@@ -39,7 +39,6 @@ import { StaffService } from './api/staff.service';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { DialogEmployeeaddComponent } from './pages/dialog-employeeadd/dialog-employeeadd.component';
 import { DialogEmployeeupdComponent } from './pages/dialog-employeeupd/dialog-employeeupd.component';
-import { DialogComfirmComponent } from './dialog-comfirm/dialog-comfirm.component';
 
 
 
@@ -81,7 +80,6 @@ import { DialogComfirmComponent } from './dialog-comfirm/dialog-comfirm.componen
     PagenotfoundComponent,
     DialogEmployeeaddComponent,
     DialogEmployeeupdComponent,
-    DialogComfirmComponent,
   ],
   exports: [
     MatButtonModule,
