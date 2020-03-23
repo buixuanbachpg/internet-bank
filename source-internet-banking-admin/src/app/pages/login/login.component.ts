@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.resolvedRecaptcha = '';
+    localStorage.clear();
   }
   ngOnDestroy() {
   }
@@ -77,10 +78,20 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.openDialog({ Text: mess, Title: 0 });
       return;
     }
-    this.router.navigate(['\dashboard'], {
-      queryParams: { id: 'Bao-LG', pass: '1234' },
-      fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14'
-    });
+    localStorage.setItem('userid', 'Bao-LG');
+    localStorage.setItem('quyen_han', '0');
+    const user = localStorage.getItem('quyen_han');
+    if (user === '1') {
+      this.router.navigate(['\manager'], {
+        fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14'
+      });
+    } else {
+      this.router.navigate(['\customer'], {
+        fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14',
+        skipLocationChange: true
+      });
+    }
+
     // this.staffService.getAccountInfoStaff(Email.value).subscribe(
     //   result => {
     //     if (result && result.mat_khau === Pass.value) {

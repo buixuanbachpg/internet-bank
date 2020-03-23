@@ -24,9 +24,7 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataUser.currentData.subscribe(data => {
-      this.userId = data;
-    });
+    this.userId = localStorage.getItem('userid');
     this.listTitles = ROUTES.filter(listTitle => listTitle);
   }
   getTitle() {

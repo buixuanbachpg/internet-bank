@@ -20,7 +20,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'maps', component: MapsComponent },
     { path: 'manager', component: EmployeemanagerComponent },
     { path: 'report', component: TradereportComponent },
-    { path: 'registercustomer', component: RegistercustomerComponent },
+    { path: 'customer', component: RegistercustomerComponent },
     { path: 'trade', component: TradeComponent },
     { path: 'reviewtrade', component: ReviewtradeComponent },
 
