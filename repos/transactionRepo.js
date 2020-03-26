@@ -134,8 +134,7 @@ exports.hashMd5 = function(strToHash, secretKey) 
     							
     
 exports.add = function(poco) {
-    var rdt = moment().format('YYYY-MM-DD HH:mm:ss');
-    var sql = `insert into doi_soat( from_account_number, to_account_number, amount,message,time) values('${poco.from_account_number}',  ${poco.to_account_number}, '${poco.amount}', '${poco.message}', ${rdt})`;
+    var sql = `insert into doi_soat( from_account_number, to_account_number, amount,message,time) values('${poco.from_account_number}',  ${poco.to_account_number}, '${poco.amount}', '${poco.message}', ${poco.timestamp})`;
     return db.insert(sql);
 }
 

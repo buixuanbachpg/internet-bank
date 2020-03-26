@@ -47,8 +47,8 @@ router.post('/query_info', (req, res) => {
     });
    }
    else{
-    res.status(200).json({
-        "statusCode": 200,
+    res.status(204).json({
+        "statusCode": 204,
         "message": " no data"
     })
    }
