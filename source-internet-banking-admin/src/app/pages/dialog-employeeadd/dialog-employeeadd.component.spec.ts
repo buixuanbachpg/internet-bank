@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavbarComponent } from './navbar.component';
+import { DialogEmployeeaddComponent } from './dialog-employeeadd.component';
 
-describe('NavbarComponent', () => {
-  let component: NavbarComponent;
-  let fixture: ComponentFixture<NavbarComponent>;
+describe('DialogEmployeeaddComponent', () => {
+  let component: DialogEmployeeaddComponent;
+  let fixture: ComponentFixture<DialogEmployeeaddComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavbarComponent ]
+      declarations: [ DialogEmployeeaddComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NavbarComponent);
+    fixture = TestBed.createComponent(DialogEmployeeaddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

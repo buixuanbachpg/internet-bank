@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import Chart from 'chart.js';
 
 // core components
@@ -7,24 +7,32 @@ import {
   parseOptions,
   chartExample1,
   chartExample2
-} from "../../variables/charts";
+} from '../../variables/charts';
+import { ActivatedRoute } from '@angular/router';
+import { DatasharelocalService } from '../../data/datasharelocal.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
-  public datasets: any;
-  public data: any;
-  public salesChart;
-  public clicked: boolean = true;
-  public clicked1: boolean = false;
-
-  constructor() { }
+  datasets: any;
+  data: any;
+  salesChart;
+  clicked = true;
+  clicked1 = false;
+  private queryParam: any;
+  constructor(
+    private route: ActivatedRoute,
+    private dataUser: DatasharelocalService
+  ) { }
 
   ngOnInit() {
+    this.queryParam = this.route.queryParamMap.subscribe(params => {
+      this.dataUser.changeData(params.get('id') || 'FAKED USER');
+    });
 
     this.datasets = [
       [0, 20, 10, 30, 15, 40, 20, 60, 60],
@@ -33,31 +41,36 @@ export class DashboardComponent implements OnInit {
     this.data = this.datasets[0];
 
 
-    var chartOrders = document.getElementById('chart-orders');
+    const chartOrders = document.getElementById('chart-orders');
 
     parseOptions(Chart, chartOptions());
 
 
-    var ordersChart = new Chart(chartOrders, {
+    const ordersChart = new Chart(chartOrders, {
       type: 'bar',
       options: chartExample2.options,
       data: chartExample2.data
     });
 
-    var chartSales = document.getElementById('chart-sales');
+    const chartSales = document.getElementById('chart-sales');
 
     this.salesChart = new Chart(chartSales, {
-			type: 'line',
-			options: chartExample1.options,
-			data: chartExample1.data
-		});
+      type: 'line',
+      options: chartExample1.options,
+      data: chartExample1.data
+    });
+  }
+
+  ngOnDestroy() {
+    this.queryParam.unsubscribe();
+    this.dataUser.clearAll();
   }
 
 
 
 
 
-  public updateOptions() {
+  updateOptions() {
     this.salesChart.data.datasets[0].data = this.data;
     this.salesChart.update();
   }

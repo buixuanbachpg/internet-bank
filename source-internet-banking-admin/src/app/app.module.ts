@@ -36,6 +36,10 @@ import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { DialogWarningComponent } from './dialog-warning/dialog-warning.component';
 import { StaffService } from './api/staff.service';
+import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
+import { DialogEmployeeaddComponent } from './pages/dialog-employeeadd/dialog-employeeadd.component';
+import { DialogEmployeeupdComponent } from './pages/dialog-employeeupd/dialog-employeeupd.component';
+
 
 
 @NgModule({
@@ -72,7 +76,10 @@ import { StaffService } from './api/staff.service';
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    DialogWarningComponent
+    DialogWarningComponent,
+    PagenotfoundComponent,
+    DialogEmployeeaddComponent,
+    DialogEmployeeupdComponent,
   ],
   exports: [
     MatButtonModule,
@@ -94,11 +101,15 @@ import { StaffService } from './api/staff.service';
   ],
   providers: [
     {
-      provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}
+      provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false }
     },
     StaffService
   ],
-  entryComponents: [DialogWarningComponent],
+  entryComponents: [
+    DialogWarningComponent,
+    DialogEmployeeaddComponent,
+    DialogEmployeeupdComponent
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
