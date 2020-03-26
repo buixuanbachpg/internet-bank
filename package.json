@@ -12,12 +12,14 @@
 		"axios": "^0.18.0",
 		"body-parser": "^1.18.2",
 		"cors": "^2.8.4",
+		"crypto": "^1.0.1",
 		"crypto-js": "^3.1.9-1",
 		"express": "^4.16.2",
 		"jsonwebtoken": "^8.2.1",
 		"moment": "^2.22.2",
 		"morgan": "^1.9.0",
 		"mysql": "^2.15.0",
+		"openpgp": "^4.10.1",
 		"rand-token": "^0.4.0"
 	}
 }
