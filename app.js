@@ -6,8 +6,7 @@ var express = require('express'),
 
 var userCtrl = require('./apiControllers/userController'),
 	staffCtrl = require('./apiControllers/staffController'),
-	transCtrl = require('./apiControllers/transactionController'),
-	linkCtrl = require('./apiControllers/linkController');
+	transCtrl = require('./apiControllers/transactionController');
 
 var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
 
@@ -26,7 +25,6 @@ app.use(staticDir);
 
 app.use('/users', userCtrl);
 app.use('/staff',  staffCtrl);
-app.use('/link',  linkCtrl);
 app.use('/trans',  transCtrl);
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

@@ -55,5 +55,51 @@ router.post('/query_info', (req, res) => {
 });
 
 
-
+router.post('/receive_external', (req, res) => {
+    const {partner_code, timestamp, hash, signature} = req.query;
+    const {from_account_number,to_account_number,amount,message} =req.body;
+    let currenttimestamp = +new Date();
+   if(!partner_code || !timestamp || !signature || !from_account_number || !to_account_number || !amount || !message || !hash)
+   {
+       console.log("1");
+       res.status(400).json({
+           "statusCode": 400,
+           "error": "Bad request",
+           "message": "lack of information"
+       })
+   }
+   else if(tranRepo.checkpartnercode(partner_code)== null){
+    console.log("2");
+    res.status(400).json({
+        "statusCode": 400,
+        "error": "Bad request",
+        "message": "partner_code not registered"
+    })
+   }
+   else if(currenttimestamp/1000-timestamp/1000>300)
+   {
+    console.log("3");
+    res.status(400).json({
+        "statusCode": 400,
+        "error": "Bad request",
+        "message": "timestamp is out of date"
+    })
+   }
+   else if (tranRepo.verifyPGP(tranRepo.publicKeyArmored,signature,hash))
+   {
+    tranRepo.add(from_account_number,to_account_number,amount,message,timestamp,signature).then(rows => {
+        res.json(rows);
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+        res.end(' error unknown ');
+    });
+   }
+   else{
+    res.status(500).json({
+        "statusCode": 500,
+        "message": " Your transaction is failed"
+    })
+   }
+});
 module.exports = router;

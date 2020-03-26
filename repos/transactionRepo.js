@@ -1,11 +1,10 @@
-var md5 = require('crypto-js/md5');
 const crypto = require('crypto');				
 var openpgp = require('openpgp');
 
 var db = require('../fn/mysql-db');
-openpgp.initWorker({ path:'openpgp.worker.js' })
+// openpgp.initWorker({ path:'openpgp.worker.js' })
 
-const publicKeyArmored = `-----BEGIN PGP PUBLIC KEY BLOCK-----
+var publicKeyArmored = `-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: Keybase OpenPGP v1.0.0
 Comment: https://keybase.io/crypto
 
@@ -98,31 +97,39 @@ O54zhslkKf+K4yDB0h/tc3aIyuKGsNwABFmNFqeU8A==
 =1ViA
 -----END PGP PRIVATE KEY BLOCK-----
 ` 
-const passphrase = `xuanbach` 
+const passphrase = "xuanbach"
 
 
-exports.signPGP = async function (privateKeyArmored, data) {
-    const { keys: [privateKey] } = await OpenPGP.key.readArmored(privateKeyArmored);
-    await privateKey.decrypt(passphrase);
+   exports.signPGP=( async (privateKeyArmored, data) =>{
+        const { keys: [privateKey] } = await openpgp.key.readArmored(privateKeyArmored);
+        await privateKey.decrypt(passphrase);
+    
+        const { signature: detachedSignature } = await openpgp.sign({
+            message: openpgp.cleartext.fromText(data), // CleartextMessage or Message object
+            privateKeys: [privateKey],                            // for signing
+            detached: true
+        });
+    console.log(detachedSignature);
+        return detachedSignature;
+    })
 
-    const { signature: detachedSignature } = await OpenPGP.sign({
-        message: OpenPGP.cleartext.fromText(data), // CleartextMessage or Message object
-        privateKeys: [privateKey],                            // for signing
-        detached: true
-    });
+    exports.verifyPGP=( async(publicKeyArmored, detachedSignature, data) =>{
+        const verified = await openpgp.verify({
+            message: openpgp.cleartext.fromText('Hello, World!'),              // CleartextMessage or Message object
+            signature: await openpgp.signature.readArmored(detachedSignature), // parse detached signature
+            publicKeys: (await openpgp.key.readArmored(publicKeyArmored)).keys // for verification
+        });
+        const { valid } = verified.signatures[0];
+        if (valid) {
+            console.log('signed by key id ' + verified.signatures[0].keyid.toHex());
+        } else {
+            throw new Error('signature could not be verified');
+        }
+    })
+    
+  
 
-    return detachedSignature;
-}
 
-exports.verifyPGP= async function(publicKeyArmored, detachedSignature, data) {
-    const { signatures } = await OpenPGP.verify({
-        message: OpenPGP.cleartext.fromText(data),              // CleartextMessage or Message object
-        signature: await OpenPGP.signature.readArmored(detachedSignature), // parse detached signature
-        publicKeys: (await OpenPGP.key.readArmored(publicKeyArmored)).keys // for verification
-    });
-    const { valid } = signatures[0];
-    return valid;
-}
 
 exports.hashMd5 = function(strToHash, secretKey) 
 {							
@@ -134,7 +141,7 @@ exports.hashMd5 = function(strToHash, secretKey) 
     							
     
 exports.add = function(poco) {
-    var sql = `insert into doi_soat( from_account_number, to_account_number, amount,message,time) values('${poco.from_account_number}',  ${poco.to_account_number}, '${poco.amount}', '${poco.message}', ${poco.timestamp})`;
+    var sql = `insert into doi_soat( from_account_number, to_account_number, amount,message,time,sign) values('${poco.from_account_number}',  ${poco.to_account_number}, '${poco.amount}', '${poco.message}', ${poco.timestamp},${poco.sign})`;
     return db.insert(sql);
 }
 
@@ -143,7 +150,7 @@ exports.load = function(id) {
     var sql = `select * from chi_tiet_tai_khoan `;
     return db.load(sql);
 }
-exports.checktimestamp = function(partner_code,timestamp,account_number,hash,secretKey){
+exports.checkHash = function(partner_code,timestamp,account_number,hash,secretKey){
     let strToHash = `${partner_code}|${timestamp}|${account_number}`;
     let genHmac = this.hashMd5(strToHash, secretKey);
     if(genHmac === hash)
@@ -160,10 +167,18 @@ exports.checkpartnercode =function(partner_code)
     else
         return null;
 }
-var account_number=123456789;
+
+// var account_number=123456789;
 var partner_code="vankhue";
 let timestamp = 1585248460999;
 var secretKey=this.checkpartnercode(partner_code);
-let strToHash = `${partner_code}|${timestamp}|${account_number}`;
-let genHmac = this.hashMd5(strToHash, secretKey);
-console.log(genHmac);
+// let strToHash = `${partner_code}|${timestamp}|${account_number}`;
+// let genHmac = this.hashMd5(strToHash, secretKey);
+// console.log(genHmac);
+from_account_number =123456789;
+to_account_number=1234567891234;
+amount= 10000;
+messag="tro no 10000 vnd"
+let strToHash = `${partner_code}|${timestamp}|${from_account_number}|${to_account_number}|${amount}`;
+let genHmac = 'b90fb5f48c366ef9800d6db07531650d';
+var res=this.signPGP(privateKeyArmored,genHmac);
