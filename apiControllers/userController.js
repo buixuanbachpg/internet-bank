@@ -1,9 +1,9 @@
 var express = require('express'),
-    axios = require('axios');
-
+    axios = require('axios'),
+    opts = require('../fn/opts');
 var staffRepo = require('../repos/staffRepo'),
     authRepo = require('../repos/authRepo');
-
+    transRepo=require('../repos/transactionRepo')
 var router = express.Router();
 
 router.post('/add', (req, res) => {
@@ -172,5 +172,67 @@ router.post('/logout', authRepo.verifyAccessToken, (req, res) => {
             res.statusCode = 500;
             res.end('View error log on console.');
         });
+});
+
+router.post('/chuyentien', async(req, res) => {
+    var url = `http://localhost:3000/trans/receive_external`;
+    const {from_account_number,to_account_number,amount,message} =req.body;
+    var partner_code="vankhue";
+    let timestamp = +new Date();
+    let strToHash = `${partner_code}|${timestamp}|${from_account_number}|${to_account_number}|${amount}|${message}`;
+    let genHmac = transRepo.hashMd5(strToHash,transRepo.checkpartnercode(partner_code));
+    let signature= await transRepo.signPGP(opts.PGPKEY.privateKeyArmored,genHmac)
+    axios({
+            url: url,
+            method: 'POST',
+            params: Object.assign({
+                partner_code: partner_code,
+                timestamp: timestamp,
+                hash: genHmac,
+                signature: signature
+            }),
+            data:{        
+                from_account_number :from_account_number,
+                to_account_number:to_account_number,
+                amount: amount,
+                message:message
+                    
+            }
+        }).then(function (response)
+        {
+            res.json(response.data)
+        }).catch(function (error) {
+            res.json(error.response.data)
+          });
+    
+   
+    
+    
+});
+router.post('/query_info', (req, res) => {
+    var url = `http://localhost:3000/trans/query_info`;
+    const {account_number} =req.body;
+    var partner_code="vankhue";
+    let timestamp = +new Date();
+    let strToHash = `${partner_code}|${timestamp}|${account_number}`;
+    let genHmac = transRepo.hashMd5(strToHash,"s");
+     axios({
+            url: url,
+            method: 'POST',
+            params: Object.assign({
+                partner_code: partner_code,
+                timestamp: timestamp,
+                hash: genHmac
+            }),
+            data:{        
+                account_number:account_number                    
+            }
+        }).then(function (response)
+        {
+            res.json(response.data)
+        }).catch(function (error) {
+            res.json(error.response.data)
+          });
+    
 });
 module.exports = router;
