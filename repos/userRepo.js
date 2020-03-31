@@ -1,21 +1,67 @@
-var md5 = require('crypto-js/md5');
-
+const bcrypt = require('bcrypt');
 var db = require('../fn/mysql-db');
-
-exports.add = function(poco) {
-    // poco={
-    //     email: 'asad@',
-    //     ten_tai_khoan: 'baach',
-    //     mat_khau: '123',
-    //     quyen_han: 1,
-    //     dia_chi: 123546,
-    //     so_dien_thoai: 10000
-    //      }
-    var md5_password = md5(poco.mat_khau);
-    var sql = `insert into nhan_vien( ten_tai_khoan, mat_khau, quyen_han,dia_chi,email, so_dien_thoai) values('${poco.ten_tai_khoan}', '${md5_password}', ${poco.quyen_han}, '${poco.dia_chi}', '${poco.email}', ${poco.so_dien_thoai})`;
-    return db.insert(sql);
+const saltRound=10;
+function getRandomIntInclusive(Min,Max) {
+    min = Math.ceil(Min);
+    max = Math.floor(Max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 }
-
+  async function getRandomAccountNumber(){
+       var sql="",
+        number="",
+        Max=100000000000,
+       Min=999999999999;
+      while(1)
+     {
+        number= await getRandomIntInclusive(Min,Max);
+        sql=`select account_number from khach_hang where account_number = '${number}'`;    
+        result= await db.load(sql).then(rows => {
+            if (rows.length > 0)
+            return rows[0].account_number;
+            else
+            return "";
+         });
+         if(number != result)
+         break ;
+     }
+     return number;
+}
+async function getRandomSavingAccountNumber(){
+    var sql="",
+     number="",
+     Max=10000000000000,
+    Min=99999999999999;
+   while(1)
+  {
+     number= await getRandomIntInclusive(Min,Max);
+     sql=`select saving_number from tiet_kiem where saving_number = '${number}'`;    
+     result= await db.load(sql).then(rows => {
+         if (rows.length > 0)
+         return rows[0].saving_number;
+         else
+         return "";
+      });
+      if(number != result)
+      break ;
+  }
+  return number;
+}
+exports.add = async function(poco) {
+    // poco={
+        // {
+        //     "username": "asad@",
+        //     "password": "baach",
+        //     "account_balance": "123"
+        //  }
+    account_number= await getRandomAccountNumber();
+    hash=await bcrypt.hash(poco.password, saltRound).then(hash=>{
+return hash;
+    }).catch(error=>{
+        console.log(error);
+    });
+    var sql = `insert into khach_hang( username, password, account_number,account_balance) values('${poco.username}', '${hash}', '${account_number}','${poco.account_balance}')`;
+return db.insert(sql);
+}
 exports.login = function(userName, password) {
     return new Promise((resolve, reject) => {
         var md5_password = md5(password);
@@ -39,12 +85,16 @@ exports.delete = function(id) {
 }
 
 exports.loadDetail = function(id) {
-    var sql = `select * from chi_tiet_tai_khoan where so_tai_khoan = '${id}'`;
+    var sql = `select account_number,email,username,full_name from chi_tiet_tai_khoan where account_number = '${id}'`;
     return db.load(sql);
 }
 
+exports.load = function(id) {
+    var sql = `select * from khach_hang where username='${id}'`;
+    return db.load(sql);
+}
 exports.loadAll = function() {
-    var sql = `select * from nhan_vien `;
+    var sql = `select * from khach_hang `;
     return db.load(sql);
 }
 

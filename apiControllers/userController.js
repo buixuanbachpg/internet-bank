@@ -1,16 +1,16 @@
 var express = require('express'),
     axios = require('axios'),
     opts = require('../fn/opts');
-var staffRepo = require('../repos/staffRepo'),
+var userRepo = require('../repos/userRepo'),
     authRepo = require('../repos/authRepo');
     transRepo=require('../repos/transactionRepo')
 var router = express.Router();
 
-router.post('/add', (req, res) => {
-    staffRepo.add(req.body)
+router.post('/', (req, res) => {
+    userRepo.add(req.body)
         .then(insertId => {
             res.statusCode = 201;
-            res.json(req.body);
+            res.json(insertId);
         })
         .catch(err => {
             console.log(err);
@@ -35,7 +35,7 @@ router.post('/update', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-    staffRepo.loadAll().then(rows => {
+    userRepo.loadAll().then(rows => {
         res.json(rows);
     }).catch(err => {
         console.log(err);
@@ -69,10 +69,9 @@ router.delete('/:id', (req, res) => {
 router.get('/:name', (req, res) => {
     
     if (req.params.name) {
-        console.log(req.params.name);
         var id = req.params.name;
 
-        staffRepo.load(id).then(rows => {
+        userRepo.load(id).then(rows => {
             if (rows.length > 0) {
                 res.json(rows[0]);
             } else {
@@ -87,8 +86,7 @@ router.get('/:name', (req, res) => {
     } else {
         res.statusCode = 400;
         res.json({
-            msg: 'error',
-            error: req.params.ten
+            msg: 'error'
         });
     }
 });
@@ -215,7 +213,7 @@ router.post('/query_info', (req, res) => {
     var partner_code="vankhue";
     let timestamp = +new Date();
     let strToHash = `${partner_code}|${timestamp}|${account_number}`;
-    let genHmac = transRepo.hashMd5(strToHash,"s");
+    let genHmac = transRepo.hashMd5(strToHash,transRepo.checkpartnercode(partner_code));
      axios({
             url: url,
             method: 'POST',
