@@ -9,8 +9,10 @@ var router = express.Router();
 router.post('/', (req, res) => {
     userRepo.add(req.body)
         .then(insertId => {
-            res.statusCode = 201;
-            res.json(insertId);
+            res.status(201).json({
+                "message": "thêm thành công",
+                "insertId":insertId
+            })
         })
         .catch(err => {
             console.log(err);
@@ -18,21 +20,36 @@ router.post('/', (req, res) => {
             res.end();
         });
 });
+router.post('/Account/', (req, res) => {
+    userRepo.updateAccountBalance(req.body)
+        .then(results => {
+            res.json(req.body);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                "message": "bad request"
+            })
+        });
+});
 
-router.post('/update', (req, res) => {
-    staffRepo.update(req.body)
-        .then(changedRows => {
-            res.statusCode = 201;
-            res.json({
-                changedRows: changedRows
+router.post('/Saving/', (req, res) => {
+    userRepo.updateSavingBalance(req.body)
+        .then(results => {
+            res.status(200).json({
+                "message": "nạp tiền thành công",
+                "saving_number":req.body.saving_number,
+                "saving_balance":req.body.saving_balance
             });
         })
         .catch(err => {
             console.log(err);
-            res.statusCode = 500;
-            res.end();
+            res.status(500).json({
+                "message": "bad request"
+            })
         });
 });
+
 
 router.get('/', (req, res) => {
     userRepo.loadAll().then(rows => {
@@ -71,7 +88,7 @@ router.get('/:name', (req, res) => {
     if (req.params.name) {
         var id = req.params.name;
 
-        userRepo.load(id).then(rows => {
+        userRepo.loadAccount(id).then(rows => {
             if (rows.length > 0) {
                 res.json(rows[0]);
             } else {

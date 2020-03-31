@@ -5,7 +5,8 @@ var express = require('express'),
 	path = require('path');
 
 var userCtrl = require('./apiControllers/userController'),
-	staffCtrl = require('./apiControllers/staffController'),
+	adminCtrl = require('./apiControllers/adminController'),
+	employeeCtrl = require('./apiControllers/employeeController'),
 	transCtrl = require('./apiControllers/transactionController');
 
 var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
@@ -24,8 +25,9 @@ app.use(staticDir);
 
 
 app.use('/users', userCtrl);
-app.use('/staff',  staffCtrl);
+app.use('/staff',  adminCtrl);
 app.use('/trans',  transCtrl);
+app.use('/employee',employeeCtrl);
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
 	console.log(`API running on port ${port}`);

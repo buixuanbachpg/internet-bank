@@ -1,13 +1,13 @@
 var express = require('express'),
     axios = require('axios');
 
-var staffRepo = require('../repos/staffRepo'),
+var adminRepo = require('../repos/adminRepo'),
     authRepo = require('../repos/authRepo');
 
 var router = express.Router();
 
 router.post('/add', (req, res) => {
-    staffRepo.add(req.body)
+    adminRepo.add(req.body)
         .then(insertId => {
             res.statusCode = 201;
             res.json(req.body);
@@ -20,7 +20,7 @@ router.post('/add', (req, res) => {
 });
 
 router.post('/update', (req, res) => {
-    staffRepo.update(req.body)
+    adminRepo.update(req.body)
         .then(changedRows => {
             res.statusCode = 201;
             res.json({
@@ -35,7 +35,7 @@ router.post('/update', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-    staffRepo.loadAll().then(rows => {
+    adminRepo.loadAll().then(rows => {
         res.json(rows);
     }).catch(err => {
         console.log(err);
@@ -49,7 +49,7 @@ router.delete('/:id', (req, res) => {
         var id = req.params.id;
 
 
-        staffRepo.delete(id).then(affectedRows => {
+        adminRepo.delete(id).then(affectedRows => {
             res.json({
                 affectedRows: affectedRows
             });
@@ -72,7 +72,7 @@ router.get('/:name', (req, res) => {
         console.log(req.params.name);
         var id = req.params.name;
 
-        staffRepo.load(id).then(rows => {
+        adminRepo.load(id).then(rows => {
             if (rows.length > 0) {
                 res.json(rows[0]);
             } else {
@@ -94,7 +94,7 @@ router.get('/:name', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    staffRepo.login(req.body.user, req.body.pwd)
+    adminRepo.login(req.body.user, req.body.pwd)
         .then(userObj => {
             if (userObj) {                
                 var token = authRepo.generateAccessToken(userObj);
@@ -142,7 +142,7 @@ router.post('/renew-token', (req, res) => {
                 return rows[0].ID;
             }
         })
-        .then(id => staffRepo.load(id))
+        .then(id => adminRepo.load(id))
         .then(rows => {
             var userObj = rows[0];
             var token = authRepo.generateAccessToken(userObj);
