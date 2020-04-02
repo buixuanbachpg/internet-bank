@@ -60,7 +60,41 @@ router.get('/', (req, res) => {
         res.end('View error log on console.');
     });
 });
-
+router.get('/history/Receive/:id', (req, res) => {
+    if (req.params.id) {
+        var id = req.params.id;
+        userRepo.loadReceive(id).then(rows => {
+            res.json(rows);
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+    } else {
+        res.statusCode = 400;
+        res.json({
+            msg: 'error'
+        });
+    }
+});
+router.get('/history/Transfer/:id', (req, res) => {
+    if (req.params.id) {
+        var id = req.params.id;
+        userRepo.loadTransfer(id).then(rows => {
+            res.json(rows);
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+    } else {
+        res.statusCode = 400;
+        res.json({
+            msg: 'error'
+        });
+    }
+    
+});
 router.delete('/:id', (req, res) => {
     if (req.params.id) {
         var id = req.params.id;

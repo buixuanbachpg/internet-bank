@@ -48,8 +48,8 @@ openpgp.initWorker({ path:'openpgp.worker.js' })
     }							
     							
     
-exports.add = function(from_account_number,to_account_number,amount,message,timestamp,signature) {
-    var sql = `insert into doi_soat( from_account_number, to_account_number, amount,message,time,signature) values('${from_account_number}',  '${to_account_number}', ${amount}, '${message}', '${timestamp}','${signature}')`;
+exports.add = function(from_account_number,to_account_number,amount,message,timestamp,signature,partner_code) {
+    var sql = `insert into doi_soat( from_account_number, to_account_number, amount,message,time,signature,partner_code) values('${from_account_number}',  '${to_account_number}', '${amount}', '${message}', '${timestamp}','${signature}','${partner_code}')`;
     return db.insert(sql);
 }
 

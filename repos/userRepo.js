@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 var db = require('../fn/mysql-db');
 
 exports.loadDetail = function(id) {
@@ -16,5 +15,13 @@ exports.loadSaving = function(id) {
 }
 exports.loadAll = function() {
     var sql = `select * from khach_hang `;
+    return db.load(sql);
+}
+exports.loadReceive = function(id){
+    var sql=`select * from doi_soat_noi_bo where to_account_number='${id}'`;
+    return db.load(sql);
+}
+exports.loadTransfer = function(id){
+    var sql=`select * from doi_soat_noi_bo where from_account_number='${id}'`;
     return db.load(sql);
 }

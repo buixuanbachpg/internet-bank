@@ -1,8 +1,7 @@
 var express = require('express'),
     opts = require('../fn/opts');
 var tranRepo = require('../repos/transactionRepo'),
-    userRepo = require('../repos/userRepo'),
-    employeeRepo= require('../repos/employeeRepo');
+    userRepo = require('../repos/userRepo');
 
 var router = express.Router();
 
@@ -95,33 +94,15 @@ router.post('/receive_external', (req, res) => {
    else if (tranRepo.verifyPGP(opts.PGPKEY.publicKeyArmored,signature,hash))
    {
        signatures=tranRepo.pgptoString(signature);
-       userRepo.loadAccount(to_account_number).then(rows=>
-        {
-            if(rows.length>0)
-            {
-                var user_old_amount=JSON.stringify(rows[0]);
-                var user_json_amount=JSON.parse(user_old_amount);
-                var new_amount=Number(user_json_amount.account_balance)+Number(amount);
-                employeeRepo.updateAccountBalance(to_account_number,new_amount)
-                .then(() => {
-                    tranRepo.add(from_account_number,to_account_number,amount,message,timestamp,signatures,partner_code).then(rows => {
-                        res.json({
-                            msg: 'Your transaction success'
-                        });
-                    }).catch(err => {
-                        console.log(err);
-                        res.statusCode = 400;
-                        res.end(' bad request ');
-                    });
-                })
-                
-            }
-           else{
-            res.status(400).json({
-                "message": "account_number not exist"
-            })   
-           }
-        })
+    tranRepo.add(from_account_number,to_account_number,amount,message,timestamp,signatures,partner_code).then(rows => {
+        res.json({
+            msg: 'Your transaction success'
+        });
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 400;
+        res.end(' bad request ');
+    });
    }
    else{
     res.status(400).json({

@@ -1,10 +1,8 @@
-var express = require('express'),
-    axios = require('axios'),
-    opts = require('../fn/opts');
+var express = require('express');
 var userRepo = require('../repos/userRepo'),
 employeeRepo = require('../repos/employeeRepo'),
     authRepo = require('../repos/authRepo');
-var router = express.Router();
+    var router = express.Router();
 
 router.post('/', (req, res) => {
     employeeRepo.add(req.body)
@@ -21,16 +19,49 @@ router.post('/', (req, res) => {
         });
 });
 router.post('/Account/', (req, res) => {
-    employeeRepo.updateAccountBalance(req.body)
-        .then(results => {
-            res.json(req.body);
+    const {to_account_number,amount,message}=req.body;
+    if(!to_account_number || !amount || !message)
+    {
+        res.status(400).json({
+            "statusCode": 400,
+            "error": "Bad request",
+            "message": "account_number,amount,message required"
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                "message": "bad request"
-            })
-        });
+    }
+    else{
+        userRepo.loadAccount(to_account_number).then(rows=>
+            {
+                if(rows.length>0)
+                {
+                    var user_old_amount=JSON.stringify(rows[0]);
+                    var user_json_amount=JSON.parse(user_old_amount);
+                    var new_amount=Number(user_json_amount.account_balance)+Number(amount);
+                    employeeRepo.updateAccountBalance(to_account_number,new_amount)
+                    .then(() => {
+                        let time=+new Date();
+                        employeeRepo.transactionAdd("0000",to_account_number,amount,message,time,false).then(()=>{
+                            res.status(200).json({
+                                "account_number":to_account_number,
+                                "amount":"+"+amount,
+                                "message": "sucessful"
+                            })
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.status(500).json({
+                                "message": "bad request"
+                            })
+                        });
+                    })
+                    
+                }
+               else{
+                res.status(400).json({
+                    "message": "account_number not exist"
+                })   
+               }
+            }); 
+    }
 });
 
 router.post('/Saving/', (req, res) => {
