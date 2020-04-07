@@ -13,6 +13,7 @@ import {
   MatIconModule,
 } from '@angular/material/';
 import { ClipboardModule } from 'ngx-clipboard';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AdminLayoutRoutes } from './admin-layout.routing';
 import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
@@ -44,7 +45,8 @@ import { ReviewtradeComponent } from '../../pages/reviewtrade/reviewtrade.compon
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    NgxSpinnerModule
   ],
   declarations: [
     DashboardComponent,
@@ -56,9 +58,9 @@ import { ReviewtradeComponent } from '../../pages/reviewtrade/reviewtrade.compon
     TradereportComponent,
     RegistercustomerComponent,
     TradeComponent,
-    ReviewtradeComponent
+    ReviewtradeComponent,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 
 export class AdminLayoutModule { }

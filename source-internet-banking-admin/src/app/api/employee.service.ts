@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { throwError, Observable } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class StaffService {
+export class EmployeeService {
   private base_path = 'http://localhost:3000';
   constructor(
     private http: HttpClient
   ) { }
-  httpOptions = {
-    headers: new HttpHeaders({
+  httpOptions = () => {
+    return new HttpHeaders({
       'Content-Type': 'application/json'
-    })
-  };
+    });
+  }
 
   handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -29,19 +28,8 @@ export class StaffService {
       'Something bad happened; please try again later.');
   }
 
-  getAccountInfoStaff(id: string): Observable<any> {
-    return this.http.get(this.base_path + '/staff/' + id).pipe(
-      retry(2),
-      catchError(this.handleError)
-    );
-  }
 
-  getTokenStaff(user: any) {
-    return this.http.post(this.base_path + '/login', JSON.stringify(user), this.httpOptions);
-  }
-
-  getRefeshtTokenStaff(token: any) {
-    return this.http.post(this.base_path + '/renew-token', JSON.stringify(token), this.httpOptions);
+  insertCustomer(user: any) {
+    return this.http.post(this.base_path + '/employee/', JSON.stringify(user), { headers: this.httpOptions(), withCredentials: false });
   }
 }
-
