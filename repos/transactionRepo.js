@@ -1,28 +1,43 @@
-const crypto = require('crypto');				
-var openpgp = require('openpgp'),
- opts = require('../fn/opts');
-var db = require('../fn/mysql-db');
-openpgp.initWorker({ path:'openpgp.worker.js' })
+var crypto= require('crypto');	
+var OpenPGP = require('openpgp');
+var db = require('../fn/mysql-db'),
+fs = require('fs');
 
-   exports.signPGP=( async (privateKeyArmored, data) =>{
-       try {
-        const { keys: [privateKey] } = await openpgp.key.readArmored(privateKeyArmored);
-        await privateKey.decrypt("xuanbach");
-    
-        const { signature: detachedSignature } = await openpgp.sign({
-            message: openpgp.cleartext.fromText(data), // CleartextMessage or Message object
-            privateKeys: [privateKey],                            // for signing
-            detached: true
-        });
-        return detachedSignature;
-       }catch(error)
-       {
-        console.log(error);
-        
-       }       
-        
-    })
+OpenPGP.initWorker({ path:'openpgp.worker.js' })
 
+exports.signPGP= async (data) => {
+    const privateKeyArmored = fs.readFileSync('./fn/0xC4BDB84C-sec.asc', 'utf8');
+    const { keys: [privateKey] } = await OpenPGP.key.readArmored(privateKeyArmored);
+    await privateKey.decrypt("p7gMVCAVStC9c3mMKhEuxspS21UfhCS8");
+
+    const { signature: detachedSignature } = await OpenPGP.sign({
+        message: OpenPGP.cleartext.fromText(data), // CleartextMessage or Message object
+        privateKeys: [privateKey],                            // for signing
+        detached: true
+    });
+
+    return detachedSignature;
+}
+
+exports.signPGP1=( async (privateKeyArmored, data) =>{
+    try {
+     const { keys: [privateKey] } = await openpgp.key.readArmored(privateKeyArmored);
+     await privateKey.decrypt("xuanbach");
+ 
+     const { signature: detachedSignature } = await openpgp.sign({
+         message: openpgp.cleartext.fromText(data), // CleartextMessage or Message object
+         privateKeys: [privateKey],                            // for signing
+         detached: true
+     });
+     return detachedSignature;
+    }catch(error)
+    {
+     console.log(error);
+     
+    }       
+     
+ })
+			
     exports.verifyPGP=( async(publicKeyArmored, detachedSignature, data) =>{
         try{
             const { signatures } = await openpgp.verify({
@@ -46,7 +61,18 @@ openpgp.initWorker({ path:'openpgp.worker.js' })
     const genHmac = content.digest('hex');							
     return genHmac;							
     }							
-    							
+    exports.signRSA= async (privateKey, data) =>{
+        try {
+            const signer = crypto.createSign('md5');
+           await signer.update(data);
+           return signer.sign(Buffer.from(privateKey, "utf8"), 'hex');
+            
+        }catch(error)
+        {
+         console.log(error);
+         
+        }
+     }	
     
 exports.add = function(from_account_number,to_account_number,amount,message,timestamp,signature,partner_code) {
     var sql = `insert into doi_soat( from_account_number, to_account_number, amount,message,time,signature,partner_code) values('${from_account_number}',  '${to_account_number}', '${amount}', '${message}', '${timestamp}','${signature}','${partner_code}')`;
@@ -70,7 +96,7 @@ exports.checkpartnercode =function(partner_code)
 {
     if(partner_code=="tuananh")
        return secretKey="N9TT-9G0A-B7FQ-RANC";
-    else if(partner_code=="vankhue")
+    else if(partner_code=="bkt.partner")
         return secretKey="QK6A-JI6S-7ETR-0A6C";
     else
         return "";
@@ -85,6 +111,7 @@ for (word in words)
 }
 return text;
 }
+
 // var account_number=123456789;
 // var partner_code="vankhue";
 // let timestamp = 1585248460999;

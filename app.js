@@ -25,8 +25,8 @@ app.use(staticDir);
 
 
 app.use('/users', userCtrl);
-app.use('/staff',  adminCtrl);
-app.use('/trans',  transCtrl);
+app.use('/admin', verifyAccessToken, adminCtrl);
+app.use('/api',  transCtrl);
 app.use('/employee',employeeCtrl);
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

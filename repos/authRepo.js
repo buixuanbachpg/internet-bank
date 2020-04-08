@@ -3,7 +3,6 @@ var randtoken = require('rand-token'),
     moment = require('moment');
 
 var db = require('../fn/mysql-db'),
-    config = require('../fn/config')
     opts = require('../fn/opts');
 
 //
@@ -14,47 +13,13 @@ exports.generateAccessToken = userObj => {
         user: userObj,
         info: 'more info for you'
     }
-    
-    var token = jwt.sign(payload, config.secret, {
-        expiresIn: config.tokenLife
-        });
-    
-    return token;
-}
-
-exports.generateRefreshToken = userObj => {
-    var payload = {
-        user: userObj,
-        info: 'more info for you'
-    }
-    var token = jwt.sign(payload, config.refreshTokenSecret, {
-        expiresIn: config.refreshTokenLife
-        });
-
-    return token;
-}
-
-
-exports.updateRefreshToken = (id, refreshToken) => {
-    return new Promise((resolve, reject) => {
-        var rdt = moment().format('YYYY-MM-DD HH:mm:ss');
-        var sql = `delete from userRefreshTokenExt where ten_tai_khoan = '${id}'`;
-        db.delete(sql)
-            .then(affectedRows => {
-                sql = `insert into userRefreshTokenExt values('${id}', '${refreshToken}', '${rdt}')`;
-                return db.insert(sql);
-            })
-            .then(insert_id => {
-                resolve(true);
-            })
-            .catch(err => reject(err));
+    var token = jwt.sign(payload, opts.ACCESS_TOKEN.SECRET_KEY, {
+        expiresIn: opts.ACCESS_TOKEN.LIFETIME
     });
+
+    return token;
 }
 
-exports.verifyRefreshToken = refreshToken => {
-    var sql = `select * from userRefreshTokenExt where refreshToken = '${refreshToken}'`;
-    return db.load(sql);
-}
 exports.verifyAccessToken = (req, res, next) => {
     var token = req.headers['x-access-token'];
     if (token) {
@@ -77,7 +42,62 @@ exports.verifyAccessToken = (req, res, next) => {
         });
     }
 };
-exports.deleteRefreshToken = id => {
-    var sql = `delete from userRefreshTokenExt where ten_tai_khoan = '${id}'`;
+
+//
+// refresh-token
+
+exports.generateRefreshToken = () => {
+    return randtoken.generate(opts.REFRESH_TOKEN.SIZE);
+}
+
+exports.updateUserRefreshToken = (id, refreshToken) => {
+    return new Promise((resolve, reject) => {
+        var rdt=(+new Date() /1000) ;
+        var sql = `delete from userrefreshtokenext where username = '${id}'`;
+        db.delete(sql)
+            .then(affectedRows => {
+                sql = `insert into userrefreshtokenext values('${id}', '${refreshToken}', '${rdt}')`;
+                return db.insert(sql);
+            })
+            .then(insert_id => {
+                resolve(true);
+            })
+            .catch(err => reject(err));
+    });
+}
+
+exports.verifyUserRefreshToken = refreshToken => {
+    var sql = `select * from userrefreshtokenext where refreshToken = '${refreshToken}'`;
+    return db.load(sql);
+}
+
+exports.deleteUserRefreshToken = id => {
+    var sql = `delete from userrefreshtokenext where username = '${id}'`;
+    return db.delete(sql);
+}
+
+exports.updateEmployeeRefreshToken = (id, refreshToken) => {
+    return new Promise((resolve, reject) => {
+        var rdt=Number(+new Date() /1000) ;
+        var sql = `delete from employeef5token where email = '${id}'`;
+        db.delete(sql)
+            .then(affectedRows => {
+                sql = `insert into employeef5token values('${id}', '${refreshToken}', '${rdt}')`;
+                return db.insert(sql);
+            })
+            .then(insert_id => {
+                resolve(true);
+            })
+            .catch(err => reject(err));
+    });
+}
+
+exports.verifyEmployeeRefreshToken = refreshToken => {
+    var sql = `select * from employeef5token where refreshToken = '${refreshToken}'`;
+    return db.load(sql);
+}
+
+exports.deleteEmployeeRefreshToken = id => {
+    var sql = `delete from employeef5token where email = '${id}'`;
     return db.delete(sql);
 }
