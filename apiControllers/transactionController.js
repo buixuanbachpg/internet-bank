@@ -6,7 +6,7 @@ var tranRepo = require('../repos/transactionRepo'),
 
 var router = express.Router();
 
-router.post('/query_info', (req, res) => {
+router.post('transactions/query_info', (req, res) => {
     const {partner_code, timestamp, hash} = req.query;
     const {account_number} =req.body;
     let currenttimestamp = +new Date();
@@ -62,7 +62,7 @@ router.post('/query_info', (req, res) => {
 });
 
 
-router.post('/receive_external', (req, res) => {
+router.post('/transactions/receive_external', (req, res) => {
     const {partner_code, timestamp, hash, signature} = req.query;
     const {from_account_number,to_account_number,amount,message} =req.body;
     let currenttimestamp = +new Date();

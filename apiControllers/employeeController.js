@@ -3,22 +3,100 @@ var userRepo = require('../repos/userRepo'),
 employeeRepo = require('../repos/employeeRepo'),
     authRepo = require('../repos/authRepo');
     var router = express.Router();
-
-router.post('/', (req, res) => {
-    employeeRepo.add(req.body)
-        .then(insertId => {
-            res.status(201).json({
-                "message": "thêm thành công",
-                "insertId":insertId
+router.post('/login', (req, res) => {
+        employeeRepo.login(req.body.email, req.body.password)
+            .then(userObj => {
+                if (userObj) {
+                    var token = authRepo.generateAccessToken(userObj);
+                    var refreshToken = authRepo.generateRefreshToken();
+                    authRepo.updateEmployeeRefreshToken(userObj.email, refreshToken)
+                        .then(rs => {
+                            res.json({
+                                auth: true,
+                                user: userObj,
+                                access_token: token,
+                                refresh_token: refreshToken
+                            })
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.statusCode = 500;
+                            res.end('View error log on console.');
+                        });
+                } else {
+                    res.json({
+                        auth: false
+                    });
+                }
             })
-        })
-        .catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end();
-        });
-});
-router.post('/Account/', (req, res) => {
+            .catch(err => {
+                console.log(err);
+                res.statusCode = 500;
+                res.end('View error log on console.');
+            });
+    });
+
+router.post('/logout', authRepo.verifyAccessToken, (req, res) => {
+        // var info = req.token_payload.info;
+        var user = req.token_payload.user;
+        authRepo.deleteEmployeeRefreshToken(user.email)
+            .then(affectedRows => {
+                res.json({
+                    msg: 'success'
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                res.statusCode = 500;
+                res.end('View error log on console.');
+            });
+    });
+router.post('/renew-token', (req, res) => {
+        var rToken = req.body.refreshToken;
+        currentTime= (+new Date() /1000);
+        authRepo.verifyEmployeeRefreshToken(rToken)
+            .then(rows => {
+                console.log(rows[0].expiresIn);
+                if (rows.length === 0) {
+                    res.statusCode = 400;
+                    res.json({
+                        msg: 'invalid refresh-token'
+                    });
+    
+                    throw new Error('abort-chain'); // break promise chain
+    
+                } 
+                else if (currentTime-rows[0].expiresIn>1800) {
+                    res.statusCode = 403;
+                    res.json({
+                        msg: 'refresh-token expired'
+                    });
+    
+                    throw new Error('abort-chain'); // break promise chain
+    
+                }
+                
+                else {
+                    return rows[0].username;
+                }
+            })
+            .then(id => employeeRepo.load(id))
+            .then(rows => {
+                var userObj = rows[0];
+                var token = authRepo.generateAccessToken(userObj);
+                res.json({
+                    access_token: token
+                });
+            })
+            .catch(err => {
+                if (err.message !== 'abort-chain') {
+                    console.log(err);
+                    res.statusCode = 500;
+                    res.end('View error log on console.');
+                }
+            });
+    });
+router.post('/Account/',authRepo.verifyAccessToken,  (req, res) => {
     const {to_account_number,amount,message}=req.body;
     if(!to_account_number || !amount || !message)
     {
@@ -64,7 +142,7 @@ router.post('/Account/', (req, res) => {
     }
 });
 
-router.post('/Saving/', (req, res) => {
+router.post('/Saving/',authRepo.verifyAccessToken,  (req, res) => {
     employeeRepo.updateSavingBalance(req.body)
         .then(results => {
             res.status(200).json({
@@ -81,8 +159,32 @@ router.post('/Saving/', (req, res) => {
         });
 });
 
+router.get('/:name',authRepo.verifyAccessToken,  (req, res) => {
+    
+    if (req.params.name) {
+        var id = req.params.name;
 
-router.get('/', (req, res) => {
+        userRepo.loadAccount(id).then(rows => {
+            if (rows.length > 0) {
+                res.json(rows[0]);
+            } else {
+                res.statusCode = 204;
+                res.end();
+            }
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+    } else {
+        res.statusCode = 400;
+        res.json({
+            msg: 'error'
+        });
+    }
+});
+
+router.get('/',authRepo.verifyAccessToken,  (req, res) => {
     userRepo.loadAll().then(rows => {
         res.json(rows);
     }).catch(err => {
@@ -93,7 +195,7 @@ router.get('/', (req, res) => {
 });
 
 
-router.get('/account/:name', (req, res) => {
+router.get('/account/:name',authRepo.verifyAccessToken,  (req, res) => {
     
     if (req.params.name) {
         var id = req.params.name;
@@ -119,7 +221,7 @@ router.get('/account/:name', (req, res) => {
     }
 });
 
-router.get('/saving/:name', (req, res) => {
+router.get('/saving/:name',authRepo.verifyAccessToken,  (req, res) => {
     
     if (req.params.name) {
         var id = req.params.name;
@@ -143,5 +245,20 @@ router.get('/saving/:name', (req, res) => {
             msg: 'error'
         });
     }
+});
+router.post('/',authRepo.verifyAccessToken,  (req, res) => {
+    employeeRepo.add(req.body)
+        .then(insertId => {
+            res.status(201).json({
+                "message": "thêm thành công",
+                "username":req.body.username,
+                "account_balance": req.body.account_balance
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end();
+        });
 });
 module.exports = router;

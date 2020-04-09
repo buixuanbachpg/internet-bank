@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatDialog } from '@angular/material';
+import { DetailPerson } from 'src/app/variables/icommon';
+import { DialogDetailComponent } from '../dialog-detail/dialog-detail.component';
 
 @Component({
   selector: 'app-reviewtrade',
@@ -8,17 +10,28 @@ import { MatPaginator, MatTableDataSource } from '@angular/material';
   styleUrls: ['./reviewtrade.component.scss']
 })
 export class ReviewtradeComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'detail'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
   date: FormControl;
   fBanks: FormControl;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor() { }
+  constructor(
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.date = new FormControl(new Date());
     this.fBanks = new FormControl('', Validators.required);
+  }
+
+  openDialogDetail(Obj: DetailPerson) {
+    const dialogIns = this.dialog.open(DialogDetailComponent, {
+      width: '400px',
+      height: '450px',
+      hasBackdrop: true,
+      data: Obj
+    });
   }
 
 }

@@ -23,7 +23,8 @@ import {
   MatTableModule,
   MatPaginatorModule,
   MatDialogModule,
-  MAT_DIALOG_DEFAULT_OPTIONS
+  MatProgressSpinnerModule,
+  MAT_DIALOG_DEFAULT_OPTIONS,
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -31,6 +32,7 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
@@ -39,6 +41,9 @@ import { StaffService } from './api/staff.service';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { DialogEmployeeaddComponent } from './pages/dialog-employeeadd/dialog-employeeadd.component';
 import { DialogEmployeeupdComponent } from './pages/dialog-employeeupd/dialog-employeeupd.component';
+import { DialogDetailComponent } from './pages/dialog-detail/dialog-detail.component';
+import { EmployeeService } from './api/employee.service';
+import { UserService } from './api/user.service';
 
 
 
@@ -70,7 +75,9 @@ import { DialogEmployeeupdComponent } from './pages/dialog-employeeupd/dialog-em
     MatTableModule,
     MatPaginatorModule,
     RecaptchaModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    NgxSpinnerModule
   ],
   declarations: [
     AppComponent,
@@ -80,6 +87,7 @@ import { DialogEmployeeupdComponent } from './pages/dialog-employeeupd/dialog-em
     PagenotfoundComponent,
     DialogEmployeeaddComponent,
     DialogEmployeeupdComponent,
+    DialogDetailComponent,
   ],
   exports: [
     MatButtonModule,
@@ -97,18 +105,23 @@ import { DialogEmployeeupdComponent } from './pages/dialog-employeeupd/dialog-em
     MatChipsModule,
     MatTooltipModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    NgxSpinnerModule
   ],
   providers: [
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false }
     },
-    StaffService
+    StaffService,
+    EmployeeService,
+    UserService
   ],
   entryComponents: [
     DialogWarningComponent,
     DialogEmployeeaddComponent,
-    DialogEmployeeupdComponent
+    DialogEmployeeupdComponent,
+    DialogDetailComponent,
+    AppComponent
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

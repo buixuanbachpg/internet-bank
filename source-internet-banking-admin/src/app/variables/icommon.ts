@@ -20,3 +20,7 @@ export interface Report {
     bank: string;
     money: string;
 }
+
+export interface DetailPerson {
+
+}
