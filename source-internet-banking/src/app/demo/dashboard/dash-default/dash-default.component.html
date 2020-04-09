@@ -1,7 +1,7 @@
 <div class="row">
   <!-- table card start -->
   <div class="col-md-12 col-xl-4">
-    <app-card [hidHeader]="true" cardClass="flat-card" blockClass="p-0">
+    <!-- <app-card [hidHeader]="true" cardClass="flat-card" blockClass="p-0">
       <div class="row-table">
         <div class="col-sm-6 card-body br">
           <div class="row">
@@ -50,21 +50,21 @@
           </div>
         </div>
       </div>
-    </app-card>
+    </app-card> -->
     <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-primary-card">
-      <div class="row-table">
+      <div class="row-table" (click)="test()">
         <div class="col-sm-3 card-body">
-          <i class="feather icon-star-on"></i>
+          <i class="feather icon-file-text"></i>
         </div>
         <div class="col-sm-9">
-          <h4>4000 +</h4>
-          <h6>Ratings Received</h6>
+          <h4>2</h4>
+          <h6>Account information</h6>
         </div>
       </div>
     </app-card>
   </div>
   <div class="col-md-12 col-xl-4">
-    <app-card [hidHeader]="true" cardClass="flat-card" blockClass="p-0">
+    <!-- <app-card [hidHeader]="true" cardClass="flat-card" blockClass="p-0">
       <div class="row-table">
         <div class="col-sm-6 card-body br">
           <div class="row">
@@ -113,20 +113,20 @@
           </div>
         </div>
       </div>
-    </app-card>
+    </app-card> -->
     <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-purple-card">
       <div class="row-table">
         <div class="col-sm-3 card-body">
-          <i class="fas fa-trophy"></i>
+          <i class="fas fa-clipboard-list"></i>
         </div>
         <div class="col-sm-9">
           <h4>17</h4>
-          <h6>Achievements</h6>
+          <h6>Recipient list</h6>
         </div>
       </div>
     </app-card>
   </div>
-  <div class="col-md-12 col-xl-4">
+  <!-- <div class="col-md-12 col-xl-4">
     <app-card [hidHeader]="true" cardClass="support-bar overflow-hidden" blockClass="p-0" [isCardFooter]="true" footerClass="bg-primary text-white">
       <div class="p-20 pb-0">
         <h2 class="m-0">350</h2>
@@ -151,39 +151,27 @@
         </div>
       </div>
     </app-card>
-  </div>
+  </div> -->
   <!-- table card end -->
 
   <!-- project and team member start -->
-  <div class="col-xl-6 col-md-12">
-    <app-card cardTitle="Projects" cardClass="table-card" blockClass="p-0">
+  <div class="col-xl-12 col-md-12">
+    <app-card cardTitle="Account information" cardClass="table-card" blockClass="p-0">
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
           <tr>
             <th>
-              <div class="chk-option">
-                <label class="check-task custom-control custom-checkbox d-flex justify-content-center done-task">
-                  <input type="checkbox" class="custom-control-input">
-                  <span class="custom-control-label"></span>
-                </label>
-              </div>
-              Assigned
+              Account number
             </th>
-            <th>Name</th>
-            <th>Due Date</th>
-            <th class="text-right">Priority</th>
+            <th>Account type</th>
+            <th class="text-right">Balance</th>
+            <!-- <th class="text-right">Priority</th> -->
           </tr>
           </thead>
           <tbody>
           <tr>
             <td>
-              <div class="chk-option">
-                <label class="check-task custom-control custom-checkbox d-flex justify-content-center done-task">
-                  <input type="checkbox" class="custom-control-input">
-                  <span class="custom-control-label"></span>
-                </label>
-              </div>
               <div class="d-inline-block align-middle">
                 <img src="assets/images/user/avatar-4.jpg" alt="user image" class="img-radius wid-40 align-top m-r-15">
                 <div class="d-inline-block">
@@ -193,10 +181,10 @@
               </div>
             </td>
             <td>Flat Able</td>
-            <td>Jun, 26</td>
-            <td class="text-right"><label class="badge badge-light-danger">Low</label></td>
+            <td class="text-right">Jun, 26</td>
+            <!-- <td class="text-right"><label class="badge badge-light-danger">Low</label></td> -->
           </tr>
-          <tr>
+          <!-- <tr>
             <td>
               <div class="chk-option">
                 <label class="check-task custom-control custom-checkbox d-flex justify-content-center done-task">
@@ -215,8 +203,8 @@
             <td>Mashable</td>
             <td>March, 31</td>
             <td class="text-right"><label class="badge badge-light-primary">high</label></td>
-          </tr>
-          <tr>
+          </tr> -->
+          <!-- <tr>
             <td>
               <div class="chk-option">
                 <label class="check-task custom-control custom-checkbox d-flex justify-content-center done-task">
@@ -235,8 +223,8 @@
             <td>Flatable</td>
             <td>Aug, 02</td>
             <td class="text-right"><label class="badge badge-light-success">medium</label></td>
-          </tr>
-          <tr>
+          </tr> -->
+          <!-- <tr>
             <td>
               <div class="chk-option">
                 <label class="check-task custom-control custom-checkbox d-flex justify-content-center done-task">
@@ -255,13 +243,17 @@
             <td>Guruable</td>
             <td>Sep, 22</td>
             <td class="text-right"><label class="badge badge-light-primary">high</label></td>
-          </tr>
+          </tr> -->
           </tbody>
         </table>
+        <div   style="display: flex;">
+          <h6 class="col-xl-10 col-md-12 text-muted text-right">Total balance: </h6>
+          <h5 class="col-xl-2 col-md-12 card-title">123456789 VND</h5>
+        </div>
       </div>
     </app-card>
   </div>
-  <div class="col-xl-6 col-md-12">
+  <!-- <div class="col-xl-6 col-md-12">
     <app-card cardTitle="Latest Updates" cardClass="latest-update-card">
       <div class="latest-update-box">
         <div class="row p-t-30 p-b-30">
@@ -320,11 +312,11 @@
         <a href="javascript:" class="b-b-primary text-primary">View all Projects</a>
       </div>
     </app-card>
-  </div>
+  </div> -->
   <!-- project and team member end -->
 
   <!-- seo start -->
-  <div class="col-xl-4 col-md-12">
+  <!-- <div class="col-xl-4 col-md-12">
     <app-card [hidHeader]="true">
       <div class="row align-items-center">
         <div class="col-6">
@@ -336,8 +328,8 @@
         </div>
       </div>
     </app-card>
-  </div>
-  <div class="col-xl-4 col-md-6">
+  </div> -->
+  <!-- <div class="col-xl-4 col-md-6">
     <app-card [hidHeader]="true">
       <div class="row align-items-center">
         <div class="col-6">
@@ -349,8 +341,8 @@
         </div>
       </div>
     </app-card>
-  </div>
-  <div class="col-xl-4 col-md-6">
+  </div> -->
+  <!-- <div class="col-xl-4 col-md-6">
     <app-card [hidHeader]="true">
       <div class="row align-items-center">
         <div class="col-6">
@@ -362,11 +354,11 @@
         </div>
       </div>
     </app-card>
-  </div>
+  </div> -->
   <!-- seo end -->
 
   <!-- latest customers start -->
-  <div class="col-lg-8 col-md-12">
+  <!-- <div class="col-lg-8 col-md-12">
     <app-card cardTitle="Customer Reviews" headerClass="borderless" cardClass="table-card review-card">
       <div class="review-block">
         <div class="row">
@@ -460,8 +452,8 @@
         </app-card>
       </div>
     </div>
-  </div>
-  <div class="col-lg-4 col-md-12">
+  </div> -->
+  <!-- <div class="col-lg-4 col-md-12">
     <app-card cardTitle="Chat" cardClass="chat-card">
       <div class="row m-b-20 m-t-20 received-chat">
         <div class="col-auto p-r-0">
@@ -605,6 +597,6 @@
         </app-card>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- latest customers end -->
 </div>
