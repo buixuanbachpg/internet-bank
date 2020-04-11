@@ -1,6 +1,7 @@
 var express = require('express');
 var userRepo = require('../repos/userRepo'),
 employeeRepo = require('../repos/employeeRepo'),
+tranRepo = require('../repos/transactionRepo'),
     authRepo = require('../repos/authRepo');
     var router = express.Router();
 router.post('/login', (req, res) => {
@@ -98,6 +99,9 @@ router.post('/renew-token', (req, res) => {
     });
 router.post('/Account/',authRepo.verifyAccessToken,  (req, res) => {
     const {to_account_number,amount,message}=req.body;
+    poco={
+        account_number:to_account_number
+    }
     if(!to_account_number || !amount || !message)
     {
         res.status(400).json({
@@ -107,17 +111,17 @@ router.post('/Account/',authRepo.verifyAccessToken,  (req, res) => {
         })
     }
     else{
-        userRepo.loadAccount(to_account_number).then(rows=>
+        userRepo.loadAccount(poco).then(rows=>
             {
                 if(rows.length>0)
                 {
                     var user_old_amount=JSON.stringify(rows[0]);
                     var user_json_amount=JSON.parse(user_old_amount);
                     var new_amount=Number(user_json_amount.account_balance)+Number(amount);
-                    employeeRepo.updateAccountBalance(to_account_number,new_amount)
+                    userRepo.updateAccountBalance(to_account_number,new_amount)
                     .then(() => {
                         let time=+new Date();
-                        employeeRepo.transactionAdd("0000",to_account_number,amount,message,time,false).then(()=>{
+                        tranRepo.addLocal("0000",to_account_number,amount,message,time,false).then(()=>{
                             res.status(200).json({
                                 "account_number":to_account_number,
                                 "amount":"+"+amount,
@@ -143,7 +147,7 @@ router.post('/Account/',authRepo.verifyAccessToken,  (req, res) => {
 });
 
 router.post('/Saving/',authRepo.verifyAccessToken,  (req, res) => {
-    employeeRepo.updateSavingBalance(req.body)
+    userRepo.updateSavingBalance(req.body)
         .then(results => {
             res.status(200).json({
                 "message": "nạp tiền thành công",
@@ -159,12 +163,16 @@ router.post('/Saving/',authRepo.verifyAccessToken,  (req, res) => {
         });
 });
 
-router.get('/:name',authRepo.verifyAccessToken,  (req, res) => {
+router.get('/:name',authRepo.verifyAccessToken, (req, res) => {
     
     if (req.params.name) {
-        var id = req.params.name;
+        var poco ={
+           email: req.params.name,
+           username: req.params.name,
+           account_number:req.params.name
+        } ;
 
-        userRepo.loadAccount(id).then(rows => {
+        userRepo.loadAccount(poco).then(rows => {
             if (rows.length > 0) {
                 res.json(rows[0]);
             } else {
@@ -195,31 +203,6 @@ router.get('/',authRepo.verifyAccessToken,  (req, res) => {
 });
 
 
-router.get('/account/:name',authRepo.verifyAccessToken,  (req, res) => {
-    
-    if (req.params.name) {
-        var id = req.params.name;
-
-        userRepo.loadAccount(id).then(rows => {
-            if (rows.length > 0) {
-                res.json(rows[0]);
-            } else {
-                res.status(204).json({
-                    msg: 'no data'
-                });
-            }
-        }).catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-    } else {
-        res.statusCode = 400;
-        res.json({
-            msg: 'error'
-        });
-    }
-});
 
 router.get('/saving/:name',authRepo.verifyAccessToken,  (req, res) => {
     

@@ -30,11 +30,11 @@ exports.delete = function(id) {
 
 exports.update =async function(poco) {
     // {
-    //     "full_name":"ly gia bao",
+    //     "full_name":"bui xuan bach",
     //     "password":"12346789",
-    //     "permission":0,
+    //     "permission":1,
     //     "address":"277 nguyen van cu",
-    //     "email":"baogia97@gmail.com",
+    //     "email":"test",
     //     "phone":"123456789"
     //     }
 

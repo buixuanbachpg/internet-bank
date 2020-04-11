@@ -5,24 +5,23 @@ fs = require('fs');
 
 OpenPGP.initWorker({ path:'openpgp.worker.js' })
 
-exports.signPGP= async (data) => {
-    const privateKeyArmored = fs.readFileSync('./fn/0xC4BDB84C-sec.asc', 'utf8');
-    const { keys: [privateKey] } = await OpenPGP.key.readArmored(privateKeyArmored);
-    await privateKey.decrypt("p7gMVCAVStC9c3mMKhEuxspS21UfhCS8");
+// exports.signPGP1= async (data) => {
+//     const privateKeyArmored = fs.readFileSync('./fn/0xC4BDB84C-sec.asc', 'utf8');
+//     const { keys: [privateKey] } = await OpenPGP.key.readArmored(privateKeyArmored);
+//     await privateKey.decrypt("p7gMVCAVStC9c3mMKhEuxspS21UfhCS8");
 
-    const { signature: detachedSignature } = await OpenPGP.sign({
-        message: OpenPGP.cleartext.fromText(data), // CleartextMessage or Message object
-        privateKeys: [privateKey],                            // for signing
-        detached: true
-    });
+//     const { signature: detachedSignature } = await OpenPGP.sign({
+//         message: OpenPGP.cleartext.fromText(data), // CleartextMessage or Message object
+//         privateKeys: [privateKey],                            // for signing
+//         detached: true
+//     });
 
-    return detachedSignature;
-}
-
-exports.signPGP1=( async (privateKeyArmored, data) =>{
+//     return detachedSignature;
+// }
+exports.signPGP=( async (privateKeyArmored,passphrase,data) =>{
     try {
      const { keys: [privateKey] } = await openpgp.key.readArmored(privateKeyArmored);
-     await privateKey.decrypt("xuanbach");
+     await privateKey.decrypt(passphrase);
  
      const { signature: detachedSignature } = await openpgp.sign({
          message: openpgp.cleartext.fromText(data), // CleartextMessage or Message object
@@ -32,11 +31,10 @@ exports.signPGP1=( async (privateKeyArmored, data) =>{
      return detachedSignature;
     }catch(error)
     {
-     console.log(error);
-     
-    }       
-     
+     console.log(error);        
+    }  
  })
+
 			
     exports.verifyPGP=( async(publicKeyArmored, detachedSignature, data) =>{
         try{
@@ -78,7 +76,11 @@ exports.add = function(from_account_number,to_account_number,amount,message,time
     var sql = `insert into doi_soat( from_account_number, to_account_number, amount,message,time,signature,partner_code) values('${from_account_number}',  '${to_account_number}', '${amount}', '${message}', '${timestamp}','${signature}','${partner_code}')`;
     return db.insert(sql);
 }
-
+exports.addLocal= function (from_account_number, to_account_number, amount, message, time, pay_debit)
+{
+    var sql = `insert into doi_soat_noi_bo( from_account_number, to_account_number, amount, message, time, pay_debit) values('${from_account_number}', '${to_account_number}', '${amount}','${message}','${time}',${pay_debit})`;
+    return db.insert(sql);
+}
 
 exports.load = function(id) {
     var sql = `select * from chi_tiet_tai_khoan `;

@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 var db = require('../fn/mysql-db');
 const saltRound=10;
-var hash_v="";
 function getRandomIntInclusive(Min,Max) {
     min = Math.ceil(Min);
     max = Math.floor(Max);
@@ -49,31 +48,22 @@ async function getRandomSavingAccountNumber(){
 }
 
 exports.add = async function(poco) {
-           // {
-        //     "username": "asad@",
+        //    {
+        //     "email": "asad@",
         //     "password": "baach",
         //     "account_balance": "123"
         //  }
         account_number= await getRandomAccountNumber();
-        hash=await bcrypt.hash(poco.password, saltRound).then(hash=>{
+        bcryptPassword=await bcrypt.hash(poco.password, saltRound).then(hash=>{
     return hash;
         }).catch(error=>{
             console.log(error);
         });
-        var sql = `insert into khach_hang(username, password, account_number, account_balance, full_name, email, phone) values('${poco.username}', '${hash}', '${account_number}','${poco.account_balance}', '${poco.full_name}', '${poco.email}', '${poco.phone}')`;
+        var sql = `insert into khach_hang(username, password, account_number, account_balance, full_name, email, phone,sex,address) values('${poco.username}', '${bcryptPassword}', '${account_number}','${poco.account_balance}', '${poco.full_name}', '${poco.email}', '${poco.phone}')`;
     return db.insert(sql);
 }
 
-exports.updateAccountBalance = function(account_number,account_balance) {
-//     {
-    {
-        // "to_account_number": "34325",
-    //    "amount": 10000
-   }
-//    }
-    var sql = `update khach_hang SET  account_balance = '${account_balance}' where account_number='${account_number}'`;
-    return db.update(sql);
-}
+
 exports.updateSavingBalance = function(poco) {
     // poco={
         // username: 'asad@',
@@ -82,9 +72,35 @@ exports.updateSavingBalance = function(poco) {
     var sql = `update tiet_kiem SET  saving_balance = '${poco.saving_balance}' where saving_number='${poco.saving_number}'`;
     return db.update(sql);
 }
-exports.transactionAdd= function (from_account_number, to_account_number, amount, message, time, pay_debit)
-{
-    var sql = `insert into doi_soat_noi_bo( from_account_number, to_account_number, amount, message, time, pay_debit) values('${from_account_number}', '${to_account_number}', '${amount}','${message}','${time}',${pay_debit})`;
-    return db.insert(sql);
+
+
+exports.login = async function(email, password) {
+    return new Promise((resolve, reject) => {       
+        var sql = `select * from nhan_vien where email = '${email}'`;
+        db.load(sql)
+            .then(rows => {
+                if (rows.length === 0) {
+                    resolve(null);
+                } else {
+                    var user = rows[0];
+                    bcrypt.compare(password, user.password, function(err, result) {
+                        if(result)
+                        resolve(user);
+                        else
+                        resolve(null);
+                    });
+                    
+                }
+            })
+            .catch(err => reject(err));
+    });
+}
+exports.load = function(id) {
+    var sql = `select * from nhan_vien where email = '${id}'`;
+    return db.load(sql);
 }
 
+exports.loadAll = function() {
+    var sql = `select full_name, permission, address, email, phone, sex from nhan_vien `;
+    return db.load(sql);
+}

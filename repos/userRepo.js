@@ -5,8 +5,8 @@ exports.loadDetail = function(id) {
     return db.load(sql);
 }
 
-exports.loadAccount = function(id) {
-    var sql = `select * from khach_hang where username='${id}' or account_number='${id}' or email='${id}'`;
+exports.loadAccount = function(poco) {
+    var sql = `select username, account_number, account_balance, full_name, email, phone, sex, address from khach_hang where username='${poco.username}' or account_number='${poco.account_number}' or email='${poco.email}'`;
     return db.load(sql);
 }
 exports.loadSaving = function(id) {
@@ -28,4 +28,18 @@ exports.loadTransfer = function(id){
 exports.addListRecipient=function(poco){
     var sql = `insert into danh_sach_nguoi_nhan(account_number, account_number_receive, name_reminiscent) values('${poco.account_number}','${poco.account_number_receive}','${poco.name_reminiscent}')`;
     return db.insert(sql);
+}
+exports.updateAccountBalance = function(account_number,account_balance) {
+    //     {
+        
+            // "to_account_number": "34325",
+        //    "amount": 10000
+       
+    //    }
+        var sql = `update khach_hang SET  account_balance = '${account_balance}' where account_number='${account_number}'`;
+        return db.update(sql);
+}
+exports.updateDouAccountBalance=function(from_account_number,to_account_number,new_amount_from,new_amount_to){
+    var sql = `update khach_hang set account_balance = ( CASE WHEN account_number = '${from_account_number}' THEN '${new_amount_from}' WHEN account_number = '${to_account_number}' THEN '${new_amount_to}'  END) WHERE account_number IN ('${from_account_number}','${to_account_number}');`;
+   return db.update(sql);
 }

@@ -2,8 +2,7 @@ var express = require('express'),
     axios = require('axios');
 
 var adminRepo = require('../repos/adminRepo'),
-    userRepo = require('../repos/userRepo'),
-    authRepo = require('../repos/authRepo');
+    employeeRepo = require('../repos/employeeRepo');
 
 var router = express.Router();
 
@@ -26,7 +25,7 @@ router.post('/', (req, res) => {
         });
 });
 
-router.post('/:id', (req, res) => {
+router.put('/', (req, res) => {
     adminRepo.update(req.body)
         .then(changedRows => {
             res.statusCode = 201;
@@ -40,8 +39,6 @@ router.post('/:id', (req, res) => {
             res.end();
         });
 });
-
-
 
 router.delete('/:id', (req, res) => {
     if (req.params.id) {
@@ -80,9 +77,19 @@ router.get('/:name', (req, res) => {
         console.log(req.params.name);
         var id = req.params.name;
 
-        userRepo.load(id).then(rows => {
+        employeeRepo.load(id).then(rows => {
             if (rows.length > 0) {
-                res.json(rows[0]);
+                user=rows[0];
+                res.json(
+                    {
+                        full_name: user.full_name,
+                        permission:user.permission,
+                        address: user.address,
+                        email: user.email,
+                        phone: user.phone,
+                        sex: user.sex
+                    }
+                );
             } else {
                 res.statusCode = 204;
                 res.end();
@@ -101,7 +108,7 @@ router.get('/:name', (req, res) => {
     }
 });
 router.get('/', (req, res) => {
-    userRepo.loadAll().then(rows => {
+    employeeRepo.loadAll().then(rows => {
         res.json(rows);
     }).catch(err => {
         console.log(err);

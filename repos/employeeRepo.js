@@ -63,16 +63,7 @@ exports.add = async function(poco) {
     return db.insert(sql);
 }
 
-exports.updateAccountBalance = function(account_number,account_balance) {
-//     {
-    {
-        // "to_account_number": "34325",
-    //    "amount": 10000
-   }
-//    }
-    var sql = `update khach_hang SET  account_balance = '${account_balance}' where account_number='${account_number}'`;
-    return db.update(sql);
-}
+
 exports.updateSavingBalance = function(poco) {
     // poco={
         // username: 'asad@',
@@ -81,11 +72,7 @@ exports.updateSavingBalance = function(poco) {
     var sql = `update tiet_kiem SET  saving_balance = '${poco.saving_balance}' where saving_number='${poco.saving_number}'`;
     return db.update(sql);
 }
-exports.transactionAdd= function (from_account_number, to_account_number, amount, message, time, pay_debit)
-{
-    var sql = `insert into doi_soat_noi_bo( from_account_number, to_account_number, amount, message, time, pay_debit) values('${from_account_number}', '${to_account_number}', '${amount}','${message}','${time}',${pay_debit})`;
-    return db.insert(sql);
-}
+
 
 exports.login = async function(email, password) {
     return new Promise((resolve, reject) => {       
@@ -114,6 +101,6 @@ exports.load = function(id) {
 }
 
 exports.loadAll = function() {
-    var sql = `select * from nhan_vien `;
+    var sql = `select full_name, permission, address, email, phone, sex from nhan_vien `;
     return db.load(sql);
 }
