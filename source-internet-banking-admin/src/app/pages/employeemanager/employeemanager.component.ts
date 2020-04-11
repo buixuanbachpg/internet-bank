@@ -3,6 +3,7 @@ import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { Employee } from 'src/app/variables/icommon';
 import { DialogEmployeeupdComponent } from '../dialog-employeeupd/dialog-employeeupd.component';
 import { DialogEmployeeaddComponent } from '../dialog-employeeadd/dialog-employeeadd.component';
+import { AdminService } from 'src/app/api/admin.service';
 
 @Component({
   selector: 'app-employeemanager',
@@ -15,7 +16,8 @@ export class EmployeemanagerComponent implements OnInit {
   dataSource = new MatTableDataSource<Employee>(ELEMENT_DATA);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private adminService: AdminService
   ) { }
 
   ngOnInit() {

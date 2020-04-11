@@ -37,13 +37,13 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { DialogWarningComponent } from './dialog-warning/dialog-warning.component';
-import { StaffService } from './api/staff.service';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { DialogEmployeeaddComponent } from './pages/dialog-employeeadd/dialog-employeeadd.component';
 import { DialogEmployeeupdComponent } from './pages/dialog-employeeupd/dialog-employeeupd.component';
 import { DialogDetailComponent } from './pages/dialog-detail/dialog-detail.component';
 import { EmployeeService } from './api/employee.service';
 import { UserService } from './api/user.service';
+import { AdminService } from './api/admin.service';
 
 
 
@@ -112,7 +112,7 @@ import { UserService } from './api/user.service';
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false }
     },
-    StaffService,
+    AdminService,
     EmployeeService,
     UserService
   ],

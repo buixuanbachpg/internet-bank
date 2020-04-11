@@ -9,6 +9,7 @@ import { RecaptchaModule, RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recap
 
 import { LoginComponent } from '../../pages/login/login.component';
 import { RegisterComponent } from '../../pages/register/register.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 const globalSettings: RecaptchaSettings = { siteKey: '6Lc1INwUAAAAAA0ntCzOxL6-5Pw-NSUQrPkVzF95' };
 
@@ -19,7 +20,8 @@ const globalSettings: RecaptchaSettings = { siteKey: '6Lc1INwUAAAAAA0ntCzOxL6-5P
     FormsModule,
     RecaptchaModule,
     NgbModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSpinnerModule
   ],
   declarations: [
     LoginComponent,

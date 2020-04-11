@@ -3,8 +3,9 @@ import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms'
 import { Router } from '@angular/router';
 import { DialogWarningComponent } from '../../dialog-warning/dialog-warning.component';
 import { MatDialog } from '@angular/material';
-import { StaffService } from '../../api/staff.service';
 import { Msg } from 'src/app/variables/icommon';
+import { EmployeeService } from 'src/app/api/employee.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private dialog: MatDialog,
-    private staffService: StaffService
+    private employeeService: EmployeeService,
+    private ngxSpinnerService: NgxSpinnerService
   ) {
     this.formLogin = new FormGroup({
       email: new FormControl(
@@ -78,37 +80,45 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.openDialog({ Text: mess, Title: 0 });
       return;
     }
-    localStorage.setItem('userid', 'Bao-LG');
-    localStorage.setItem('quyen_han', '0');
-    const user = localStorage.getItem('quyen_han');
-    if (user === '1') {
-      this.router.navigate(['\manager'], {
-        fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14'
-      });
-    } else {
-      this.router.navigate(['\customer'], {
-        fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14',
-        skipLocationChange: true
-      });
-    }
 
-    // this.staffService.getAccountInfoStaff(Email.value).subscribe(
-    //   result => {
-    //     if (result && result.mat_khau === Pass.value) {
-    //       this.router.navigate(['\dashboard'], {
-    //         queryParams: { id: result.ten_tai_khoan, pass: result.mat_khau },
-    //         fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14'
-    //       });
-    //     } else {
-    //       mess = 'Mật khẩu hoặc email của bạn đã sai!';
-    //       this.openDialog(mess);
-    //     }
-    //   },
-    //   error => {
-    //     mess = 'Hệ thống đang bị lỗi!';
-    //     this.openDialog(mess);
-    //   }
-    // );
+    this.ngxSpinnerService.show();
+    // localStorage.setItem('userid', 'Bao-LG');
+    // localStorage.setItem('quyen_han', '0');
+    // const user = localStorage.getItem('quyen_han');
+    // if (user === '1') {
+    //   this.router.navigate(['\manager'], {
+    //     fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14'
+    //   });
+    // } else {
+    //   this.router.navigate(['\customer'], {
+    //     fragment: 'sessionId=%23HRAf4w184VVBAS9#x45w24g7a47vADaJNGHAGVA545RQ1ZXVAJI14',
+    //     skipLocationChange: true
+    //   });
+    // }
+
+    this.employeeService.login<any>({ email: Email.value, password: Pass.value }).subscribe(
+      result => {
+        if (result.auth) {
+          localStorage.setItem('access-token', result.access_token);
+          localStorage.setItem('email', result.user.email);
+          localStorage.setItem('full_name', result.user.full_name);
+          localStorage.setItem('permission', result.user.permission.toString());
+          localStorage.setItem('refresh-token', result.refresh_token);
+          if (result.user.permission.toString() === '1') {
+            this.router.navigate(['\manager']);
+          } else {
+            this.router.navigate(['\customer']);
+          }
+        } else {
+          this.openDialog({ Text: 'Email hoặc mật khẩu đang bị sai!', Title: 0 });
+        }
+        this.ngxSpinnerService.hide();
+      },
+      error => {
+        this.ngxSpinnerService.hide();
+        this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+      }
+    );
 
   }
 

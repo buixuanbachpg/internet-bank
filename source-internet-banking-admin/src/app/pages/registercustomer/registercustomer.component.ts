@@ -20,9 +20,7 @@ export class RegistercustomerComponent implements OnInit {
     private employeeService: EmployeeService,
     private userService: UserService,
     private ngxSpinnerService: NgxSpinnerService
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.registerForm = new FormGroup({
       'name': new FormControl('',
         [
@@ -49,8 +47,13 @@ export class RegistercustomerComponent implements OnInit {
           Validators.required,
           Validators.maxLength(15),
         ]
-      )
+      ),
+      'address': new FormControl(''),
+      'sex': new FormControl('nam')
     });
+  }
+
+  ngOnInit() {
   }
 
 
@@ -91,8 +94,6 @@ export class RegistercustomerComponent implements OnInit {
         }
       }
     );
-
-
   }
 
   private CheckInput(name, username, email, phone): boolean {
