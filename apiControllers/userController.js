@@ -7,9 +7,9 @@ var userRepo = require('../repos/userRepo'),
     employeeRepo = require('../repos/employeeRepo'),
     transRepo = require('../repos/transactionRepo');
 var router = express.Router();
-
+var verifyOtpMail= require('../repos/otpRepo').verifyOtpMail;
 router.post('/login', (req, res) => {
-    employeeRepo.login(req.body.email, req.body.password)
+    user.login(req.body.username, req.body.password)
         .then(userObj => {
             if (userObj) {
                 var token = authRepo.generateAccessToken(userObj);
@@ -102,7 +102,7 @@ router.post('/renew-token', (req, res) => {
         });
 });
 
-router.post('/transfer/:bank', async (req, res) => {
+router.post('/transfer/:bank',authRepo.verifyAccessToken,verifyOtpMail, async (req, res) => {
     var secret_key = "";
     var partner_code = "";
     var signature = "";
@@ -179,7 +179,7 @@ router.post('/transfer/:bank', async (req, res) => {
 
 });
 
-router.post('/transfer', (req, res) => {
+router.post('/transfer',authRepo.verifyAccessToken,verifyOtpMail, (req, res) => {
     let timestamp = +new Date();
     const { username, to_account_number, amount, message, pay_debit } = req.body;
     poco = {
@@ -239,7 +239,7 @@ router.post('/transfer', (req, res) => {
 
 
 });
-router.post('/recipient ', (req, res) => {
+router.post('/recipient ',authRepo.verifyAccessToken, (req, res) => {
 
     userRepo.add(req.body)
         .then(insertId => {
@@ -254,37 +254,8 @@ router.post('/recipient ', (req, res) => {
             res.end();
         });
 });
-router.post('/Account/', (req, res) => {
-    userRepo.updateAccountBalance(req.body)
-        .then(results => {
-            res.json(req.body);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                "message": "bad request"
-            })
-        });
-});
 
-router.post('/Saving/', (req, res) => {
-    userRepo.updateSavingBalance(req.body)
-        .then(results => {
-            res.status(200).json({
-                "message": "nạp tiền thành công",
-                "saving_number": req.body.saving_number,
-                "saving_balance": req.body.saving_balance
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                "message": "bad request"
-            })
-        });
-});
-
-router.get('/history/Receive/:id', (req, res) => {
+router.get('/history/Receive/:id',authRepo.verifyAccessToken, (req, res) => {
     if (req.params.id) {
         var id = req.params.id;
         userRepo.loadReceive(id).then(rows => {
@@ -301,7 +272,7 @@ router.get('/history/Receive/:id', (req, res) => {
         });
     }
 });
-router.get('/history/Transfer/:id', (req, res) => {
+router.get('/history/Transfer/:id',authRepo.verifyAccessToken, (req, res) => {
     if (req.params.id) {
         var id = req.params.id;
         userRepo.loadTransfer(id).then(rows => {
@@ -319,29 +290,8 @@ router.get('/history/Transfer/:id', (req, res) => {
     }
 
 });
-router.delete('/:id', (req, res) => {
-    if (req.params.id) {
-        var id = req.params.id;
 
-
-        staffRepo.delete(id).then(affectedRows => {
-            res.json({
-                affectedRows: affectedRows
-            });
-        }).catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-    } else {
-        res.statusCode = 400;
-        res.json({
-            msg: 'error'
-        });
-    }
-});
-
-router.get('/:name', authRepo.verifyAccessToken, (req, res) => {
+router.get('/:name', authRepo.verifyAccessToken,(req, res) => {
 
     if (req.params.name) {
         var id = req.params.name;
@@ -365,87 +315,25 @@ router.get('/:name', authRepo.verifyAccessToken, (req, res) => {
         });
     }
 });
-
-router.post('/login', (req, res) => {
-    staffRepo.login(req.body.user, req.body.pwd)
-        .then(userObj => {
-            if (userObj) {
-                var token = authRepo.generateAccessToken(userObj);
-                var refreshToken = authRepo.generateRefreshToken();
-                authRepo.updateRefreshToken(userObj.ten_tai_khoan, refreshToken)
-                    .then(rs => {
-                        res.json({
-                            auth: true,
-                            user: userObj,
-                            access_token: token,
-                            refresh_token: refreshToken
-                        })
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        res.statusCode = 500;
-                        res.end('View error log on console.');
-                    });
-            } else {
-                res.json({
-                    auth: false
-                });
-            }
+router.post('/resetPassword',authRepo.verifyAccessToken,verifyOtpMail, (req,res)=>{
+    userRepo.updatePassword(req.body).then(changedRows=>{
+        if(changedRows){
+            res.status(200).json({
+                message:"changed success"
+            })
+        }
+        else{
+            res.status(500).json({
+                message:"changed failed"
+            })
+        }
+    }).catch(err=>{
+        console.log(err);
+        res.status(500).json({
+            message:"view log on console"
         })
-        .catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-});
-
-router.post('/renew-token', (req, res) => {
-    var rToken = req.body.refreshToken;
-    authRepo.verifyRefreshToken(rToken)
-        .then(rows => {
-            if (rows.length === 0) {
-                res.statusCode = 400;
-                res.json({
-                    msg: 'invalid refresh-token'
-                });
-
-                throw new Error('abort-chain'); // break promise chain
-
-            } else {
-                return rows[0].ID;
-            }
-        })
-        .then(id => staffRepo.load(id))
-        .then(rows => {
-            var userObj = rows[0];
-            var token = authRepo.generateAccessToken(userObj);
-            res.json({
-                access_token: token
-            });
-        })
-        .catch(err => {
-            if (err.message !== 'abort-chain') {
-                console.log(err);
-                res.statusCode = 500;
-                res.end('View error log on console.');
-            }
-        });
-});
-router.post('/logout', authRepo.verifyAccessToken, (req, res) => {
-    // var info = req.token_payload.info;
-    var user = req.token_payload.user;
-    authRepo.deleteRefreshToken(user.ten_tai_khoan)
-        .then(affectedRows => {
-            res.json({
-                msg: 'success'
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-});
+    })
+})
 
 router.post('/query_info', (req, res) => {
     var url = `http://bkt-banking.herokuapp.com/api/transactions/query_info`;
@@ -502,7 +390,7 @@ router.post('/query_info2', async (req, res) => {
 
     }
 });
-router.get('/', (req, res) => {
+router.get('/',authRepo.verifyAccessToken, (req, res) => {
 
     userRepo.loadAccount(req.body).then(rows => {
         if (rows.length > 0) {

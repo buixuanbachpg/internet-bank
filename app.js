@@ -7,6 +7,7 @@ var express = require('express'),
 var userCtrl = require('./apiControllers/userController'),
 	adminCtrl = require('./apiControllers/adminController'),
 	employeeCtrl = require('./apiControllers/employeeController'),
+	otpCtrl = require('./apiControllers/otpController'),
 	transCtrl = require('./apiControllers/transactionController');
 
 var verifyAccessToken = require('./repos/authRepo').verifyAccessToken;
@@ -27,6 +28,7 @@ app.use(staticDir);
 app.use('/users', userCtrl);
 app.use('/admin', verifyAccessToken, adminCtrl);
 app.use('/api',  transCtrl);
+app.use('/otp',  otpCtrl);
 app.use('/employee',employeeCtrl);
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
