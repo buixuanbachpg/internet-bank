@@ -50,7 +50,7 @@ exports.history=function(req)
 {
 const{fromDate,toDate,bank}=req.query;
 var sql="";
-if(""!=bank)
+if(bank)
 {
 sql=`select * from doi_soat where time>=${fromDate} and time <=${toDate} and partner_code='${bank}' order by time desc`;
 }

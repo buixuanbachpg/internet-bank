@@ -2,7 +2,6 @@ var express = require('express');
 var userRepo = require('../repos/userRepo'),
 employeeRepo = require('../repos/employeeRepo'),
 tranRepo = require('../repos/transactionRepo'),
-crosscheckRepo = require('../repos/crosscheckRepo'),
 authRepo = require('../repos/authRepo');
     var router = express.Router();
 router.post('/login', (req, res) => {
@@ -192,29 +191,7 @@ router.get('/:name',authRepo.verifyAccessToken, (req, res) => {
         });
     }
 });
-router.get('/history/receive/:id',(req, res) => {
-    
-    if (req.params.id) {
-        crosscheckRepo.loadReceiveLocal(req.params.id).then(rows => {
-          return rows;
-        }).then(rows=>{
-            console.log(rows);
-        })
-        .catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-        } 
 
-        
-    else {
-        res.statusCode = 400;
-        res.json({
-            msg: 'number_acccount not found'
-        });
-    }
-});
 router.get('/',authRepo.verifyAccessToken,  (req, res) => {
     userRepo.loadAll().then(rows => {
         res.json(rows);

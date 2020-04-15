@@ -70,7 +70,15 @@ router.get('/transaction', (req, res) => {
         res.end('View error log on console.');
     });
 });
-
+router.get('/history', (req, res) => {
+    adminRepo.history(req).then(rows => {
+        res.json(rows);
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+        res.end('View error log on console.');
+    });
+});
 router.get('/:name', (req, res) => {
     
     if (req.params.name) {
@@ -116,6 +124,7 @@ router.get('/', (req, res) => {
         res.end('View error log on console.');
     });
 });
+
 
 
 

@@ -4,12 +4,12 @@ var express = require('express'),
     fs = require('fs');
 var userRepo = require('../repos/userRepo'),
     authRepo = require('../repos/authRepo'),
-    employeeRepo = require('../repos/employeeRepo'),
+    crosscheckRepo = require('../repos/crosscheckRepo'),
     transRepo = require('../repos/transactionRepo');
 var router = express.Router();
 var verifyOtpMail= require('../repos/otpRepo').verifyOtpMail;
 router.post('/login', (req, res) => {
-    user.login(req.body.username, req.body.password)
+    userRepo.login(req.body.username, req.body.password)
         .then(userObj => {
             if (userObj) {
                 var token = authRepo.generateAccessToken(userObj);
@@ -255,42 +255,92 @@ router.post('/recipient ',authRepo.verifyAccessToken, (req, res) => {
         });
 });
 
-router.get('/history/Receive/:id',authRepo.verifyAccessToken, (req, res) => {
+router.get('/history/receive/:id',authRepo.verifyAccessToken,async (req, res) => {
+    
     if (req.params.id) {
-        var id = req.params.id;
-        userRepo.loadReceive(id).then(rows => {
-            res.json(rows);
-        }).catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-    } else {
+        id=req.params.id;
+        let local;
+        try {
+            local = await crosscheckRepo.loadReceiveLocal(id)  ;
+        } catch (err) {
+          logger.error(err);
+          return res.status(500).send();
+        }
+      
+        let global;
+        try {
+            global = await crosscheckRepo.loadReceiveGlobal(id);
+        } catch (err) {
+          logger.error( err);
+          return res.status(500).send();
+        }
+        data={
+            local:local,
+            global:global
+        }
+        res.status(200).json(data);
+        } 
+
+        
+    else {
         res.statusCode = 400;
         res.json({
-            msg: 'error'
+            msg: 'number_acccount not found'
         });
     }
 });
-router.get('/history/Transfer/:id',authRepo.verifyAccessToken, (req, res) => {
+router.get('/history/transfer/:id',authRepo.verifyAccessToken,async (req, res) => {
+    
     if (req.params.id) {
-        var id = req.params.id;
-        userRepo.loadTransfer(id).then(rows => {
-            res.json(rows);
-        }).catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-    } else {
+        id=req.params.id;
+        let local;
+        try {
+            local = await crosscheckRepo.loadTransferLocal(id)  ;
+        } catch (err) {
+          logger.error(err);
+          return res.status(500).send();
+        }
+      
+        let global;
+        try {
+            global = await crosscheckRepo.loadTransferGlobal(id);
+        } catch (err) {
+          logger.error( err);
+          return res.status(500).send();
+        }
+        data={
+            local:local,
+            global:global
+        }
+        res.status(200).json(data);
+        } 
+
+        
+    else {
         res.statusCode = 400;
         res.json({
-            msg: 'error'
+            msg: 'number_acccount not found'
         });
     }
-
 });
-
+router.get('/history/paydebit/:id',authRepo.verifyAccessToken,async (req, res) => {
+    
+    if (req.params.id) {
+        id=req.params.id;
+        crosscheckRepo.loadPayDebit(id).then(rows=>{
+            res.json(rows);
+        }).catch(err=>{
+            console.log(err);
+            res.status(500).send("view log on console");
+        })
+    }        
+    else {
+        res.statusCode = 400;
+        res.json({
+            msg: 'number_acccount not found'
+        });
+    }
+});
 router.get('/:name', authRepo.verifyAccessToken,(req, res) => {
 
     if (req.params.name) {
@@ -333,15 +383,28 @@ router.post('/resetPassword',authRepo.verifyAccessToken,verifyOtpMail, (req,res)
             message:"view log on console"
         })
     })
-})
+});
 
-router.post('/query_info', (req, res) => {
-    var url = `http://bkt-banking.herokuapp.com/api/transactions/query_info`;
-    const { account_number } = req.body;
-    var partner_code = "bbd.bank";
+router.post('/query_info/:bank/:id', (req, res) => {
+    bank=req.params.bank;
+    account_number=req.params.id;
+    var secret_key="";
+    var partner_code="";
     let timestamp = +new Date();
-    let strToHash = `${partner_code}|${timestamp}|${account_number}`;
-    let secret_key = "QK6A-JI6S-7ETR-0A6C";
+    if(bank && id)
+    {
+        if ("bkt.bank" === bank) {
+            var url = `http://bkt-banking.herokuapp.com/api/transactions/query_info`;
+             secret_key = "QK6A-JI6S-7ETR-0A6C";
+              partner_code = "bbd.bank";
+        }
+        else if ("ta.bank" === bank) {
+            var url = `https://ibserver.herokuapp.com/api/transactions/query_info`;
+             secret_key = "374e9e67-8838-400b-acb6-55a8428ae5fa";
+             partner_code = "20929a37-5e69-44e2-94e4-c640bd4e33cd";
+        }  
+    }   
+    let strToHash = `${partner_code}|${timestamp}|${account_number}`;   
     let genHmac = transRepo.hashMd5(strToHash, secret_key);
     let rs = axios({
         url: url,
@@ -362,34 +425,6 @@ router.post('/query_info', (req, res) => {
     console.log(rs);
 });
 
-router.post('/query_info2', async (req, res) => {
-    var url = `https://ibserver.herokuapp.com/api/transactions/query_info`;
-    const { account_number } = req.body;
-    var secret_key = "374e9e67-8838-400b-acb6-55a8428ae5fa";
-    let partner_code = "20929a37-5e69-44e2-94e4-c640bd4e33cd";
-    let timestamp = +new Date();
-    let strToHash = `${partner_code}|${timestamp}|${account_number}`;
-    let genHmac = transRepo.hashMd5(strToHash, secret_key);
-
-    try {
-        let rs = await axios({
-            url: url,
-            method: 'POST',
-            params: Object.assign({
-                partner_code: partner_code,
-                timestamp: timestamp,
-                hash: genHmac
-            }),
-            data: {
-                account_number: account_number
-            }
-        })
-        console.log(rs);
-    } catch (error) {
-        console.log(error);
-
-    }
-});
 router.get('/',authRepo.verifyAccessToken, (req, res) => {
 
     userRepo.loadAccount(req.body).then(rows => {
