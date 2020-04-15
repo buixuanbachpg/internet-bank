@@ -25,6 +25,7 @@ import {
   MatDialogModule,
   MatProgressSpinnerModule,
   MAT_DIALOG_DEFAULT_OPTIONS,
+  MatCheckboxModule
 } from '@angular/material';
 
 import { AppComponent } from './app.component';
@@ -77,7 +78,8 @@ import { AdminService } from './api/admin.service';
     RecaptchaModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MatCheckboxModule
   ],
   declarations: [
     AppComponent,
@@ -106,7 +108,8 @@ import { AdminService } from './api/admin.service';
     MatTooltipModule,
     MatTableModule,
     MatPaginatorModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MatCheckboxModule
   ],
   providers: [
     {

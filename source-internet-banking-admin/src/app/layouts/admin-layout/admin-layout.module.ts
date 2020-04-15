@@ -11,7 +11,8 @@ import {
   MatInputModule,
   MatSelectModule,
   MatIconModule,
-  MatRadioModule
+  MatRadioModule,
+  MatCheckboxModule
 } from '@angular/material/';
 import { ClipboardModule } from 'ngx-clipboard';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -48,7 +49,8 @@ import { ReviewtradeComponent } from '../../pages/reviewtrade/reviewtrade.compon
     MatSelectModule,
     MatIconModule,
     NgxSpinnerModule,
-    MatRadioModule
+    MatRadioModule,
+    MatCheckboxModule
   ],
   declarations: [
     DashboardComponent,

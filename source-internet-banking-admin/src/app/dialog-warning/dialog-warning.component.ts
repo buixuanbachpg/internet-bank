@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Msg } from '../variables/icommon';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dialog-warning',
@@ -22,13 +23,16 @@ export class DialogWarningComponent implements OnInit {
       case 1:
         this.pageTitle = 'Xác nhận';
         break;
+      case 2:
+        this.pageTitle = 'Thông báo';
+        break;
       default:
         break;
     }
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
 }

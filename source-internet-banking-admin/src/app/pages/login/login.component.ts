@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DialogWarningComponent } from '../../dialog-warning/dialog-warning.component';
 import { MatDialog } from '@angular/material';
@@ -12,7 +12,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
+  @ViewChild('email') private iEmail: ElementRef;
+  @ViewChild('password') private iPassword: ElementRef;
   formLogin: FormGroup;
 
   private resolvedRecaptcha: string;
@@ -27,6 +29,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
+          Validators.maxLength(45),
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')
         ]
       ),
@@ -34,19 +37,24 @@ export class LoginComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          Validators.minLength(2),
           Validators.maxLength(45)
         ]
       )
     });
+  }
+  @HostListener('document:mousedown', ['$event'])
+  onMouseDown(event: MouseEvent) {
+    if (event.which === 2) {
+      event.preventDefault();
+      alert('Hệ thống bị gián đoạn!');
+    }
   }
 
   ngOnInit() {
     this.resolvedRecaptcha = '';
     localStorage.clear();
   }
-  ngOnDestroy() {
-  }
+
 
   resolved(captchaResponse: string) {
     this.resolvedRecaptcha = captchaResponse;
@@ -56,22 +64,30 @@ export class LoginComponent implements OnInit, OnDestroy {
     const Email = this.formLogin.get('email');
     let mess = '';
     if (Email.errors) {
-      mess = Email.errors.required
-        ? 'Vui lòng không để trống email!'
-        : 'Vui lòng nhập đúng kiểu email!';
-      this.openDialog({ Text: mess, Title: 0 });
+      if (Email.errors.required) {
+        mess = 'Vui lòng không để trống email!';
+      } else if (Email.errors.maxlength) {
+        mess = 'Số ký tự của email không được vượt quá 45 ký tự!';
+      } else {
+        mess = 'Vui lòng nhập đúng định dạng email!';
+      }
+      this.openDialog({ Text: mess, Title: 0 }).afterClosed().subscribe(
+        Prosc => {
+          this.iEmail.nativeElement.focus();
+        }
+      );
       return;
     }
     const Pass = this.formLogin.get('password');
     if (Pass.errors) {
-      if (Pass.errors.minlength) {
-        mess = 'Số ký tự không được dưới 2 ký tự!';
-      } else if (Pass.errors.maxlength) {
-        mess = 'Số ký tự không được vượt quá 45 ký tự!';
-      } else {
-        mess = 'Vui lòng không để trống mật khẩu!';
-      }
-      this.openDialog({ Text: mess, Title: 0 });
+      mess = Pass.errors.maxlength
+        ? 'Số ký tự của mật khẩu không được vượt quá 45 ký tự!'
+        : 'Vui lòng không để trống mật khẩu!';
+      this.openDialog({ Text: mess, Title: 0 }).afterClosed().subscribe(
+        Prosc => {
+          this.iPassword.nativeElement.focus();
+        }
+      );
       return;
 
     }
@@ -105,9 +121,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           localStorage.setItem('permission', result.user.permission.toString());
           localStorage.setItem('refresh-token', result.refresh_token);
           if (result.user.permission.toString() === '1') {
-            this.router.navigate(['\manager']);
+            this.router.navigate(['/manager'], { replaceUrl: true });
           } else {
-            this.router.navigate(['\customer']);
+            this.router.navigate(['/customer'], { replaceUrl: true });
           }
         } else {
           this.openDialog({ Text: 'Email hoặc mật khẩu đang bị sai!', Title: 0 });
@@ -124,10 +140,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private openDialog(mess: Msg) {
     const dialogRef = this.dialog.open(DialogWarningComponent, {
-      width: '350px',
+      width: '400px',
       hasBackdrop: true,
       data: mess
     });
+
+    return dialogRef;
   }
 
 }
