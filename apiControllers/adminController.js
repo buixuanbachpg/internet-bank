@@ -25,6 +25,31 @@ router.post('/', (req, res) => {
         });
 });
 
+router.put('/:email', (req, res) => {
+   email=req.params.email;
+   if(email)
+   {
+    password=req.body.password;
+    adminRepo.resetPassword(email,password).then(changedRows=>{
+        if(changedRows>0)
+        {
+            res.status(200).send("thay đổi thành công");
+        }
+        else{
+            res.status(500).send("thay đổi không thành công");
+        }
+    }).catch(err=>
+        {
+            console.log(err);
+            res.status(500).send("view log on console");
+        })
+   }
+   else{
+       res.status(400).json({
+           message:"require email"
+       })
+   }
+});
 router.put('/', (req, res) => {
     adminRepo.update(req.body)
         .then(changedRows => {
@@ -39,7 +64,6 @@ router.put('/', (req, res) => {
             res.end();
         });
 });
-
 router.delete('/:id', (req, res) => {
     if (req.params.id) {
         var id = req.params.id;
@@ -88,7 +112,7 @@ router.get('/:name', (req, res) => {
         employeeRepo.load(id).then(rows => {
             if (rows.length > 0) {
                 user=rows[0];
-                res.json(
+                res.status(200).json(
                     {
                         full_name: user.full_name,
                         permission:user.permission,

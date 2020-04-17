@@ -2,7 +2,7 @@ var db = require('../fn/mysql-db'),
  bcrypt = require('bcrypt');
 const saltRound=10;
 exports.loadDetail = function(id) {
-    var sql = `select account_number,email,username,full_name from  khach_hang  where account_number = '${id}' or account_number='${id}'`;
+    var sql = `select account_number,email,username,full_name from  khach_hang  where username = '${id}' or account_number='${id}'`;
     return db.load(sql);
 }
 
@@ -24,6 +24,19 @@ exports.addListRecipient=function(poco){
     var sql = `insert into danh_sach_nguoi_nhan(account_number, account_number_receive, name_reminiscent) values('${poco.account_number}','${poco.account_number_receive}','${poco.name_reminiscent}')`;
     return db.insert(sql);
 }
+exports.update = async function (poco) {
+    // {
+    //     "full_name":"bui xuan bach",
+    //     "password":"12346789",
+    //     "permission":1,
+    //     "address":"277 nguyen van cu",
+    //     "email":"test",
+    //     "phone":"123456789"
+    //     }
+    var sql = `update khach_hang SET  address = '${poco.address}',full_name = '${poco.full_name}', phone ='${poco.phone}',sex='${poco.sex}' where username ='${poco.username}' `;
+    return db.update(sql);
+}
+
 exports.updateAccountBalance = function(account_number,account_balance) {
     //     {
         
@@ -59,13 +72,30 @@ exports.login = async function(username,password) {
             .catch(err => reject(err));
     });
 }
-exports.updatePassword= async function(poco)
-{
-    bcryptPassword=await bcrypt.hash(poco.password, saltRound).then(hash=>{
+exports.changePassword = async function (username, new_password, old_password) {
+    var bcrypt_password = await bcrypt.hash(new_password, saltRound).then(hash => {
         return hash;
-            }).catch(error=>{
-                console.log(error);
-            });
-    var sql = `update khach_hang SET  password = '${bcryptPassword}' where username='${poco.username}'`;
-    return db.update(sql);
+    }).catch(error => {
+        console.log(error);
+    });
+    return new Promise((resolve, reject) => {
+        var sql = `select password from khach_hang where username = '${username}'`;        
+        db.load(sql)
+            .then(rows => {
+                if (rows.length === 0) {
+                    resolve(null);
+                } else {
+                    var user = rows[0];
+                    bcrypt.compare(old_password, user.password, function (err, result) {
+                        if (result) {                          
+                            var sql = `update khach_hang SET  password = '${bcrypt_password}' where username ='${username}' `;
+                            db.update(sql).then(changedRows => { resolve(changedRows) }).catch(err => reject(err));
+                        } else
+                            resolve(false);
+                    });
+
+                }
+            })
+
+    });
 }

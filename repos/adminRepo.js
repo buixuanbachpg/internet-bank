@@ -25,10 +25,7 @@ exports.delete = function(id) {
     var sql = `DELETE FROM nhan_vien WHERE email =  '${id}'`;
     return db.delete(sql);
 }
-
-
-
-exports.update =async function(poco) {
+exports.resetPassword =async function(email,password) {
     // {
     //     "full_name":"bui xuan bach",
     //     "password":"12346789",
@@ -43,7 +40,21 @@ exports.update =async function(poco) {
             }).catch(error=>{
                 console.log(error);
             });
-    var sql = `update nhan_vien SET  password = '${bcrypt_password}', permission = ${poco.permission},address = '${poco.address}',full_name = '${poco.full_name}', phone =${poco.phone} where email ='${poco.email}' `;
+    var sql = `update nhan_vien SET  password = '${bcrypt_password}' where email ='${email}' `;
+    return db.update(sql);
+}
+
+exports.update =async function(poco) {
+    // {
+    //     "full_name":"bui xuan bach",
+    //     "password":"12346789",
+    //     "permission":1,
+    //     "address":"277 nguyen van cu",
+    //     "email":"test",
+    //     "phone":"123456789"
+    //     }
+
+    var sql = `update nhan_vien SET  permission = ${poco.permission},address = '${poco.address}',full_name = '${poco.full_name}', phone ='${poco.phone}',sex='${poco.sex}' where email ='${poco.email}' `;
     return db.update(sql);
 }
 exports.history=function(req)

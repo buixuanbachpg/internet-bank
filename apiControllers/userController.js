@@ -101,7 +101,37 @@ router.post('/renew-token', (req, res) => {
             }
         });
 });
-
+router.put('/changePassword', (req, res) => {
+    const { username, new_password, old_password } = req.body;
+    userRepo.changePassword(username, new_password, old_password)
+        .then(changedRows => {
+            if(changedRows>0)
+            {
+                res.statusCode = 201;
+                res.json({
+                    changedRows: changedRows,
+                    message:"thay đổi mật khẩu thành công"
+                });
+            }
+            else if(false==changedRows){
+                res.statusCode = 400;
+            res.json({
+                message:"Mật khẩu cũ không khớp"
+            });
+            }
+            else{
+                res.statusCode = 500;
+            res.json({
+                message:"Thay đổi không thành công"
+            });
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end();
+        });
+});
 router.post('/transfer/:bank',authRepo.verifyAccessToken,verifyOtpMail, async (req, res) => {
     var secret_key = "";
     var partner_code = "";
@@ -426,8 +456,12 @@ router.post('/query_info/:bank/:id', (req, res) => {
 });
 
 router.get('/',authRepo.verifyAccessToken, (req, res) => {
-
-    userRepo.loadAccount(req.body).then(rows => {
+    var poco ={
+        email: req.query.email,
+        username: req.query.username,
+        account_number:req.query.account_number
+     } ;
+    userRepo.loadAccount(poco).then(rows => {
         if (rows.length > 0) {
             res.json(rows[0]);
         } else {
@@ -442,5 +476,18 @@ router.get('/',authRepo.verifyAccessToken, (req, res) => {
 
 });
 
-
+router.put('/', (req, res) => {
+    userRepo.update(req.body)
+        .then(changedRows => {
+            res.statusCode = 201;
+            res.json({
+                changedRows: changedRows
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end();
+        });
+});
 module.exports = router;
