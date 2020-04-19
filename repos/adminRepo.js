@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 var db = require('../fn/mysql-db');
-const saltRound=10;
-exports.add =async function(poco) {
+const saltRound = 10;
+exports.add = async function (poco) {
     // {
     //     "email": "test",
     //     "full_name": "bach",
@@ -11,21 +11,21 @@ exports.add =async function(poco) {
     //     "phone": "10000",
     //     "sex":"nam"
     // }
-    hash=await bcrypt.hash(poco.password, saltRound).then(hash=>{
+    hash = await bcrypt.hash(poco.password, saltRound).then(hash => {
         return hash;
-            }).catch(error=>{
-                console.log(error);
-            });
+    }).catch(error => {
+        console.log(error);
+    });
     var sql = `insert into nhan_vien(full_name, password, permission, address, email, phone,sex) values('${poco.full_name}', '${hash}', ${poco.permission}, '${poco.address}', '${poco.email}', '${poco.phone}','${poco.sex}')`;
     return db.insert(sql);
 }
 
 
-exports.delete = function(id) {
+exports.delete = function (id) {
     var sql = `DELETE FROM nhan_vien WHERE email =  '${id}'`;
     return db.delete(sql);
 }
-exports.resetPassword =async function(email,password) {
+exports.resetPassword = async function (email, password) {
     // {
     //     "full_name":"bui xuan bach",
     //     "password":"12346789",
@@ -35,16 +35,16 @@ exports.resetPassword =async function(email,password) {
     //     "phone":"123456789"
     //     }
 
-    var bcrypt_password =await bcrypt.hash(poco.password, saltRound).then(hash=>{
+    var bcrypt_password = await bcrypt.hash(password, saltRound).then(hash => {
         return hash;
-            }).catch(error=>{
-                console.log(error);
-            });
+    }).catch(error => {
+        console.log(error);
+    });
     var sql = `update nhan_vien SET  password = '${bcrypt_password}' where email ='${email}' `;
     return db.update(sql);
 }
 
-exports.update =async function(poco) {
+exports.update = async function (poco) {
     // {
     //     "full_name":"bui xuan bach",
     //     "password":"12346789",
@@ -57,16 +57,17 @@ exports.update =async function(poco) {
     var sql = `update nhan_vien SET  permission = ${poco.permission},address = '${poco.address}',full_name = '${poco.full_name}', phone ='${poco.phone}',sex='${poco.sex}' where email ='${poco.email}' `;
     return db.update(sql);
 }
-exports.history=function(req)
-{
-const{fromDate,toDate,bank}=req.query;
-var sql="";
-if(bank)
-{
-sql=`select * from doi_soat where time>=${fromDate} and time <=${toDate} and partner_code='${bank}' order by time desc`;
-}
-else{
-    sql=`select * from doi_soat where time>=${fromDate} and time <=${toDate} order by time desc `;
-}
-return db.load(sql);
+exports.history = function (req) {
+    const {
+        fromDate,
+        toDate,
+        bank
+    } = req.query;
+    var sql = "";
+    if (bank) {
+        sql = `select * from doi_soat where time>=${fromDate} and time <=${toDate} and partner_code='${bank}' order by time desc`;
+    } else {
+        sql = `select * from doi_soat where time>=${fromDate} and time <=${toDate} order by time desc `;
+    }
+    return db.load(sql);
 }
