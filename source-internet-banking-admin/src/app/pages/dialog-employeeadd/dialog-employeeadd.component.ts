@@ -1,5 +1,5 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { Component, OnInit, ElementRef, ViewChild, Inject } from '@angular/core';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatButton } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Msg, Employee } from 'src/app/variables/icommon';
 import { DialogWarningComponent } from 'src/app/dialog-warning/dialog-warning.component';
@@ -19,18 +19,18 @@ export class DialogEmployeeaddComponent implements OnInit {
   @ViewChild('email') private iEmail: ElementRef;
   @ViewChild('phone') private iPhone: ElementRef;
   @ViewChild('address') private iAddress: ElementRef;
+  @ViewChild('btnBack') private iBack: MatButton;
 
   insForm: FormGroup;
   constructor(
     private matDialogRef: MatDialogRef<DialogEmployeeaddComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: string[],
     private dialog: MatDialog,
     private ngxSpinnerService: NgxSpinnerService,
     private adminService: AdminService,
     private employeeService: EmployeeService,
     private router: Router
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.insForm = new FormGroup({
       'name': new FormControl('',
         [
@@ -45,9 +45,17 @@ export class DialogEmployeeaddComponent implements OnInit {
           Validators.maxLength(45),
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')
         ]),
-      'phone': new FormControl('', Validators.maxLength(15)),
+      'phone': new FormControl('',
+        [
+          Validators.maxLength(15),
+          Validators.pattern('^[0-9]{1,}$')
+        ]),
       'address': new FormControl('', Validators.maxLength(200))
     });
+  }
+
+  ngOnInit() {
+    this.iBack.focus();
   }
 
   insertClick() {
@@ -137,9 +145,22 @@ export class DialogEmployeeaddComponent implements OnInit {
       return false;
     }
 
+    if (this.data.indexOf(email.value) !== -1) {
+      msg = 'Email này đã được đăng ký';
+      this.openDialog({ Text: msg, Title: 0 }).afterClosed()
+        .subscribe(
+          Prosc => {
+            this.iEmail.nativeElement.focus();
+          }
+        );
+      return false;
+    }
+
     const phone = this.insForm.get('phone');
     if (phone.errors) {
-      msg = 'Số ký tự của số điện thoại không được vượt quá 15 ký tự!';
+      msg = phone.errors.maxlength
+        ? 'Số ký tự của số điện thoại không được vượt quá 15 ký tự!'
+        : 'Số điện thoại phải là số';
       this.openDialog({ Text: msg, Title: 0 }).afterClosed()
         .subscribe(
           Prosc => {
@@ -160,6 +181,7 @@ export class DialogEmployeeaddComponent implements OnInit {
         );
       return false;
     }
+
     return true;
   }
 

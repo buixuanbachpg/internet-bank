@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatButton } from '@angular/material';
 import { Employee, Msg } from 'src/app/variables/icommon';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogWarningComponent } from 'src/app/dialog-warning/dialog-warning.component';
@@ -19,6 +19,7 @@ export class DialogEmployeeupdComponent implements OnInit {
   @ViewChild('email') private iEmail: ElementRef;
   @ViewChild('phone') private iPhone: ElementRef;
   @ViewChild('address') private iAddress: ElementRef;
+  @ViewChild('btnBack') private iBack: MatButton;
   updForm: FormGroup;
   constructor(
     private matDialogRef: MatDialogRef<DialogEmployeeupdComponent>,
@@ -28,9 +29,7 @@ export class DialogEmployeeupdComponent implements OnInit {
     private adminService: AdminService,
     private employeeService: EmployeeService,
     private router: Router
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.updForm = new FormGroup({
       'name': new FormControl(this.data.full_name,
         [
@@ -45,17 +44,18 @@ export class DialogEmployeeupdComponent implements OnInit {
           Validators.maxLength(45),
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')
         ]),
-      // 'password': new FormControl(this.data.password, [
-      //   Validators.required,
-      //   Validators.minLength(6),
-      //   Validators.maxLength(45)
-      // ]),
-      'phone': new FormControl(this.data.phone, Validators.maxLength(15)),
+      'phone': new FormControl(this.data.phone,
+        [
+          Validators.maxLength(15),
+          Validators.pattern('^[0-9]{1,}$')
+        ]),
       'address': new FormControl(this.data.address, Validators.maxLength(200))
     });
-    // this.chkpass = false;
+  }
+
+  ngOnInit() {
     this.updForm.controls['email'].disable();
-    this.updForm.controls['password'].disable();
+    this.iBack.focus();
   }
 
   updateClick() {
@@ -63,44 +63,132 @@ export class DialogEmployeeupdComponent implements OnInit {
       return;
     }
 
-    this.Update_Employee().subscribe(
-      () => {
-
-      },
-      error => {
-        if (error.status === 401) {
-          this.Renew_Token().subscribe(
-            result => {
-              if (result) {
-                this.Update_Employee().subscribe(
-                  () => { },
-                  errors => {
-                    this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
-                  });
-              } else {
-                this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
-                  .subscribe(
-                    Prosc => {
-                      this.router.navigateByUrl('', { replaceUrl: true });
+    this.openDialog({ Text: 'Bạn có muốn thay đổi dữ liệu', Title: 3 }).afterClosed()
+      .subscribe(
+        ProscC => {
+          if (ProscC) {
+            this.Update_Employee().subscribe(
+              complete => {
+                if (complete) {
+                  this.openDialog({ Text: 'Cập nhật thành công!', Title: 0 });
+                } else {
+                  this.openDialog({ Text: 'Cập nhật không thành công!', Title: 0 });
+                }
+              },
+              error => {
+                if (error.status === 401) {
+                  this.Renew_Token().subscribe(
+                    result => {
+                      if (result) {
+                        this.Update_Employee().subscribe(
+                          caseComplete => {
+                            if (caseComplete) {
+                              this.openDialog({ Text: 'Cập nhật thành công!', Title: 0 });
+                            } else {
+                              this.openDialog({ Text: 'Cập nhật không thành công!', Title: 0 });
+                            }
+                          },
+                          errors => {
+                            this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                          });
+                      } else {
+                        this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
+                          .subscribe(
+                            Prosc => {
+                              this.router.navigateByUrl('', { replaceUrl: true });
+                            }
+                          );
+                      }
                     }
                   );
+                } else {
+                  this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                }
               }
-            }
-          );
-        } else {
-          this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+            );
+          }
         }
-      }
-    );
+      );
+  }
+
+  resetClick() {
+    this.openDialog({ Text: 'Bạn có muốn đặt lại mật khẩu', Title: 3 }).afterClosed()
+      .subscribe(
+        ProscC => {
+          if (ProscC) {
+            this.Reset_Password().subscribe(
+              complete => {
+                if (complete) {
+                  this.openDialog({ Text: 'Cập nhật thành công!', Title: 0 });
+                } else {
+                  this.openDialog({ Text: 'Cập nhật không thành công!', Title: 0 });
+                }
+              },
+              error => {
+                if (error.status === 401) {
+                  this.Renew_Token().subscribe(
+                    result => {
+                      if (result) {
+                        this.Reset_Password().subscribe(
+                          caseComplete => {
+                            if (caseComplete) {
+                              this.openDialog({ Text: 'Cập nhật thành công!', Title: 0 });
+                            } else {
+                              this.openDialog({ Text: 'Cập nhật không thành công!', Title: 0 });
+                            }
+                          },
+                          errors => {
+                            this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                          });
+                      } else {
+                        this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
+                          .subscribe(
+                            Prosc => {
+                              this.router.navigateByUrl('', { replaceUrl: true });
+                            }
+                          );
+                      }
+                    }
+                  );
+                } else {
+                  this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                }
+              }
+            );
+          }
+        }
+      );
+  }
+
+  private Reset_Password(): Observable<boolean> {
+    this.ngxSpinnerService.show();
+    return Observable.create((observer: Observer<boolean>) => {
+      this.adminService.reset(
+        this.updForm.get('email').value,
+        `${this.updForm.get('email').value.split('@')[0]}12345`
+      ).subscribe(
+        result => {
+          if (result) {
+            observer.next(true);
+          } else {
+            observer.next(false);
+          }
+          this.ngxSpinnerService.hide();
+          observer.complete();
+        },
+        error => {
+          this.ngxSpinnerService.hide();
+          observer.error(error);
+          observer.complete();
+        }
+      );
+    });
+
   }
 
   closeClick() {
     this.matDialogRef.close();
   }
-
-  // chkDis(e) {
-  //   console.log(e);
-  // }
 
   private openDialog(mess: Msg) {
     const dialogRef = this.dialog.open(DialogWarningComponent, {
@@ -147,7 +235,9 @@ export class DialogEmployeeupdComponent implements OnInit {
 
     const phone = this.updForm.get('phone');
     if (phone.errors) {
-      msg = 'Số ký tự của số điện thoại không được vượt quá 15 ký tự!';
+      msg = phone.errors.maxlength
+        ? 'Số ký tự của số điện thoại không được vượt quá 15 ký tự!'
+        : 'Số điện thoại phải là số';
       this.openDialog({ Text: msg, Title: 0 }).afterClosed()
         .subscribe(
           Prosc => {

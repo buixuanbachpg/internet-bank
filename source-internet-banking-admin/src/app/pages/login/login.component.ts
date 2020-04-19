@@ -114,6 +114,7 @@ export class LoginComponent implements OnInit {
 
     this.employeeService.login<any>({ email: Email.value, password: Pass.value }).subscribe(
       result => {
+        this.ngxSpinnerService.hide();
         if (result.auth) {
           localStorage.setItem('access-token', result.access_token);
           localStorage.setItem('email', result.user.email);
@@ -128,7 +129,6 @@ export class LoginComponent implements OnInit {
         } else {
           this.openDialog({ Text: 'Email hoặc mật khẩu đang bị sai!', Title: 0 });
         }
-        this.ngxSpinnerService.hide();
       },
       error => {
         this.ngxSpinnerService.hide();

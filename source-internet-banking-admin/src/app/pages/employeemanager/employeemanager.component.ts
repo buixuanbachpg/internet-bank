@@ -40,10 +40,12 @@ export class EmployeemanagerComponent implements OnInit {
   }
 
   openDialogUpdate(obj: Employee) {
+    obj.permission = obj.permission === 'Admin' ? '1' : '0';
     const dialogUpd = this.dialog.open(DialogEmployeeupdComponent, {
-      width: '450px',
+      width: '400px',
       height: '500px',
       data: obj,
+      disableClose: true,
       hasBackdrop: true,
     });
 
@@ -56,9 +58,11 @@ export class EmployeemanagerComponent implements OnInit {
 
   openDialogInsert() {
     const dialogIns = this.dialog.open(DialogEmployeeaddComponent, {
-      width: '450px',
+      width: '400px',
       height: '500px',
       hasBackdrop: true,
+      disableClose: true,
+      data: this.dataEmployee.map(x => x.email)
     });
 
     dialogIns.afterClosed().subscribe(
@@ -69,57 +73,65 @@ export class EmployeemanagerComponent implements OnInit {
   }
 
   DeleteEmployee(element) {
-    this.Delete_Employee(element.email).subscribe(
-      delComplete => {
-        if (delComplete) {
-          this.openDialog({ Text: 'Xóa thành công!', Title: 1 }).afterClosed().subscribe(
-            () => {
-              this.F_Get_Data_Init();
-            }
-          );
-        } else {
-          this.openDialog({ Text: 'Xóa không thành công!', Title: 0 });
-        }
-      },
-      error => {
-        if (error.status === 401) {
-          this.Renew_Token().subscribe(
-            result => {
-              if (result) {
-                this.Delete_Employee(element.email).subscribe(
-                  delComplete2 => {
-                    if (delComplete2) {
-                      this.openDialog({ Text: 'Xóa thành công!', Title: 1 }).afterClosed().subscribe(
-                        () => {
-                          this.F_Get_Data_Init();
-                        }
-                      );
-                    } else {
-                      this.openDialog({ Text: 'Xóa không thành công!', Title: 0 });
-                    }
-                  },
-                  errors => {
-                    this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
-                  });
-              } else {
-                this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
-                  .subscribe(
-                    Prosc => {
-                      this.router.navigateByUrl('', { replaceUrl: true });
+    this.openDialog({ Text: 'Bạn có muốn xóa thông tin này?', Title: 3 }).afterClosed()
+      .subscribe(
+        confirmD => {
+          if (confirmD) {
+            this.Delete_Employee(element.email).subscribe(
+              delComplete => {
+                if (delComplete) {
+                  this.openDialog({ Text: 'Xóa thành công!', Title: 1 }).afterClosed().subscribe(
+                    () => {
+                      this.F_Get_Data_Init();
                     }
                   );
+                } else {
+                  this.openDialog({ Text: 'Xóa không thành công!', Title: 0 });
+                }
+              },
+              error => {
+                if (error.status === 401) {
+                  this.Renew_Token().subscribe(
+                    result => {
+                      if (result) {
+                        this.Delete_Employee(element.email).subscribe(
+                          delComplete2 => {
+                            if (delComplete2) {
+                              this.openDialog({ Text: 'Xóa thành công!', Title: 1 }).afterClosed().subscribe(
+                                () => {
+                                  this.F_Get_Data_Init();
+                                }
+                              );
+                            } else {
+                              this.openDialog({ Text: 'Xóa không thành công!', Title: 0 });
+                            }
+                          },
+                          errors => {
+                            this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                          });
+                      } else {
+                        this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
+                          .subscribe(
+                            Prosc => {
+                              this.router.navigateByUrl('', { replaceUrl: true });
+                            }
+                          );
+                      }
+                    }
+                  );
+                } else {
+                  this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                }
               }
-            }
-          );
-        } else {
-          this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+            );
+          }
         }
-      }
-    );
+      );
   }
 
   private F_Get_Data_Init() {
     this.dataSource.data = [];
+    this.dataEmployee = [];
     this.Get_All_Employee().subscribe(
       () => { },
       error => {

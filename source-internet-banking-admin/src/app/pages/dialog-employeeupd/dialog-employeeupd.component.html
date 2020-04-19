@@ -3,7 +3,7 @@
   <form [formGroup]="updForm">
     <mat-form-field style="width: 300px;">
       <mat-label>Họ tên</mat-label>
-      <input #name matInput disabled [formControlName]="'name'">
+      <input #name type="text" matInput [formControlName]="'name'">
     </mat-form-field>
     <br>
     <label>Giới tính: </label>
@@ -18,8 +18,6 @@
       <mat-radio-button [value]="'0'">Giao dịch viên</mat-radio-button>
     </mat-radio-group>
     <br>
-    <mat-checkbox>Đặt lại mật khẩu</mat-checkbox>
-    <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Email</mat-label>
       <input #email matInput type="email" [formControlName]="'email'">
@@ -27,18 +25,19 @@
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Số điện thoại</mat-label>
-      <input #phone matInput [formControlName]="'phone'">
+      <input #phone type="tel" matInput [formControlName]="'phone'">
     </mat-form-field>
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Địa chỉ</mat-label>
-      <input #address matInput [formControlName]="'address'">
+      <input #address type="text" matInput [formControlName]="'address'">
     </mat-form-field>
   </form>
 </div>
 <div mat-dialog-actions>
   <div style="margin: 0 auto">
     <button mat-button (click)="updateClick()">Cập nhật</button>
-    <button mat-button (click)="closeClick()" cdkFocusInitial>Trở về</button>
+    <button mat-button (click)="resetClick()">Đặt lại mật khẩu</button>
+    <button mat-button #btnBack (click)="closeClick()">Trở về</button>
   </div>
 </div>

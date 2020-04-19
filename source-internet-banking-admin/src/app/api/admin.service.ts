@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { retry, catchError, retryWhen, delay, take } from 'rxjs/operators';
 
@@ -37,5 +37,13 @@ export class AdminService {
   delete<T>(id) {
     return this.http.delete<T>(`${this.base_path}/${id}`,
       { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false });
+  }
+
+  reset<T>(email, pass) {
+    return this.http.put<T>(`${this.base_path}/${email}`, JSON.stringify({ password: pass }),
+      {
+        headers: this.httpOptions(localStorage.getItem('access-token')),
+        withCredentials: false
+      });
   }
 }

@@ -3,7 +3,7 @@
   <form [formGroup]="insForm">
     <mat-form-field style="width: 300px;">
       <mat-label>Họ tên</mat-label>
-      <input #name matInput [formControlName]="'name'">
+      <input #name type="text" matInput [formControlName]="'name'">
     </mat-form-field>
     <br>
     <label>Giới tính: </label>
@@ -20,23 +20,23 @@
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Email</mat-label>
-      <input #email matInput [formControlName]="'email'">
+      <input #email type="email" matInput [formControlName]="'email'">
     </mat-form-field>
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Số điện thoại</mat-label>
-      <input #phone matInput [formControlName]="'phone'">
+      <input #phone type="tel" matInput [formControlName]="'phone'">
     </mat-form-field>
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Địa chỉ</mat-label>
-      <input #address matInput [formControlName]="'address'">
+      <input #address type="text" matInput [formControlName]="'address'">
     </mat-form-field>
   </form>
 </div>
 <div mat-dialog-actions>
   <div style="margin: 0 auto">
     <button mat-button (click)="insertClick()">Đăng ký</button>
-    <button mat-button (click)="closeClick()" cdkFocusInitial>Trở về</button>
+    <button mat-button #btnBack (click)="closeClick()">Trở về</button>
   </div>
 </div>
