@@ -12,7 +12,8 @@ import {
   MatSelectModule,
   MatIconModule,
   MatRadioModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatTooltipModule
 } from '@angular/material/';
 import { ClipboardModule } from 'ngx-clipboard';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -28,6 +29,7 @@ import { TradereportComponent } from '../../pages/tradereport/tradereport.compon
 import { RegistercustomerComponent } from 'src/app/pages/registercustomer/registercustomer.component';
 import { TradeComponent } from '../../pages/trade/trade.component';
 import { ReviewtradeComponent } from '../../pages/reviewtrade/reviewtrade.component';
+import { NgxCurrencyModule } from 'ngx-currency';
 
 
 // import { ToastrModule } from 'ngx-toastr';
@@ -50,7 +52,9 @@ import { ReviewtradeComponent } from '../../pages/reviewtrade/reviewtrade.compon
     MatIconModule,
     NgxSpinnerModule,
     MatRadioModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    NgxCurrencyModule,
+    MatTooltipModule
   ],
   declarations: [
     DashboardComponent,

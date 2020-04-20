@@ -29,22 +29,7 @@ export class AppComponent implements OnInit {
     this.router.events
       .pipe(filter((rs): rs is NavigationEnd => rs instanceof NavigationEnd))
       .subscribe(event => {
-        if (event.id === 1
-          && event.url === event.urlAfterRedirects
-          && event.url !== '/login') {
-          // this.Renew_Token().subscribe(
-          //   result => {
-          //     if (!result) {
-          //       this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
-          //         .subscribe(
-          //           Prosc => {
-          //             this.router.navigateByUrl('', { replaceUrl: true });
-          //           }
-          //         );
-          //     }
-          //   }
-          // );
-        } else if (event.url === event.urlAfterRedirects) {
+        if (event.url === event.urlAfterRedirects) {
           if (!localStorage.getItem('permission')) {
             this.router.navigateByUrl('', { replaceUrl: true });
           } else {
@@ -52,7 +37,6 @@ export class AppComponent implements OnInit {
               x => x.permission === localStorage.getItem('permission') && x.path === this.router.url
             ).length === 0) {
               this.router.navigateByUrl('**', { replaceUrl: true });
-
             }
           }
         }

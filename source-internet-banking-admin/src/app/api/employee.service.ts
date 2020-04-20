@@ -32,8 +32,19 @@ export class EmployeeService {
       { headers: this.httpOptions(), withCredentials: false });
   }
 
-  insertCustomer(user) {
-    return this.http.post(this.base_path + '/', JSON.stringify(user),
+  insertCustomer<T>(user) {
+    return this.http.post<T>(this.base_path + '/', JSON.stringify(user),
+      { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false });
+  }
+
+  getUser<T>(id) {
+    return this.http.get<T>(this.base_path + `/${id}`,
+      { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false }
+    );
+  }
+
+  updateAccountBalance<T>(info) {
+    return this.http.post<T>(`${this.base_path}/Account/`, JSON.stringify(info),
       { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false });
   }
 

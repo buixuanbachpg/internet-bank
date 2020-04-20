@@ -79,7 +79,7 @@ import { AdminService } from './api/admin.service';
     MatDialogModule,
     MatProgressSpinnerModule,
     NgxSpinnerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
   ],
   declarations: [
     AppComponent,
@@ -109,7 +109,7 @@ import { AdminService } from './api/admin.service';
     MatTableModule,
     MatPaginatorModule,
     NgxSpinnerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
   ],
   providers: [
     {

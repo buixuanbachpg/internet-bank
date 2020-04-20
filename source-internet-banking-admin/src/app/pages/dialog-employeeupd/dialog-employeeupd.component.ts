@@ -47,9 +47,14 @@ export class DialogEmployeeupdComponent implements OnInit {
       'phone': new FormControl(this.data.phone,
         [
           Validators.maxLength(15),
+          Validators.required,
           Validators.pattern('^[0-9]{1,}$')
         ]),
-      'address': new FormControl(this.data.address, Validators.maxLength(200))
+      'address': new FormControl(this.data.address,
+        [
+          Validators.maxLength(200),
+          Validators.required,
+        ])
     });
   }
 
@@ -204,7 +209,7 @@ export class DialogEmployeeupdComponent implements OnInit {
     const name = this.updForm.get('name');
     let msg = '';
     if (name.errors) {
-      msg = name.errors.required ? 'Họ tên không được phép bỏ trống!'
+      msg = name.errors.required ? 'Vui lòng không được phép bỏ trống họ tên!'
         : 'Số ký tự của họ tên không được vượt quá 45 ký tự!';
       this.openDialog({ Text: msg, Title: 0 }).afterClosed()
         .subscribe(
@@ -218,7 +223,7 @@ export class DialogEmployeeupdComponent implements OnInit {
     const email = this.updForm.get('email');
     if (email.errors) {
       if (email.errors.required) {
-        msg = 'Email không được phép bỏ trống!';
+        msg = 'Vui lòng không được phép bỏ trống Email!';
       } else if (email.errors.maxlength) {
         msg = 'Số ký tự của Email không được vượt quá 45 ký tự!';
       } else {
@@ -235,9 +240,13 @@ export class DialogEmployeeupdComponent implements OnInit {
 
     const phone = this.updForm.get('phone');
     if (phone.errors) {
-      msg = phone.errors.maxlength
-        ? 'Số ký tự của số điện thoại không được vượt quá 15 ký tự!'
-        : 'Số điện thoại phải là số';
+      if (phone.errors.required) {
+        msg = 'Vui lòng không được phép bỏ trống số điện thoại!';
+      } else if (phone.errors.maxlength) {
+        msg = 'Số ký tự của số điện thoại không được vượt quá 15 ký tự!';
+      } else {
+        msg = 'Số điện thoại phải là số!';
+      }
       this.openDialog({ Text: msg, Title: 0 }).afterClosed()
         .subscribe(
           Prosc => {
@@ -249,7 +258,9 @@ export class DialogEmployeeupdComponent implements OnInit {
 
     const address = this.updForm.get('address');
     if (address.errors) {
-      msg = 'Số ký tự của địa chỉ không được vượt quá 200 ký tự!';
+      msg = address.errors.required
+        ? 'Vui lòng không được phép bỏ trống địa chỉ!'
+        : 'Số ký tự của địa chỉ không được vượt quá 200 ký tự!';
       this.openDialog({ Text: msg, Title: 0 }).afterClosed()
         .subscribe(
           Prosc => {

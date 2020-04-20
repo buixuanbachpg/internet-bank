@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 var db = require('../fn/mysql-db');
 const saltRound = 10;
+
 function getRandomIntInclusive(Min, Max) {
     min = Math.ceil(Min);
     max = Math.floor(Max);
@@ -57,7 +58,7 @@ exports.add = async function (poco) {
     }).catch(error => {
         console.log(error);
     });
-    var sql = `insert into khach_hang(username, password, account_number, account_balance, full_name, email, phone,sex,address) values('${poco.username}', '${bcryptPassword}', '${account_number}','${poco.account_balance}', '${poco.full_name}', '${poco.email}', '${poco.phone}')`;
+    var sql = `insert into khach_hang(username, password, account_number, account_balance, full_name, email, phone,sex,address) values('${poco.username}', '${bcryptPassword}', '${account_number}','${poco.account_balance}', '${poco.full_name}', '${poco.email}', '${poco.phone}', '${poco.sex}', '${poco.address}')`;
     return db.insert(sql);
 }
 exports.update = async function (poco) {
@@ -121,7 +122,7 @@ exports.changePassword = async function (email, new_password, old_password) {
         console.log(error);
     });
     return new Promise((resolve, reject) => {
-        var sql = `select password from nhan_vien where email = '${email}'`;        
+        var sql = `select password from nhan_vien where email = '${email}'`;
         db.load(sql)
             .then(rows => {
                 if (rows.length === 0) {
@@ -129,9 +130,11 @@ exports.changePassword = async function (email, new_password, old_password) {
                 } else {
                     var user = rows[0];
                     bcrypt.compare(old_password, user.password, function (err, result) {
-                        if (result) {                          
+                        if (result) {
                             var sql = `update nhan_vien SET  password = '${bcrypt_password}' where email ='${email}' `;
-                            db.update(sql).then(changedRows => { resolve(changedRows) }).catch(err => reject(err));
+                            db.update(sql).then(changedRows => {
+                                resolve(changedRows)
+                            }).catch(err => reject(err));
                         } else
                             resolve(false);
                     });
