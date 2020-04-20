@@ -3,5 +3,8 @@
   <p>{{data.Text}}</p>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()" cdkFocusInitial>OK</button>
+  <div style="margin: 0 auto">
+    <button mat-button (click)="onNoClick(true)">OK</button>
+    <button mat-button id="btnBack" *ngIf="confH" (click)="onNoClick(false)">Cancel</button>
+  </div>
 </div>

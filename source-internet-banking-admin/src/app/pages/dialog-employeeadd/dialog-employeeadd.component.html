@@ -3,34 +3,40 @@
   <form [formGroup]="insForm">
     <mat-form-field style="width: 300px;">
       <mat-label>Họ tên</mat-label>
-      <input matInput disabled [formControlName]="'name'">
+      <input #name type="text" matInput [formControlName]="'name'">
     </mat-form-field>
     <br>
     <label>Giới tính: </label>
     <mat-radio-group [formControlName]="'sex'">
-      <mat-radio-button [value]="'male'">Nam</mat-radio-button>
-      <mat-radio-button [value]="'female'">Nữ</mat-radio-button>
+      <mat-radio-button [value]="'Nam'">Nam</mat-radio-button>
+      <mat-radio-button [value]="'Nữ'">Nữ</mat-radio-button>
+    </mat-radio-group>
+    <br>
+    <label>Quyền hạn: </label>
+    <mat-radio-group [formControlName]="'permission'">
+      <mat-radio-button [value]="'1'">Admin</mat-radio-button>
+      <mat-radio-button [value]="'0'">Giao dịch viên</mat-radio-button>
     </mat-radio-group>
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Email</mat-label>
-      <input matInput disabled [formControlName]="'email'">
+      <input #email type="email" matInput [formControlName]="'email'">
     </mat-form-field>
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Số điện thoại</mat-label>
-      <input matInput [formControlName]="'phone'">
+      <input #phone type="tel" matInput [formControlName]="'phone'">
     </mat-form-field>
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Địa chỉ</mat-label>
-      <input matInput [formControlName]="'address'">
+      <input #address type="text" matInput [formControlName]="'address'">
     </mat-form-field>
   </form>
 </div>
 <div mat-dialog-actions>
   <div style="margin: 0 auto">
     <button mat-button (click)="insertClick()">Đăng ký</button>
-    <button mat-button (click)="closeClick()" cdkFocusInitial>Trở về</button>
+    <button mat-button #btnBack (click)="closeClick()">Trở về</button>
   </div>
 </div>

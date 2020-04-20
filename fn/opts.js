@@ -11,7 +11,10 @@ var opts = {
     REFRESH_TOKEN: {
         SIZE: 80
     },
-
+    mail:{
+        user:'xuanbachpg@gmail.com',
+        pass:'xuanbach123@'
+    },
     DB: {
         HOST: 'localhost',
         PORT: '3306',

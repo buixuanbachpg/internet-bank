@@ -3,6 +3,11 @@ import { ROUTES } from '../sidebar/sidebar.component';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { Router } from '@angular/router';
 import { DatasharelocalService } from '../../data/datasharelocal.service';
+import { EmployeeService } from 'src/app/api/employee.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { MatDialog } from '@angular/material';
+import { Msg } from 'src/app/variables/icommon';
+import { DialogWarningComponent } from 'src/app/dialog-warning/dialog-warning.component';
 
 @Component({
   selector: 'app-navbar',
@@ -18,13 +23,15 @@ export class NavbarComponent implements OnInit {
     location: Location,
     private element: ElementRef,
     private router: Router,
-    private dataUser: DatasharelocalService
+    private employeeService: EmployeeService,
+    private ngxSpinnerService: NgxSpinnerService,
+    private dialog: MatDialog
   ) {
     this.location = location;
   }
 
   ngOnInit() {
-    this.userId = localStorage.getItem('userid');
+    this.userId = localStorage.getItem('full_name');
     this.listTitles = ROUTES.filter(listTitle => listTitle);
   }
   getTitle() {
@@ -42,7 +49,29 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    this.router.navigate(['']);
+    if (localStorage.getItem('email')) {
+      this.ngxSpinnerService.show();
+      this.employeeService.logout({ email: localStorage.getItem('email') }).subscribe(
+        result => {
+          this.ngxSpinnerService.hide();
+          this.router.navigateByUrl('', { replaceUrl: true });
+        },
+        error => {
+          this.ngxSpinnerService.hide();
+          this.openDialog({ Text: 'Hệ thống bị lỗi!', Title: 0 });
+        }
+      );
+    } else {
+      this.router.navigateByUrl('', { replaceUrl: true });
+    }
+  }
+
+  private openDialog(mess: Msg) {
+    const dialogRef = this.dialog.open(DialogWarningComponent, {
+      width: '350px',
+      hasBackdrop: true,
+      data: mess
+    });
   }
 
 }

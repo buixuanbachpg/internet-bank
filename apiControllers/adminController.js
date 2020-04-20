@@ -2,8 +2,7 @@ var express = require('express'),
     axios = require('axios');
 
 var adminRepo = require('../repos/adminRepo'),
-    userRepo = require('../repos/userRepo'),
-    authRepo = require('../repos/authRepo');
+    employeeRepo = require('../repos/employeeRepo');
 
 var router = express.Router();
 
@@ -11,9 +10,9 @@ router.post('/', (req, res) => {
     adminRepo.add(req.body)
         .then(insertId => {
             res.status(201).json({
-                "message":"thêm thành công",
-                "full_name":req.body.full_name,
-                "permission":req.body.permission,
+                "message": "thêm thành công",
+                "full_name": req.body.full_name,
+                "permission": req.body.permission,
                 "address": req.body.address,
                 "email": req.body.email,
                 "phone": req.body.phone
@@ -26,7 +25,27 @@ router.post('/', (req, res) => {
         });
 });
 
-router.post('/:id', (req, res) => {
+router.put('/:email', (req, res) => {
+    email = req.params.email;
+    if (email) {
+        password = req.body.password;
+        adminRepo.resetPassword(email, password).then(changedRows => {
+            if (changedRows > 0) {
+                res.status(200).end("thay đổi thành công");
+            } else {
+                res.status(500).send("thay đổi không thành công");
+            }
+        }).catch(err => {
+            console.log(err);
+            res.status(500).send("view log on console");
+        })
+    } else {
+        res.status(400).json({
+            message: "require email"
+        })
+    }
+});
+router.put('/', (req, res) => {
     adminRepo.update(req.body)
         .then(changedRows => {
             res.statusCode = 201;
@@ -40,9 +59,6 @@ router.post('/:id', (req, res) => {
             res.end();
         });
 });
-
-
-
 router.delete('/:id', (req, res) => {
     if (req.params.id) {
         var id = req.params.id;
@@ -73,16 +89,32 @@ router.get('/transaction', (req, res) => {
         res.end('View error log on console.');
     });
 });
-
+router.get('/history', (req, res) => {
+    adminRepo.history(req).then(rows => {
+        res.json(rows);
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+        res.end('View error log on console.');
+    });
+});
 router.get('/:name', (req, res) => {
-    
+
     if (req.params.name) {
         console.log(req.params.name);
         var id = req.params.name;
 
-        userRepo.load(id).then(rows => {
+        employeeRepo.load(id).then(rows => {
             if (rows.length > 0) {
-                res.json(rows[0]);
+                user = rows[0];
+                res.status(200).json({
+                    full_name: user.full_name,
+                    permission: user.permission,
+                    address: user.address,
+                    email: user.email,
+                    phone: user.phone,
+                    sex: user.sex
+                });
             } else {
                 res.statusCode = 204;
                 res.end();
@@ -101,7 +133,7 @@ router.get('/:name', (req, res) => {
     }
 });
 router.get('/', (req, res) => {
-    userRepo.loadAll().then(rows => {
+    employeeRepo.loadAll().then(rows => {
         res.json(rows);
     }).catch(err => {
         console.log(err);
@@ -109,6 +141,7 @@ router.get('/', (req, res) => {
         res.end('View error log on console.');
     });
 });
+
 
 
 

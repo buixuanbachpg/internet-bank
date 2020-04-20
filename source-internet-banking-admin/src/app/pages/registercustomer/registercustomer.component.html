@@ -19,7 +19,18 @@
               <div class="form-group row textbox">
                 <label for="name" class="col-sm-2 col-form-label">Họ tên</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="name" placeholder="Họ tên" formControlName="name">
+                  <input type="text" class="form-control" id="name" placeholder="Họ tên" [formControlName]="'name'">
+                </div>
+              </div>
+
+              <div class="form-group row textbox">
+                <label for="name" class="col-sm-2 col-form-label">Giới tính</label>
+                <div class="col-sm-10">
+                  <mat-radio-group style="display: block; margin-top: 7px;" aria-label="Hãy chọn giới tính"
+                    [formControlName]="'sex'">
+                    <mat-radio-button style="margin-right: 20px;" [value]="'nam'">Nam</mat-radio-button>
+                    <mat-radio-button [value]="'nu'">Nữ</mat-radio-button>
+                  </mat-radio-group>
                 </div>
               </div>
 
@@ -34,14 +45,23 @@
               <div class="form-group row textbox">
                 <label for="email" class="col-sm-2 col-form-label">Email</label>
                 <div class="col-sm-10">
-                  <input type="email" class="form-control" id="email" placeholder="Email" formControlName="email">
+                  <input type="email" class="form-control" id="email" placeholder="Email" [formControlName]="'email'">
                 </div>
               </div>
 
               <div class="form-group row textbox">
                 <label for="phone" class="col-sm-2 col-form-label">Số điện thoại</label>
                 <div class="col-sm-10">
-                  <input type="tel" class="form-control" id="phone" placeholder="Số điện thoại" formControlName="phone">
+                  <input type="tel" class="form-control" id="phone" placeholder="Số điện thoại"
+                    [formControlName]="'phone'">
+                </div>
+              </div>
+
+              <div class="form-group row textbox">
+                <label for="email" class="col-sm-2 col-form-label">Địa chỉ</label>
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="email" placeholder="Địa chỉ"
+                    [formControlName]="'address'">
                 </div>
               </div>
               <button #subbutton type="submit" style="display: none;"></button>
