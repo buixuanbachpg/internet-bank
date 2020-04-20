@@ -24,6 +24,8 @@ import { ToggleFullScreenDirective } from './theme/shared/full-screen/toggle-ful
 /* Menu Items */
 import { NavigationItem } from './theme/layout/admin/navigation/navigation';
 import { NgbButtonsModule, NgbDropdownModule, NgbTabsetModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { StoreAllModule } from 'src/store/appStore.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { NgbButtonsModule, NgbDropdownModule, NgbTabsetModule, NgbTooltipModule 
     NgbDropdownModule,
     NgbTooltipModule,
     NgbButtonsModule,
-    NgbTabsetModule
+    NgbTabsetModule,
+    StoreAllModule,
+    HttpClientModule    
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [NavigationItem],
