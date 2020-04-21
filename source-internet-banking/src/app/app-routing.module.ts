@@ -36,6 +36,10 @@ const routes: Routes = [
         loadChildren: () => import('./demo/pages/recipient-list/recipient-list.module').then(module => module.RecipientListModule)
       },
       {
+        path: 'debt-reminder-management',
+        loadChildren: () => import('./demo/pages/debt-reminder-management/debt-reminder-management.module').then(module => module.DebtReminderManagementModule)
+      },
+      {
         path: 'layout',
         loadChildren: () => import('./demo/pages/layout/layout.module').then(module => module.LayoutModule)
       },

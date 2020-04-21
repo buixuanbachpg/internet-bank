@@ -126,6 +126,19 @@
       </div>
     </app-card>
   </div>
+  <div class="col-md-12 col-xl-4">
+    <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-danger-card">
+      <div class="row-table" (click)="goToDebtReminderManagement()">
+        <div class="col-sm-3 card-body">
+          <i class="feather icon-clock"></i>
+        </div>
+        <div class="col-sm-9">
+          <h4>8</h4>
+          <h6>Debt reminder management</h6>
+        </div>
+      </div>
+    </app-card>
+  </div>
   <!-- <div class="col-md-12 col-xl-4">
     <app-card [hidHeader]="true" cardClass="support-bar overflow-hidden" blockClass="p-0" [isCardFooter]="true" footerClass="bg-primary text-white">
       <div class="p-20 pb-0">

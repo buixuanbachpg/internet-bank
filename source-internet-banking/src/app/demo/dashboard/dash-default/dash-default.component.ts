@@ -48,4 +48,8 @@ export class DashDefaultComponent implements OnInit {
     this.router.navigateByUrl("/recipientlist");
   }
 
+  goToDebtReminderManagement() {
+    this.router.navigateByUrl("/debt-reminder-management");
+  }
+
 }

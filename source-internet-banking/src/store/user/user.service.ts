@@ -16,10 +16,10 @@ export class userService {
     }
 
     login() {
-        // let url=`/`;
-        // let param = {
-        //     username: 'asad@sss'
-        // }
-        // return this.http.get(url, param);
+        let url=`/`;
+        let param = {
+            username: 'asad@sss'
+        }
+        return this.http.get(url);
     }
 }

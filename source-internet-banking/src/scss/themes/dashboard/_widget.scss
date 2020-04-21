@@ -390,6 +390,24 @@
         }
     }
 }
+
+.widget-danger-card.flat-card {
+    @extend .widget-primary-card;
+    background-color: $danger-color;
+
+    .row-table {
+        &:first-child {
+            border-bottom: none;
+        }
+
+        > [class*=col-] {
+            &:first-child {
+                background-color: darken($danger-color, 5%);
+            }
+        }
+    }
+}
+
 .latest-activity-card {
     .card-body {
         padding-top: 0;

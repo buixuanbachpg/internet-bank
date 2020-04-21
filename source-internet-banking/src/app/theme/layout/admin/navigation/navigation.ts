@@ -286,6 +286,15 @@ const NavigationItems = [
     classes: 'nav-item',
     icon: 'feather icon-list'
   }
+  ,
+  {
+    id: 'debt-reminder-management',
+    title: 'Debt reminder management',
+    type: 'item',
+    url: '/debt-reminder-management',
+    classes: 'nav-item',
+    icon: 'feather icon-clock'
+  }
 ];
 
 @Injectable()
