@@ -64,7 +64,7 @@ export class SidebarComponent implements OnInit {
         },
         error => {
           this.ngxSpinnerService.hide();
-          this.openDialog({ Text: 'Hệ thống bị lỗi!', Title: 0 });
+          this.router.navigateByUrl('', { replaceUrl: true });
         }
       );
     } else {

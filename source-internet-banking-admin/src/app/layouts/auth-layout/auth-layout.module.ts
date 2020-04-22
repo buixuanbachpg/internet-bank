@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthLayoutRoutes } from './auth-layout.routing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RecaptchaModule, RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
+import { RecaptchaModule, RECAPTCHA_SETTINGS, RecaptchaSettings, RecaptchaFormsModule } from 'ng-recaptcha';
 
 
 import { LoginComponent } from '../../pages/login/login.component';
@@ -12,7 +12,6 @@ import { RegisterComponent } from '../../pages/register/register.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { A11yModule } from '@angular/cdk/a11y';
 
-const globalSettings: RecaptchaSettings = { siteKey: '6Lc1INwUAAAAAA0ntCzOxL6-5Pw-NSUQrPkVzF95' };
 
 @NgModule({
   imports: [
@@ -23,7 +22,8 @@ const globalSettings: RecaptchaSettings = { siteKey: '6Lc1INwUAAAAAA0ntCzOxL6-5P
     NgbModule,
     ReactiveFormsModule,
     NgxSpinnerModule,
-    A11yModule
+    A11yModule,
+    RecaptchaFormsModule
   ],
   declarations: [
     LoginComponent,
@@ -33,7 +33,7 @@ const globalSettings: RecaptchaSettings = { siteKey: '6Lc1INwUAAAAAA0ntCzOxL6-5P
   providers: [
     {
       provide: RECAPTCHA_SETTINGS,
-      useValue: globalSettings,
+      useValue: { siteKey: '6Lc1INwUAAAAAA0ntCzOxL6-5Pw-NSUQrPkVzF95' } as RecaptchaSettings,
     }
   ]
 })

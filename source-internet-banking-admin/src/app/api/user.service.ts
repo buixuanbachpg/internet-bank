@@ -12,28 +12,28 @@ export class UserService {
   constructor(
     private http: HttpClient
   ) { }
-  httpOptions = () => {
+  httpOptions = (token = '') => {
     return new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json; charset=utf-8',
+      'x-access-token': token
     });
   }
 
-  handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message);
-    } else {
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
-    }
-    return throwError(
-      'Something bad happened; please try again later.');
+  getHistoryDebit<T>(id) {
+    return this.http.get<T>(`${this.base_path}/history/paydebit/${id}`,
+      { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false }
+    );
   }
 
-  getUser(id) {
-    return this.http.get(this.base_path + `/${id}`).pipe(
-      retry(2),
-      catchError(this.handleError)
+  getHistoryTransfer<T>(id) {
+    return this.http.get<T>(`${this.base_path}/history/transfer/${id}`,
+      { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false }
+    );
+  }
+
+  getHistoryReceive<T>(id) {
+    return this.http.get<T>(`${this.base_path}/history/receive/${id}`,
+      { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false }
     );
   }
 

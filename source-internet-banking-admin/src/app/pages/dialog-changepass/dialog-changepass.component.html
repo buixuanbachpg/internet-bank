@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Đổi mật khẩu</h1>
+<div mat-dialog-content>
+  <form [formGroup]="changeForm">
+    <mat-form-field style="width: 300px;">
+      <mat-label>Mật khẩu cũ</mat-label>
+      <input #oldpass type="password" matInput [formControlName]="'oldpass'">
+    </mat-form-field>
+    <br>
+    <mat-form-field style="width: 300px;">
+      <mat-label>Mật khẩu mới</mat-label>
+      <input #newpass type="password" matInput [formControlName]="'newpass'">
+    </mat-form-field>
+    <br>
+    <mat-form-field style="width: 300px;">
+      <mat-label>Nhập lại mật khẩu mới</mat-label>
+      <input #confirmpass type="password" matInput [formControlName]="'confirmpass'">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <div style="margin: 0 auto">
+    <button mat-button (click)="updateClick()">Thay đổi</button>
+    <button mat-button #btnBack (click)="closeClick()">Trở về</button>
+  </div>
+</div>

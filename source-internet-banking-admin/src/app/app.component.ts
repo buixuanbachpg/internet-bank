@@ -42,34 +42,4 @@ export class AppComponent implements OnInit {
         }
       });
   }
-
-  private openDialog(mess: Msg) {
-    const dialogRef = this.dialog.open(DialogWarningComponent, {
-      width: '400px',
-      hasBackdrop: true,
-      data: mess
-    });
-
-    return dialogRef;
-  }
-
-  private Renew_Token(): Observable<boolean> {
-    this.ngxSpinnerService.show();
-    return Observable.create((observer: Observer<boolean>) => {
-      this.employeeService.renew<any>().subscribe(
-        result => {
-          localStorage.setItem('access-token', result.access_token);
-          this.ngxSpinnerService.hide();
-          observer.next(true);
-          observer.complete();
-        },
-        error => {
-          this.ngxSpinnerService.hide();
-          observer.next(false);
-          observer.complete();
-        }
-      );
-    });
-  }
-
 }

@@ -45,6 +45,8 @@ import { DialogDetailComponent } from './pages/dialog-detail/dialog-detail.compo
 import { EmployeeService } from './api/employee.service';
 import { UserService } from './api/user.service';
 import { AdminService } from './api/admin.service';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { DialogChangepassComponent } from './pages/dialog-changepass/dialog-changepass.component';
 
 
 
@@ -90,6 +92,7 @@ import { AdminService } from './api/admin.service';
     DialogEmployeeaddComponent,
     DialogEmployeeupdComponent,
     DialogDetailComponent,
+    DialogChangepassComponent,
   ],
   exports: [
     MatButtonModule,
@@ -117,14 +120,17 @@ import { AdminService } from './api/admin.service';
     },
     AdminService,
     EmployeeService,
-    UserService
+    UserService,
+    CurrencyPipe,
+    DatePipe
   ],
   entryComponents: [
     DialogWarningComponent,
     DialogEmployeeaddComponent,
     DialogEmployeeupdComponent,
     DialogDetailComponent,
-    AppComponent
+    DialogChangepassComponent,
+    AppComponent,
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

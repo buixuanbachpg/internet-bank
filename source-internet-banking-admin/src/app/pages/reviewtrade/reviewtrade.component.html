@@ -15,64 +15,60 @@
         </div>
         <div class="table-responsive">
           <div style="background-color: antiquewhite;">
-            <mat-form-field class="dtepick">
-              <mat-label>Start</mat-label>
-              <input matInput [matDatepicker]="picker1" [formControl]="date">
-              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-              <mat-datepicker #picker1></mat-datepicker>
-            </mat-form-field>
+            <form [formGroup]="formSearch" (submit)="onSubmit()" style="margin-left: 20px;">
+              <mat-form-field style="width: 300px;">
+                <mat-label>Tên đăng nhập/Số tài khoản</mat-label>
+                <input #name type="text" matInput [formControlName]="'name'">
+              </mat-form-field>
 
-            <mat-form-field class="dtepick">
-              <mat-label>End</mat-label>
-              <input matInput [matDatepicker]="picker2" [formControl]="date">
-              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-              <mat-datepicker #picker2></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field style="margin-left: 50px; width: 250px;">
-              <mat-label>Hãy chọn ngân hàng</mat-label>
-              <mat-select [formControl]="fBanks">
-                <mat-option>None</mat-option>
-                <mat-option [value]="'All'">Tất cả ngân hàng liên kết</mat-option>
-                <mat-option [value]="'A'">A</mat-option>
-                <!-- <mat-option *ngFor="let state of states" [value]="state">{{state}}</mat-option> -->
-              </mat-select>
-              <mat-error *ngIf="fBanks.hasError('required')">Hãy chọn ngân hàng</mat-error>
-            </mat-form-field>
-
+              <button type="submit" class="btn btn-secondary ni ni-zoom-split-in" style="margin-left: 20px;">
+                Tìm kiếm</button>
+            </form>
           </div>
           <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource">
 
-              <!-- Position Column -->
-              <ng-container matColumnDef="position">
-                <th mat-header-cell *matHeaderCellDef> No. </th>
-                <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-              </ng-container>
-
               <!-- Name Column -->
               <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                <th mat-header-cell *matHeaderCellDef> Họ tên </th>
+                <td mat-cell *matCellDef="let element"> {{element.full_name}} </td>
               </ng-container>
 
-              <!-- Weight Column -->
-              <ng-container matColumnDef="weight">
-                <th mat-header-cell *matHeaderCellDef> Weight </th>
-                <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+              <!-- Username Column -->
+              <ng-container matColumnDef="username">
+                <th mat-header-cell *matHeaderCellDef> Tên đăng nhập </th>
+                <td mat-cell *matCellDef="let element"> {{element.username}} </td>
               </ng-container>
 
-              <!-- Symbol Column -->
-              <ng-container matColumnDef="symbol">
-                <th mat-header-cell *matHeaderCellDef> Symbol </th>
-                <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+              <!-- Sex Column -->
+              <ng-container matColumnDef="sex">
+                <th mat-header-cell *matHeaderCellDef> Giới tính </th>
+                <td mat-cell *matCellDef="let element"> {{element.sex}} </td>
+              </ng-container>
+
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+              </ng-container>
+
+              <!-- Phone Column -->
+              <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef> Số điện thoại </th>
+                <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+              </ng-container>
+
+              <!-- Address Column -->
+              <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef> Địa chỉ </th>
+                <td mat-cell *matCellDef="let element"> {{element.address}} </td>
               </ng-container>
 
               <!-- Detail Column -->
               <ng-container matColumnDef="detail">
-                <th mat-header-cell *matHeaderCellDef> Detail </th>
+                <th mat-header-cell *matHeaderCellDef> Chi tiết giao dịch </th>
                 <td mat-cell *matCellDef="let element">
-                  <button (click)="openDialogDetail(element)" class="btn btn-primary">Detail</button>
+                  <button (click)="openDialogDetail(element)" class="btn btn-primary">Chi tiết</button>
                 </td>
               </ng-container>
 

@@ -46,4 +46,9 @@ export class AdminService {
         withCredentials: false
       });
   }
+
+  getone<T>(id) {
+    return this.http.get<T>(`${this.base_path}/${id}`,
+      { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false });
+  }
 }

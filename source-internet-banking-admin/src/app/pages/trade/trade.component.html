@@ -24,8 +24,9 @@
                 </div>
                 <div class="col-sm-2">
                   <button style="width: 100%; overflow: hidden;" type="submit" class="btn btn-primary"
-                    [matTooltip]="'Truy Vấn'">Truy
-                    vấn</button>
+                    [matTooltip]="'Truy Vấn'">
+                    Truy Vấn
+                  </button>
                 </div>
               </div>
             </form>
@@ -41,8 +42,8 @@
             <div class="form-group row textbox">
               <label for="sex" class="col-sm-2 col-form-label">Giới tính</label>
               <div class="col-sm-8 checkbox">
-                <mat-radio-group #sex id="sex" style="display: block; margin-top: 7px;" aria-label="Hãy chọn giới tính"
-                  [(ngModel)]="sex_detail">
+                <mat-radio-group #sex [disabled]="true" id="sex" style="display: block; margin-top: 7px;"
+                  aria-label="Hãy chọn giới tính" [(ngModel)]="sex_detail">
                   <mat-radio-button style="margin-right: 20px;" [value]="'Nam'">Nam</mat-radio-button>
                   <mat-radio-button [value]="'Nữ'">Nữ</mat-radio-button>
                 </mat-radio-group>
@@ -76,13 +77,14 @@
             <div class="form-group row textbox">
               <label for="cash" class="col-sm-2 col-form-label">Số tiền</label>
               <div class="col-sm-8">
-                <input type="text" #cash currencyMask [options]="{precision: 0, prefix: '', suffix: '₫', thousands:'.'}"
+                <input type="text" #cash currencyMask
+                  [options]="{precision: 0, prefix: '', suffix: '₫', thousands:'.', nullable: true}"
                   class="form-control" id="cash" placeholder="Số tiền" [(ngModel)]="cash_detail">
               </div>
             </div>
           </div>
         </div>
-        <button #btnIns class="btn btn-success" (click)="onIns()">Nạp tiền</button>
+        <button #btnIns class="btn btn-success" (click)="onUpd()">Nạp tiền</button>
       </div>
     </div>
   </div>

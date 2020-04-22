@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Msg } from 'src/app/variables/icommon';
 import { MatDialog } from '@angular/material';
@@ -14,6 +14,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./registercustomer.component.scss']
 })
 export class RegistercustomerComponent implements OnInit {
+  @ViewChild('name') private iName: ElementRef;
+  @ViewChild('username') private iUserName: ElementRef;
+  @ViewChild('email') private iEmail: ElementRef;
+  @ViewChild('phone') private iPhone: ElementRef;
+  @ViewChild('address') private iAddress: ElementRef;
+
   registerForm: FormGroup;
   constructor(
     private dialog: MatDialog,
@@ -219,22 +225,32 @@ export class RegistercustomerComponent implements OnInit {
     if (name.errors) {
       mess = name.errors.required
         ? 'Vui lòng không để trống phần họ tên!'
-        : 'Số ký tự không được vượt quá 200 ký tự!';
-      this.openDialog({ Text: mess, Title: 0 });
+        : 'Số ký tự của họ tên không được vượt quá 200 ký tự!';
+      this.openDialog({ Text: mess, Title: 0 }).afterClosed()
+        .subscribe(
+          Prosc => {
+            this.iName.nativeElement.focus();
+          }
+        );
       return false;
     }
 
     if (username.errors) {
       if (username.errors.minlength) {
-        mess = 'Số ký tự không được dưới 6 ký tự!';
+        mess = 'Số ký tự của tên đăng nhập không được dưới 6 ký tự!';
       } else if (username.errors.maxlength) {
-        mess = 'Số ký tự không được vượt quá 45 ký tự!';
+        mess = 'Số ký tự của tên đăng nhập không được vượt quá 45 ký tự!';
       } else if (username.errors.required) {
         mess = 'Vui lòng không để trống tên đăng nhập!';
       } else {
         mess = 'Tên đăng nhập không chứa ký tự đặc biệt!';
       }
-      this.openDialog({ Text: mess, Title: 0 });
+      this.openDialog({ Text: mess, Title: 0 }).afterClosed()
+        .subscribe(
+          Prosc => {
+            this.iUserName.nativeElement.focus();
+          }
+        );
       return false;
     }
 
@@ -242,11 +258,16 @@ export class RegistercustomerComponent implements OnInit {
       if (email.errors.required) {
         mess = 'Vui lòng không để trống email!!';
       } else if (email.errors.maxlength) {
-        mess = 'Số ký tự của số điện thoại không được vượt quá 15 ký tự';
+        mess = 'Số ký tự của email không được vượt quá 45 ký tự';
       } else {
         mess = 'Vui lòng nhập đúng định dạng email!';
       }
-      this.openDialog({ Text: mess, Title: 0 });
+      this.openDialog({ Text: mess, Title: 0 }).afterClosed()
+        .subscribe(
+          Prosc => {
+            this.iEmail.nativeElement.focus();
+          }
+        );
       return false;
     }
 
@@ -258,15 +279,25 @@ export class RegistercustomerComponent implements OnInit {
       } else {
         mess = 'Số điện thoại phải là số!';
       }
-      this.openDialog({ Text: mess, Title: 0 });
+      this.openDialog({ Text: mess, Title: 0 }).afterClosed()
+        .subscribe(
+          Prosc => {
+            this.iPhone.nativeElement.focus();
+          }
+        );
       return false;
     }
 
     if (address.errors) {
       mess = address.errors.required
         ? 'Vui lòng không để trống số địa chỉ!'
-        : 'Số ký tự không được vượt quá 200 ký tự!';
-      this.openDialog({ Text: mess, Title: 0 });
+        : 'Số ký tự của địa chỉ không được vượt quá 200 ký tự!';
+      this.openDialog({ Text: mess, Title: 0 }).afterClosed()
+        .subscribe(
+          Prosc => {
+            this.iAddress.nativeElement.focus();
+          }
+        );
       return false;
     }
     return true;

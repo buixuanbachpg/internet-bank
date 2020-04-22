@@ -17,6 +17,7 @@ import {
 } from '@angular/material/';
 import { ClipboardModule } from 'ngx-clipboard';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgxCurrencyModule } from 'ngx-currency';
 
 import { AdminLayoutRoutes } from './admin-layout.routing';
 import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
@@ -29,8 +30,6 @@ import { TradereportComponent } from '../../pages/tradereport/tradereport.compon
 import { RegistercustomerComponent } from 'src/app/pages/registercustomer/registercustomer.component';
 import { TradeComponent } from '../../pages/trade/trade.component';
 import { ReviewtradeComponent } from '../../pages/reviewtrade/reviewtrade.component';
-import { NgxCurrencyModule } from 'ngx-currency';
-
 
 // import { ToastrModule } from 'ngx-toastr';
 
@@ -53,8 +52,8 @@ import { NgxCurrencyModule } from 'ngx-currency';
     NgxSpinnerModule,
     MatRadioModule,
     MatCheckboxModule,
-    NgxCurrencyModule,
-    MatTooltipModule
+    MatTooltipModule,
+    NgxCurrencyModule
   ],
   declarations: [
     DashboardComponent,

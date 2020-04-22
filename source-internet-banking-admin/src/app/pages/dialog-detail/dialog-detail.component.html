@@ -1,35 +1,45 @@
-<h1 mat-dialog-title>Thông tin chi tiết giao dịch</h1>
+<h1 mat-dialog-title>Thông tin chi tiết giao dịch của khách hàng {{data.full_name}}</h1>
 <div mat-dialog-content>
-  <!-- <form [formGroup]="insForm">
-    <mat-form-field style="width: 300px;">
-      <mat-label>Họ tên</mat-label>
-      <input matInput disabled [formControlName]="'name'">
-    </mat-form-field>
-    <br>
-    <label>Giới tính: </label>
-    <mat-radio-group [formControlName]="'sex'">
-      <mat-radio-button [value]="'male'">Nam</mat-radio-button>
-      <mat-radio-button [value]="'female'">Nữ</mat-radio-button>
-    </mat-radio-group>
-    <br>
-    <mat-form-field style="width: 300px;">
-      <mat-label>Email</mat-label>
-      <input matInput disabled [formControlName]="'email'">
-    </mat-form-field>
-    <br>
-    <mat-form-field style="width: 300px;">
-      <mat-label>Số điện thoại</mat-label>
-      <input matInput [formControlName]="'phone'">
-    </mat-form-field>
-    <br>
-    <mat-form-field style="width: 300px;">
-      <mat-label>Địa chỉ</mat-label>
-      <input matInput [formControlName]="'address'">
-    </mat-form-field>
-  </form> -->
+  <mat-radio-group [(ngModel)]="radioOptions" (change)="changeOptions()">
+    <mat-radio-button [value]="'0'">Giao dịch nhận tiền</mat-radio-button>
+    <mat-radio-button [value]="'1'">Giao dịch chuyển khoản</mat-radio-button>
+    <mat-radio-button [value]="'2'">Giao dịch thanh toán nhắc nợ</mat-radio-button>
+  </mat-radio-group>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+      <!-- Name Column -->
+      <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef> Thời gian giao dịch </th>
+        <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+      </ng-container>
+
+      <!-- Username Column -->
+      <ng-container matColumnDef="account">
+        <th mat-header-cell *matHeaderCellDef> Số tài khoản </th>
+        <td mat-cell *matCellDef="let element"> {{element.from_account_number}} </td>
+      </ng-container>
+
+      <!-- Content Column -->
+      <ng-container matColumnDef="content">
+        <th mat-header-cell *matHeaderCellDef> Nội dung </th>
+        <td mat-cell *matCellDef="let element"> {{element.message}} </td>
+      </ng-container>
+
+      <!-- Sex Column -->
+      <ng-container matColumnDef="money">
+        <th mat-header-cell *matHeaderCellDef> Số tiền </th>
+        <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+  </div>
 </div>
 <div mat-dialog-actions>
   <div style="margin: 0 auto">
-    <button mat-button (click)="closeClick()" cdkFocusInitial>Trở về</button>
+    <button #btnBack mat-button (click)="closeClick()">Trở về</button>
   </div>
 </div>

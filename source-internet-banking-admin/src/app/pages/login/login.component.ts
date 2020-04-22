@@ -17,7 +17,6 @@ export class LoginComponent implements OnInit {
   @ViewChild('password') private iPassword: ElementRef;
   formLogin: FormGroup;
 
-  private resolvedRecaptcha: string;
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -25,7 +24,7 @@ export class LoginComponent implements OnInit {
     private ngxSpinnerService: NgxSpinnerService
   ) {
     this.formLogin = new FormGroup({
-      email: new FormControl(
+      'email': new FormControl(
         '',
         [
           Validators.required,
@@ -33,12 +32,16 @@ export class LoginComponent implements OnInit {
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$')
         ]
       ),
-      password: new FormControl(
+      'password': new FormControl(
         '',
         [
           Validators.required,
           Validators.maxLength(45)
         ]
+      ),
+      'catpcha': new FormControl(
+        null,
+        Validators.required
       )
     });
   }
@@ -51,13 +54,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.resolvedRecaptcha = '';
     localStorage.clear();
-  }
-
-
-  resolved(captchaResponse: string) {
-    this.resolvedRecaptcha = captchaResponse;
   }
 
   onSubmit() {
@@ -91,7 +88,9 @@ export class LoginComponent implements OnInit {
       return;
 
     }
-    if (!this.resolvedRecaptcha) {
+
+    const Captcha = this.formLogin.get('catpcha');
+    if (Captcha.errors) {
       mess = 'Hãy xác minh bạn không phải là robot!';
       this.openDialog({ Text: mess, Title: 0 });
       return;

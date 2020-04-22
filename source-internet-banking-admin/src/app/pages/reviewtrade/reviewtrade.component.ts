@@ -1,8 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatPaginator, MatTableDataSource, MatDialog } from '@angular/material';
-import { DetailPerson } from 'src/app/variables/icommon';
+import { Person, Msg } from 'src/app/variables/icommon';
 import { DialogDetailComponent } from '../dialog-detail/dialog-detail.component';
+import { EmployeeService } from 'src/app/api/employee.service';
+import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { DialogWarningComponent } from 'src/app/dialog-warning/dialog-warning.component';
+import { Observer, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-reviewtrade',
@@ -10,59 +15,188 @@ import { DialogDetailComponent } from '../dialog-detail/dialog-detail.component'
   styleUrls: ['./reviewtrade.component.scss']
 })
 export class ReviewtradeComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'detail'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-  date: FormControl;
-  fBanks: FormControl;
+  displayedColumns: string[] = ['name', 'sex', 'username', 'email', 'phone', 'address', 'detail'];
+  dataSource = new MatTableDataSource<Person>([]);
+  formSearch: FormGroup;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   constructor(
-    private dialog: MatDialog
-  ) { }
-
-  ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-    this.date = new FormControl(new Date());
-    this.fBanks = new FormControl('', Validators.required);
-  }
-
-  openDialogDetail(Obj: DetailPerson) {
-    const dialogIns = this.dialog.open(DialogDetailComponent, {
-      width: '400px',
-      height: '450px',
-      hasBackdrop: true,
-      data: Obj
+    private dialog: MatDialog,
+    private employeeService: EmployeeService,
+    private ngxSpinnerService: NgxSpinnerService,
+    private router: Router,
+  ) {
+    this.formSearch = new FormGroup({
+      'name': new FormControl('')
     });
   }
 
+  ngOnInit() {
+    try {
+      this.dataSource.paginator = this.paginator;
+      this.Check_User_Exists('');
+    } catch (ex) {
+      this.ngxSpinnerService.hide();
+    }
+  }
+
+  openDialogDetail(Obj: Person) {
+    const dialogs = this.dialog.open(DialogDetailComponent, {
+      width: '1010px',
+      height: '520px',
+      hasBackdrop: true,
+      disableClose: true,
+      data: Obj
+    });
+
+    return dialogs;
+  }
+
+  onSubmit() {
+    this.Check_User_Exists(this.formSearch.get('name').value);
+  }
+
+  private Check_User_Exists(value) {
+    this.Get_User_Id(value).subscribe(
+      checkUser => {
+        const array = [];
+        if (checkUser instanceof Array) {
+          this.dataSource.data = [];
+          checkUser.forEach(data => {
+            array.push({
+              username: data.username,
+              account_number: data.account_number,
+              address: data.address,
+              email: data.email,
+              full_name: data.full_name,
+              phone: data.phone,
+              sex: data.sex
+            });
+          });
+          this.dataSource.data = array.sort((a, b) => a.full_name > b.full_name ? 1 : -1);
+        } else if (checkUser instanceof Object) {
+          this.dataSource.data = [];
+          array.push({
+            username: checkUser.username,
+            account_number: checkUser.account_number,
+            address: checkUser.address,
+            email: checkUser.email,
+            full_name: checkUser.full_name,
+            phone: checkUser.phone,
+            sex: checkUser.sex
+          });
+          this.dataSource.data = array.sort((a, b) => a.full_name > b.full_name ? 1 : -1);
+        } else {
+          this.openDialog({ Text: 'Tên đăng nhập/STK không tồn tại!', Title: 0 });
+        }
+      },
+      error => {
+        if (error.status === 401) {
+          this.Renew_Token().subscribe(
+            result => {
+              if (result) {
+                this.Get_User_Id(value).subscribe(
+                  checkUser => {
+                    const array = [];
+                    if (checkUser instanceof Array) {
+                      this.dataSource.data = [];
+                      checkUser.forEach(data => {
+                        array.push({
+                          username: data.username,
+                          account_number: data.account_number,
+                          address: data.address,
+                          email: data.email,
+                          full_name: data.full_name,
+                          phone: data.phone,
+                          sex: data.sex
+                        });
+                      });
+                      this.dataSource.data = array.sort((a, b) => a.full_name > b.full_name ? 1 : -1);
+                    } else if (checkUser instanceof Object) {
+                      this.dataSource.data = [];
+                      array.push({
+                        username: checkUser.username,
+                        account_number: checkUser.account_number,
+                        address: checkUser.address,
+                        email: checkUser.email,
+                        full_name: checkUser.full_name,
+                        phone: checkUser.phone,
+                        sex: checkUser.sex
+                      });
+                      this.dataSource.data = array.sort((a, b) => a.full_name > b.full_name ? 1 : -1);
+                    } else {
+                      this.openDialog({ Text: 'Tên đăng nhập/STK không tồn tại!', Title: 0 });
+                    }
+                  },
+                  errors => {
+                    this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                  });
+              } else {
+                this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
+                  .subscribe(
+                    Prosc => {
+                      this.router.navigateByUrl('', { replaceUrl: true });
+                    }
+                  );
+              }
+            }
+          );
+        } else {
+          this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+        }
+      }
+    );
+  }
+
+  private Renew_Token(): Observable<boolean> {
+    this.ngxSpinnerService.show();
+    return Observable.create((observer: Observer<boolean>) => {
+      this.employeeService.renew<any>().subscribe(
+        result => {
+          localStorage.setItem('access-token', result.access_token);
+          this.ngxSpinnerService.hide();
+          observer.next(true);
+          observer.complete();
+        },
+        error => {
+          this.ngxSpinnerService.hide();
+          observer.next(false);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  private Get_User_Id(id): Observable<any> {
+    this.ngxSpinnerService.show();
+    return Observable.create((observer: Observer<any>) => {
+      this.employeeService.getUser(id).subscribe(
+        result => {
+          this.ngxSpinnerService.hide();
+          if (result) {
+            observer.next(result);
+            observer.complete();
+          } else {
+            observer.next(null);
+            observer.complete();
+          }
+        },
+        error => {
+          this.ngxSpinnerService.hide();
+          observer.error(error);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  private openDialog(mess: Msg) {
+    const dialogRef = this.dialog.open(DialogWarningComponent, {
+      width: '400px',
+      hasBackdrop: true,
+      data: mess
+    });
+
+    return dialogRef;
+  }
+
 }
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-  { position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na' },
-  { position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg' },
-  { position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al' },
-  { position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si' },
-  { position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P' },
-  { position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S' },
-  { position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl' },
-  { position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar' },
-  { position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K' },
-  { position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca' },
-];
