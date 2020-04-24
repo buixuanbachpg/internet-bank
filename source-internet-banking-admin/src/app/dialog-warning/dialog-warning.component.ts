@@ -40,6 +40,8 @@ export class DialogWarningComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     if (this.confH) {
       this.elementRef.nativeElement.querySelector('#btnBack').focus();
+    } else {
+      this.elementRef.nativeElement.querySelector('#btnOk').focus();
     }
   }
 

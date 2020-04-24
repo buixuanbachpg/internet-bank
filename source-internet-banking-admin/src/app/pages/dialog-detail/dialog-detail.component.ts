@@ -57,19 +57,25 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
           result => {
             this.dataSource.data = [];
             const array = [];
-            if (result.local.length > 0) {
-              result.local.forEach(data => {
-                array.push({
-                  amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
-                  from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
-                  message: data.message,
-                  // pay_debit: 0,
-                  time: this.datePipe.transform(data.time, 'add/MM/yyyy hh:mm a'),
-                  // to_account_number: "944985347156",
-                });
-                this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+            result.local.forEach(data => {
+              array.push({
+                amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
+                message: data.message,
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
               });
-            } else {
+            });
+
+            result.global.forEach(data => {
+              array.push({
+                amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
+                message: data.message,
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+              });
+            });
+            this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+            if (this.dataSource.data.length === 0) {
               this.openDialog({ Text: 'Không có dữ giao dịch liệu nhận tiền!', Title: 0 });
             }
           },
@@ -82,19 +88,26 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                       result2 => {
                         this.dataSource.data = [];
                         const array = [];
-                        if (result2.local.length > 0) {
-                          result2.local.forEach(data => {
-                            array.push({
-                              amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
-                              from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
-                              message: data.message,
-                              // pay_debit: 0,
-                              time: this.datePipe.transform(data.time, 'add/MM/yyyy hh:mm a'),
-                              // to_account_number: "944985347156",
-                            });
-                            this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+                        result2.local.forEach(data => {
+                          array.push({
+                            amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                            from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
+                            message: data.message,
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
                           });
-                        } else {
+                        });
+
+                        result2.global.forEach(data => {
+                          array.push({
+                            amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                            from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
+                            message: data.message,
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                          });
+                        });
+                        this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+                        if (this.dataSource.data.length === 0) {
+
                           this.openDialog({ Text: 'Không có dữ liệu giao dịch nhận tiền!', Title: 0 });
                         }
                       },
@@ -122,19 +135,25 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
           result => {
             this.dataSource.data = [];
             const array = [];
-            if (result.local.length > 0) {
-              result.local.forEach(data => {
-                array.push({
-                  amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
-                  from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
-                  message: data.message,
-                  // pay_debit: 0,
-                  time: this.datePipe.transform(data.time, 'add/MM/yyyy hh:mm a'),
-                  // to_account_number: "944985347156",
-                });
-                this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+            result.local.forEach(data => {
+              array.push({
+                amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
+                message: data.message,
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
               });
-            } else {
+            });
+
+            result.global.forEach(data => {
+              array.push({
+                amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
+                message: data.message,
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+              });
+            });
+            this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+            if (this.dataSource.data.length === 0) {
               this.openDialog({ Text: 'Không có dữ liệu giao dịch chuyển khoản!', Title: 0 });
             }
           },
@@ -147,19 +166,25 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                       result2 => {
                         this.dataSource.data = [];
                         const array = [];
-                        if (result2.local.length > 0) {
-                          result2.local.forEach(data => {
-                            array.push({
-                              amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
-                              from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
-                              message: data.message,
-                              // pay_debit: 0,
-                              time: this.datePipe.transform(data.time, 'add/MM/yyyy hh:mm a'),
-                              // to_account_number: "944985347156",
-                            });
-                            this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+                        result2.local.forEach(data => {
+                          array.push({
+                            amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                            from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
+                            message: data.message,
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
                           });
-                        } else {
+                        });
+
+                        result2.global.forEach(data => {
+                          array.push({
+                            amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                            from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
+                            message: data.message,
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                          });
+                        });
+                        this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+                        if (this.dataSource.data.length === 0) {
                           this.openDialog({ Text: 'Không có dữ liệu giao dịch chuyển khoản!', Title: 0 });
                         }
                       },
@@ -187,17 +212,16 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
           result => {
             this.dataSource.data = [];
             const array = [];
-            if (result.local.length > 0) {
-              result.local.forEach(data => {
-                array.push({
-                  amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
-                  from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
-                  message: data.message,
-                  time: this.datePipe.transform(data.time, 'add/MM/yyyy hh:mm a'),
-                });
-                this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+            result.forEach(data => {
+              array.push({
+                amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
+                message: data.message,
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
               });
-            } else {
+            });
+            this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+            if (this.dataSource.data.length === 0) {
               this.openDialog({ Text: 'Không có dữ liệu giao dịch thanh toán nhắc nợ!', Title: 0 });
             }
           },
@@ -210,17 +234,16 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                       result2 => {
                         this.dataSource.data = [];
                         const array = [];
-                        if (result2.local.length > 0) {
-                          result2.local.forEach(data => {
-                            array.push({
-                              amount: `${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
-                              from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
-                              message: data.message,
-                              time: this.datePipe.transform(data.time, 'add/MM/yyyy hh:mm a'),
-                            });
-                            this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+                        result2.forEach(data => {
+                          array.push({
+                            amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
+                            from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
+                            message: data.message,
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
                           });
-                        } else {
+                        });
+                        this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+                        if (this.dataSource.data.length === 0) {
                           this.openDialog({ Text: 'Không có dữ liệu giao dịch thanh toán nhắc nợ!', Title: 0 });
                         }
                       },

@@ -52,7 +52,7 @@ export class UserProfileComponent implements OnInit {
       'address': new FormControl('',
         [
           Validators.required,
-          Validators.maxLength(15),
+          Validators.maxLength(200),
         ]),
       'sex': new FormControl('Nam')
     });
@@ -68,8 +68,8 @@ export class UserProfileComponent implements OnInit {
             if (user) {
               this.formUser.get('email').setValue(user.email);
               this.formUser.get('fullname').setValue(user.full_name);
-              this.formUser.get('phone').setValue(user.address);
-              this.formUser.get('address').setValue(user.phone);
+              this.formUser.get('phone').setValue(user.phone);
+              this.formUser.get('address').setValue(user.address);
               this.formUser.get('sex').setValue(user.sex);
             }
           },
@@ -84,8 +84,8 @@ export class UserProfileComponent implements OnInit {
                           if (user2) {
                             this.formUser.get('email').setValue(user2.email);
                             this.formUser.get('fullname').setValue(user2.full_name);
-                            this.formUser.get('phone').setValue(user2.address);
-                            this.formUser.get('address').setValue(user2.phone);
+                            this.formUser.get('phone').setValue(user2.phone);
+                            this.formUser.get('address').setValue(user2.address);
                             this.formUser.get('sex').setValue(user2.sex);
                           }
                         },
@@ -117,14 +117,72 @@ export class UserProfileComponent implements OnInit {
   openDialogChangePass() {
     const dialogRef = this.dialog.open(DialogChangepassComponent, {
       width: '400px',
-      height: '350px',
+      height: '400px',
       hasBackdrop: true,
       disableClose: true,
     });
 
   }
 
-  private CheckInput(name, username, email, phone, address): boolean {
+  updateinfo() {
+    if (!this.CheckInput()) {
+      return;
+    }
+
+    this.openDialog({ Text: 'Bạn có muốn cập nhật lại thông tin?', Title: 3 }).afterClosed()
+      .subscribe(
+        updateConfirm => {
+          if (updateConfirm) {
+            this.Update_Infomation().subscribe(
+              result => {
+                if (result) {
+                  this.openDialog({ Text: 'Bạn đã cập nhật thành công!', Title: 1 });
+                } else {
+                  this.openDialog({ Text: 'Quá trình cập nhật thất bại!', Title: 0 });
+                }
+              },
+              error => {
+                if (error.status === 401) {
+                  this.Renew_Token().subscribe(
+                    result => {
+                      if (result) {
+                        this.Update_Infomation().subscribe(
+                          result2 => {
+                            if (result2) {
+                              this.openDialog({ Text: 'Bạn đã cập nhật thành công!', Title: 1 });
+                            } else {
+                              this.openDialog({ Text: 'Quá trình cập nhật thất bại!', Title: 0 });
+                            }
+                          },
+                          errors => {
+                            this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                          });
+                      } else {
+                        this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
+                          .subscribe(
+                            Prosc => {
+                              this.router.navigateByUrl('', { replaceUrl: true });
+                            }
+                          );
+                      }
+                    }
+                  );
+                } else {
+                  this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                }
+              }
+            );
+          }
+        }
+      );
+  }
+
+  private CheckInput(): boolean {
+    const email = this.formUser.get('email');
+    const name = this.formUser.get('fullname');
+    const phone = this.formUser.get('phone');
+    const address = this.formUser.get('address');
+
     let mess = '';
     if (name.errors) {
       mess = name.errors.required
@@ -229,6 +287,37 @@ export class UserProfileComponent implements OnInit {
             observer.complete();
           } else {
             observer.next(null);
+            observer.complete();
+          }
+        },
+        error => {
+          this.ngxSpinnerService.hide();
+          observer.error(error);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  private Update_Infomation() {
+    this.ngxSpinnerService.show();
+    return Observable.create((observer: Observer<boolean>) => {
+      this.employeeService.update(
+        {
+          full_name: this.formUser.get('fullname').value,
+          email: this.formUser.get('email').value,
+          phone: this.formUser.get('phone').value,
+          address: this.formUser.get('address').value,
+          sex: this.formUser.get('sex').value,
+        }
+      ).subscribe(
+        result => {
+          this.ngxSpinnerService.hide();
+          if (result) {
+            observer.next(true);
+            observer.complete();
+          } else {
+            observer.next(false);
             observer.complete();
           }
         },

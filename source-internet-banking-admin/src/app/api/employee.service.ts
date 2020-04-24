@@ -33,12 +33,12 @@ export class EmployeeService {
   }
 
   insertCustomer<T>(user) {
-    return this.http.post<T>(this.base_path + '/', JSON.stringify(user),
+    return this.http.post<T>(`${this.base_path}/`, JSON.stringify(user),
       { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false });
   }
 
   getUser<T>(id) {
-    return this.http.get<T>(this.base_path + `/${id}`,
+    return this.http.get<T>(`${this.base_path}/${id}`,
       { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false }
     );
   }
@@ -46,6 +46,22 @@ export class EmployeeService {
   updateAccountBalance<T>(info) {
     return this.http.post<T>(`${this.base_path}/Account/`, JSON.stringify(info),
       { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false });
+  }
+
+  changePass<T>(data) {
+    return this.http.put<T>(`${this.base_path}/changePassword`, JSON.stringify(data),
+      {
+        headers: this.httpOptions(localStorage.getItem('access-token')),
+        withCredentials: false
+      });
+  }
+
+  update<T>(data) {
+    return this.http.put<T>(`${this.base_path}/`, JSON.stringify(data),
+      {
+        headers: this.httpOptions(localStorage.getItem('access-token')),
+        withCredentials: false
+      });
   }
 
 }

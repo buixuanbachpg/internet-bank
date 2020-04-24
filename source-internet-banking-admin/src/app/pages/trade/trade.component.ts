@@ -109,7 +109,7 @@ export class TradeComponent implements OnInit {
                   this.cash_detail = '';
                   this.openDialog({ Text: 'Bạn đã tiến hành nạp tiền thành công!', Title: 1 });
                 } else {
-                  this.openDialog({ Text: 'Quá trình tiến hành nạp tiền thất bài!', Title: 0 });
+                  this.openDialog({ Text: 'Quá trình tiến hành nạp tiền thất bại!', Title: 0 });
                 }
               },
               error => {
@@ -130,7 +130,7 @@ export class TradeComponent implements OnInit {
                               this.cash_detail = '';
                               this.openDialog({ Text: 'Bạn đã tiến hành nạp tiền thành công!', Title: 1 });
                             } else {
-                              this.openDialog({ Text: 'Quá trình tiến hành nạp tiền thất bài!', Title: 0 });
+                              this.openDialog({ Text: 'Quá trình tiến hành nạp tiền thất bại!', Title: 0 });
                             }
                           },
                           errors => {

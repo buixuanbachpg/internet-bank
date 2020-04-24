@@ -59,7 +59,7 @@ export class RegistercustomerComponent implements OnInit {
       'address': new FormControl('',
         [
           Validators.required,
-          Validators.maxLength(15),
+          Validators.maxLength(200),
         ]),
       'sex': new FormControl('Nam')
     });

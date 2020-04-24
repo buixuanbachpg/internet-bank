@@ -13,11 +13,11 @@ import { ReviewtradeComponent } from '../../pages/reviewtrade/reviewtrade.compon
 
 
 export const AdminLayoutRoutes: Routes = [
-    { path: 'dashboard', component: DashboardComponent },
+    // { path: 'dashboard', component: DashboardComponent },
     { path: 'user-profile', component: UserProfileComponent },
-    { path: 'tables', component: TablesComponent },
-    { path: 'icons', component: IconsComponent },
-    { path: 'maps', component: MapsComponent },
+    // { path: 'tables', component: TablesComponent },
+    // { path: 'icons', component: IconsComponent },
+    // { path: 'maps', component: MapsComponent },
     { path: 'manager', component: EmployeemanagerComponent },
     { path: 'report', component: TradereportComponent },
     { path: 'customer', component: RegistercustomerComponent },

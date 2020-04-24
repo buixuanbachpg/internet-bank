@@ -51,4 +51,17 @@ export class AdminService {
     return this.http.get<T>(`${this.base_path}/${id}`,
       { headers: this.httpOptions(localStorage.getItem('access-token')), withCredentials: false });
   }
+
+  gethistory<T>(data) {
+    return this.http.get<T>(`${this.base_path}/history`,
+      {
+        headers: this.httpOptions(localStorage.getItem('access-token')),
+        withCredentials: false,
+        params: {
+          fromDate: data.fromDate,
+          toDate: data.toDate,
+          bank: data.bank
+        }
+      });
+  }
 }

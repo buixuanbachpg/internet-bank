@@ -4,16 +4,44 @@
     <mat-form-field style="width: 300px;">
       <mat-label>Mật khẩu cũ</mat-label>
       <input #oldpass type="password" matInput [formControlName]="'oldpass'">
+      <mat-error *ngIf="changeForm.get('oldpass').hasError('maxlength')">
+        Số ký tự không được quá 22 ký tự
+      </mat-error>
+      <mat-error *ngIf="changeForm.get('oldpass').hasError('minlength')">
+        Số ký tự tối thiểu phải 6 ký tự
+      </mat-error>
+      <mat-error *ngIf="changeForm.get('oldpass').hasError('required')">
+        Mật khẩu cũ <strong>không được để trống!</strong>
+      </mat-error>
     </mat-form-field>
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Mật khẩu mới</mat-label>
       <input #newpass type="password" matInput [formControlName]="'newpass'">
+      <mat-error *ngIf="changeForm.get('newpass').hasError('maxlength')">
+        Số ký tự không được quá 22 ký tự
+      </mat-error>
+      <mat-error *ngIf="changeForm.get('newpass').hasError('minlength')">
+        Số ký tự tối thiểu phải 6 ký tự
+      </mat-error>
+      <mat-error *ngIf="changeForm.get('newpass').hasError('required')">
+        Mật khẩu mới <strong>không được để trống!</strong>
+      </mat-error>
     </mat-form-field>
     <br>
     <mat-form-field style="width: 300px;">
       <mat-label>Nhập lại mật khẩu mới</mat-label>
       <input #confirmpass type="password" matInput [formControlName]="'confirmpass'">
+      <mat-error *ngIf="changeForm.get('confirmpass').hasError('maxlength')">
+        Số ký tự không được quá 22 ký tự
+      </mat-error>
+      <mat-error *ngIf="changeForm.get('confirmpass').hasError('minlength')">
+        Số ký tự tối thiểu phải 6 ký tự
+      </mat-error>
+      <mat-error *ngIf="changeForm.get('confirmpass').hasError('required')">
+        Nhập lại mật khẩu mới <strong>không được để trống!</strong>
+      </mat-error>
+
     </mat-form-field>
   </form>
 </div>

@@ -54,6 +54,16 @@ export class SidebarComponent implements OnInit {
     });
   }
 
+  symbolClick() {
+    if (localStorage.getItem('permission') === '1') {
+      this.router.navigate(['/manager'], { replaceUrl: true });
+    } else if (localStorage.getItem('permission') === '0') {
+      this.router.navigate(['/customer'], { replaceUrl: true });
+    } else {
+      this.router.navigate([''], { replaceUrl: true });
+    }
+  }
+
   logout() {
     if (localStorage.getItem('email')) {
       this.ngxSpinnerService.show();
