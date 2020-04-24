@@ -31,7 +31,7 @@ router.put('/:email', (req, res) => {
         password = req.body.password;
         adminRepo.resetPassword(email, password).then(changedRows => {
             if (changedRows > 0) {
-                res.status(200).end("thay đổi thành công");
+                res.status(200).json("thay đổi thành công");
             } else {
                 res.status(500).send("thay đổi không thành công");
             }
