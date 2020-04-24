@@ -1,0 +1,78 @@
+<div class="row">
+  <!-- project and team member start -->
+  <div class="col-xl-12 col-md-12">
+
+    <app-card [hidHeader]="true" cardClass="tab-card">
+      <h5 class="mb-3">Debt reminder management</h5>
+      <ngb-tabset type="pills">
+        <ngb-tab title="Make by me" class="mb-3">
+          <ng-template ngbTabContent>
+            <table class="table table-hover mb-0" style="border: 1px solid #e2e5e8;">
+              <thead>
+                <tr>
+                  <th>
+                    Account number
+                  </th>
+                  <th>Account type</th>
+                  <th class="text-right">Balance</th>
+                  <th class="text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="d-inline-block align-middle">
+                      <img src="assets/images/user/avatar-4.jpg" alt="user image"
+                        class="img-radius wid-40 align-top m-r-15">
+                      <div class="d-inline-block">
+                        <h6>John Deo</h6>
+                        <p class="text-muted m-b-0">Graphics Designer</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Flat Able</td>
+                  <td class="text-right">Jun, 26</td>
+                  <td class="text-right">
+                    <i class="feather icon-plus-square hovericonadd"></i>
+                    <i class="feather icon-edit hovericonedit"></i>
+                    <i class="feather icon-trash hovericondelete"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Others">
+          <ng-template ngbTabContent>
+            <table class="table table-hover mb-0" style="border: 1px solid #e2e5e8;">
+              <thead>
+                <tr>
+                  <th>Account number</th>
+                  <th>Account type</th>
+                  <th class="text-right">Status</th>
+                  <th class="text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    123123123123
+                  </td>
+                  <td>Flat Able</td>
+                  <td class="text-right">Jun, 26</td>
+                  <td class="text-right">
+                    <i class="feather icon-plus-square hovericonadd"></i>
+                    <i class="feather icon-edit hovericonedit"></i>
+                    <i class="feather icon-trash hovericondelete"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+    </app-card>
+
+  </div>
+</div>
