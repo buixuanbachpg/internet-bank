@@ -19,6 +19,7 @@ export class NavbarComponent implements OnInit {
   listTitles: any[];
   location: Location;
   userId: string;
+  visible: boolean;
   constructor(
     location: Location,
     private element: ElementRef,
@@ -33,6 +34,10 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     this.userId = localStorage.getItem('full_name');
     this.listTitles = ROUTES.filter(listTitle => listTitle);
+    this.visible = false;
+    if (localStorage.getItem('permission') === '0') {
+      this.visible = true;
+    }
   }
   getTitle() {
     let titlee = this.location.prepareExternalUrl(this.location.path());

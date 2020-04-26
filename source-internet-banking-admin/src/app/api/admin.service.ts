@@ -8,7 +8,7 @@ import { retry, catchError, retryWhen, delay, take } from 'rxjs/operators';
 })
 export class AdminService {
 
-  private base_path = 'http://localhost:3000/admin';
+  private base_path = 'https://bank-demo-server.herokuapp.com/admin';
   constructor(
     private http: HttpClient
   ) { }

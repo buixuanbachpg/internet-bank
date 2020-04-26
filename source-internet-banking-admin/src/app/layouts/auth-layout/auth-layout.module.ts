@@ -33,7 +33,7 @@ import { A11yModule } from '@angular/cdk/a11y';
   providers: [
     {
       provide: RECAPTCHA_SETTINGS,
-      useValue: { siteKey: '6Lc1INwUAAAAAA0ntCzOxL6-5Pw-NSUQrPkVzF95' } as RecaptchaSettings,
+      useValue: { siteKey: '6LfUa-4UAAAAAFjBCQv5jF3tze_ZcxmBiiIn9geq' } as RecaptchaSettings,
     }
   ]
 })

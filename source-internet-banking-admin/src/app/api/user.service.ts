@@ -8,7 +8,7 @@ import { retry, catchError } from 'rxjs/operators';
 })
 export class UserService {
 
-  private base_path = 'http://localhost:3000/users';
+  private base_path = 'https://bank-demo-server.herokuapp.com/users';
   constructor(
     private http: HttpClient
   ) { }

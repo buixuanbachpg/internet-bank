@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class EmployeeService {
-  private base_path = 'http://localhost:3000/employee';
+  private base_path = 'https://bank-demo-server.herokuapp.com/employee';
   constructor(
     private http: HttpClient
   ) { }

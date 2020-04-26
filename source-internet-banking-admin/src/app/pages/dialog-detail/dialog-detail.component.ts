@@ -215,7 +215,7 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
             result.forEach(data => {
               array.push({
                 amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
-                from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
+                from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                 message: data.message,
                 time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
               });
@@ -237,7 +237,7 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                         result2.forEach(data => {
                           array.push({
                             amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
-                            from_account_number: data.from_account_number === '0000' ? 'BBD Banking' : data.from_account_number,
+                            from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                             message: data.message,
                             time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
                           });
