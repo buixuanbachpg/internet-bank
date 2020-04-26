@@ -31,7 +31,8 @@
           <div class=" dropdown-header noti-title">
             <h6 class="text-overflow m-0">Welcome!</h6>
           </div>
-          <a routerLinkActive="active" [routerLink]="['/user-profile']" class="dropdown-item">
+          <a *ngIf="visible" routerLinkActive="active" [routerLink]="['/user-profile']" [replaceUrl]="true"
+            class="dropdown-item">
             <i class="ni ni-single-02"></i>
             <span>My profile</span>
           </a>
@@ -47,7 +48,7 @@
             <i class="ni ni-support-16"></i>
             <span>Support</span>
           </a> -->
-          <div class="dropdown-divider"></div>
+          <div *ngIf="visible" class="dropdown-divider"></div>
           <a (click)="logout()" class="dropdown-item">
             <i class="ni ni-user-run"></i>
             <span>Logout</span>

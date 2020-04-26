@@ -23,6 +23,7 @@ export class SidebarComponent implements OnInit {
 
   public menuItems: any[];
   public isCollapsed = true;
+  visible: boolean;
 
   constructor(
     private router: Router,
@@ -32,6 +33,10 @@ export class SidebarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.visible = false;
+    if (localStorage.getItem('permission') === '0') {
+      this.visible = true;
+    }
     // ROUTES = localStorage.getItem('permission') === '1' ? [
     //   // { path: '/dashboard', title: 'Dashboard', icon: 'ni-tv-2 text-primary', class: '' },
     //   // { path: '/icons', title: 'Icons', icon: 'ni-planet text-blue', class: '' },
