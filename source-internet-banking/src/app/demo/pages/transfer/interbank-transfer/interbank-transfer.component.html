@@ -1,0 +1,88 @@
+<div class="row">
+  <!-- project and team member start -->
+  <div class="col-xl-12 col-md-12">
+    <app-card cardTitle="Source billing account" cardClass="table-card" blockClass="p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+          <tr>
+            <th>
+              Account number
+            </th>
+            <th>Account type</th>
+            <th class="text-right">Balance</th>
+            <!-- <th class="text-right">Priority</th> -->
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="tr_hover" (click)="gridSystemModal.show()">
+            <td>
+              <div class="d-inline-block align-middle">
+                <img src="assets/images/user/avatar-4.jpg" alt="user image" class="img-radius wid-40 align-top m-r-15">
+                <div class="d-inline-block">
+                  <h6>John Deo</h6>
+                  <p class="text-muted m-b-0">Graphics Designer</p>
+                </div>
+              </div>
+            </td>
+            <td>Flat Able</td>
+            <td class="text-right">Jun, 26</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-card>
+  </div>
+  <div class="col-xl-4 col-md-6">
+      <app-ui-modal #gridSystemModal>
+        <div class="app-modal-header">
+          <h5 class="modal-title">Recipient Information</h5>
+          <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="gridSystemModal.hide()"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="app-modal-body">
+          <div class="container-fluid bd-example-row">
+            <form action="javascript:">
+              <div class="form-group">
+                <label for="accountnumber">Account number</label>
+                <div style="display: flex;">
+                  <input type="text" class="form-control" id="accountnumber" aria-describedby="accountHelp" placeholder="Enter account number">
+                  <div class="input-group-append dropdown" ngbDropdown placement="auto">
+                    <button type="button" class="btn btn-secondary dropdown-toggle-split" ngbDropdownToggle><span class="sr-only">Toggle Dropdown</span></button>
+                    <div ngbDropdownMenu>
+                      <a class="dropdown-item" href="javascript:">Action</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="bank">Bank</label>
+                <input type="text" class="form-control" id="bank" placeholder="Enter bank">
+              </div>
+              <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="text" class="form-control" id="amount" placeholder="Enter account">
+              </div>
+              <div class="form-group">
+                <label for="transactionDetail">Transaction detail</label>
+                <input type="text" class="form-control" id="transactionDetail" placeholder="Enter transaction detail">
+              </div>
+              <div class="form-group">
+                <label for="transactionDetail">Fee charged for</label>
+                <select id="transactionDetail" class="form-control">
+                  <option selected>Sender</option>
+                  <option>Receiver</option>
+                </select>
+              </div>
+              <div class="form-group form-check">
+                
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="app-modal-footer">
+          <button type="button" style="margin-right: 10px;" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModal.hide()">Close</button>
+          <button type="button" class="btn btn-primary">Continue</button>
+        </div>
+      </app-ui-modal>
+  </div>
+</div>

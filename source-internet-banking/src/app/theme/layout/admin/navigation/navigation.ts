@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 export interface NavigationItem {
   id: string;
@@ -27,48 +27,106 @@ export interface Navigation extends NavigationItem {
 
 const NavigationItems = [
   {
-    id: 'dashboard',
-    title: 'Dashboard',
-    type: 'item',
-    url: '/dashboard/default',
-    classes: 'nav-item',
-    icon: 'feather icon-home'
-    // id: 'navigation',
-    // title: 'Navigation',
-    // type: 'group',
-    // icon: 'feather icon-monitor',
-    // children: [
-    //   {
-    //     id: 'dashboard',
-    //     title: 'Dashboard',
-    //     type: 'item',
-    //     url: '/dashboard/default',
-    //     classes: 'nav-item',
-    //     icon: 'feather icon-home'
-    //   },
-      // {
-      //   id: 'page-layouts',
-      //   title: 'Page Layouts',
-      //   type: 'collapse',
-      //   icon: 'feather icon-layout',
-      //   children: [
-      //     {
-      //       id: 'vertical',
-      //       title: 'Vertical',
-      //       type: 'item',
-      //       url: '/layout/static',
-      //       target: true
-      //     },
-      //     {
-      //       id: 'horizontal',
-      //       title: 'Horizontal',
-      //       type: 'item',
-      //       url: '/layout/horizontal',
-      //       target: true
-      //     }
-      //   ]
-      // }
-    // ]
+    id: 'product-and-services',
+    title: 'Product and services',
+    type: 'group',
+    icon: 'feather icon-monitor',
+    children: [
+      {
+        id: 'dashboard',
+        title: 'Dashboard',
+        type: 'item',
+        url: '/dashboard/default',
+        classes: 'nav-item',
+        icon: 'feather icon-home'
+        // id: 'navigation',
+        // title: 'Navigation',
+        // type: 'group',
+        // icon: 'feather icon-monitor',
+        // children: [
+        //   {
+        //     id: 'dashboard',
+        //     title: 'Dashboard',
+        //     type: 'item',
+        //     url: '/dashboard/default',
+        //     classes: 'nav-item',
+        //     icon: 'feather icon-home'
+        //   },
+        // {
+        //   id: 'page-layouts',
+        //   title: 'Page Layouts',
+        //   type: 'collapse',
+        //   icon: 'feather icon-layout',
+        //   children: [
+        //     {
+        //       id: 'vertical',
+        //       title: 'Vertical',
+        //       type: 'item',
+        //       url: '/layout/static',
+        //       target: true
+        //     },
+        //     {
+        //       id: 'horizontal',
+        //       title: 'Horizontal',
+        //       type: 'item',
+        //       url: '/layout/horizontal',
+        //       target: true
+        //     }
+        //   ]
+      },
+      {
+        id: 'accountinformation',
+        title: 'Account Information',
+        type: 'item',
+        url: '/accountinformation',
+        classes: 'nav-item',
+        icon: 'feather icon-file-text'
+      },
+      {
+        id: 'recipientlist',
+        title: 'Recipient list',
+        type: 'item',
+        url: '/recipientlist',
+        classes: 'nav-item',
+        icon: 'feather icon-list'
+      },
+      {
+        id: 'transfer',
+        title: 'Transfer',
+        type: 'collapse',
+        icon: 'fa fa-hand-holding-usd',
+        children: [
+          {
+            id: 'internal-transfer',
+            title: 'Internal Transfer (Same Bank)',
+            type: 'item',
+            url: '/transfer/internal'
+          },
+          {
+            id: 'interbank-transfer',
+            title: 'Interbank Transfer',
+            type: 'item',
+            url: '/transfer/interbank'
+          }
+        ]
+      },
+      {
+        id: 'debt-reminder-management',
+        title: 'Debt reminder management',
+        type: 'item',
+        url: '/debt-reminder-management',
+        classes: 'nav-item',
+        icon: 'feather icon-bell'
+      },
+      {
+        id: 'transaction-history',
+        title: 'Transaction history',
+        type: 'item',
+        url: '/transaction-history',
+        classes: 'nav-item',
+        icon: 'fa fa-comment-dollar'
+      }
+    ]
   },
   // {
   //   id: 'ui-element',
@@ -270,31 +328,6 @@ const NavigationItems = [
   //     }
   //   ]
   // },
-  {
-    id: 'accountinformation',
-    title: 'Account Information',
-    type: 'item',
-    url: '/accountinformation',
-    classes: 'nav-item',
-    icon: 'feather icon-file-text'
-  },
-  {
-    id: 'recipientlist',
-    title: 'Recipient list',
-    type: 'item',
-    url: '/recipientlist',
-    classes: 'nav-item',
-    icon: 'feather icon-list'
-  }
-  ,
-  {
-    id: 'debt-reminder-management',
-    title: 'Debt reminder management',
-    type: 'item',
-    url: '/debt-reminder-management',
-    classes: 'nav-item',
-    icon: 'feather icon-clock'
-  }
 ];
 
 @Injectable()
