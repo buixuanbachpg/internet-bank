@@ -32,9 +32,9 @@ export class DashDefaultComponent implements OnInit {
     this.seoChartData3 = SeoChart3.seoChartData;
     this.powerCardChartData1 = PowerCardChart1.powerCardChartData;
     this.powerCardChartData2 = PowerCardChart2.powerCardChartData;
-    // if (!localStorage.getItem("token")){
-    //   this.router.navigateByUrl("/auth/signin");
-    // }
+    if (!localStorage.getItem("TOKEN")){
+      this.router.navigateByUrl("/auth/signin");
+    }
   }
 
   ngOnInit() {

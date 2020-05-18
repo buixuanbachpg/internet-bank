@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { setArticles, getArticles } from './user.action';
+import { setArticles, getArticles, getUser, setUser } from './user.action';
 
 
 export interface Article {
@@ -12,31 +12,48 @@ export interface listArticle {
     total?: number;
 }
 
-export const initialState: listArticle = { data: [], datalistStore: {}, total: 1 };
+export interface user {
+    data:  any;
+}
 
-const articleReducer = createReducer(initialState,
-    on(setArticles, (state, payload) => {
+// export const initialState: listArticle = { data: [], datalistStore: {}, total: 1 };
+export const initialState: user = { data: {} };
+
+const userReducer = createReducer(initialState,
+    on(setUser, (state, payload) => {
         return {
             ...state,
             data: payload.data
         };
     }),
-    on(getArticles, (state, payload) => {
-        if (payload.data) {
-            const converdata = {
-                [payload.page]: payload.data.article
-            };
-            const dataInstore = { ...state.datalistStore, ...converdata };
-            return {
-                ...state,
-                data: payload.data.article,
-                datalistStore: dataInstore,
-                total: payload.data.articlescount
-            }
-        }
-    })
+    on(getUser, (state, payload) => {
+        return {
+            ...state,
+            data: payload.data
+        };
+    }),
+    // on(setArticles, (state, payload) => {
+    //     return {
+    //         ...state,
+    //         data: payload.data
+    //     };
+    // }),
+    // on(getArticles, (state, payload) => {
+    //     if (payload.data) {
+    //         const converdata = {
+    //             [payload.page]: payload.data.article
+    //         };
+    //         const dataInstore = { ...state.datalistStore, ...converdata };
+    //         return {
+    //             ...state,
+    //             data: payload.data.article,
+    //             datalistStore: dataInstore,
+    //             total: payload.data.articlescount
+    //         }
+    //     }
+    // })
 );
 
-export function ArticleReducer(state, action) {
-    return articleReducer(state, action);
+export function UserReducer(state, action) {
+    return userReducer(state, action);
 }

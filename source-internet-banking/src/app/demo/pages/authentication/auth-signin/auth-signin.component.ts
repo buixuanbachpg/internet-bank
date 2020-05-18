@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { ValidationService } from 'src/service/validation-service';
 import { Store, select } from '@ngrx/store';
 import * as appReducer from 'src/store/appStore.reducer';
-import { homeArticles } from 'src/store/user/user.action';
-import { userService } from 'src/store/user/user.service';
+import { login } from 'src/store/user/user.action';
+import { UserService } from 'src/app/api/user.service';
 
 @Component({
   selector: 'app-auth-signin',
@@ -20,30 +20,41 @@ export class AuthSigninComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private store: Store<appReducer.AppState>,
-    protected userService: userService,
+    protected userService: UserService,
   ) {
     this.userForm = this.formBuilder.group({
-      email: ['', [Validators.required, ValidationService.emailValidator]],
+      username: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
       password: ['', [Validators.required, ValidationService.passwordValidator, Validators.minLength(6), Validators.maxLength(20)]]
     });
    }
 
    ngOnInit() {}
 
-  submit(){
+  async submit(){
     if (grecaptcha.getResponse()) {
       if (this.userForm.dirty && this.userForm.valid) {
-        // this.store.pipe(select('article'))  .subscribe(res => {
-        //   console.log(res);
-          
-        // });
-
-        // this.store.dispatch(homeArticles({limit: 1, offset: 10}));
-        this.userService.login().subscribe(res => {
-          console.log(res);
-          
+        const user = {
+          username: this.userForm.controls['username'].value,
+          password: this.userForm.controls['password'].value
+        }
+        this.userService.login(user).subscribe(res => {
+          if (res && res.auth) {
+            localStorage.setItem('TOKEN', JSON.stringify(res.access_token))
+            this.router.navigateByUrl("/dashboard/default");
+          } else {
+            
+          }
         });
-        this.router.navigateByUrl("/dashboard/default");
+      //   await this.store.dispatch(login({username: this.userForm.controls['username'].value, password: this.userForm.controls['password'].value}));
+        
+      //   console.log("111111")
+      //   this.store.pipe(select('user')).subscribe(res => {
+      //     if (res.data && res.data.auth) {
+      //       this.router.navigateByUrl("/dashboard/default");
+      //     } else {
+            
+      //     }
+      //   })
        }
      }
      else{

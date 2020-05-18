@@ -1,28 +1,31 @@
 import { Injectable } from "@angular/core";
-import { userService } from './user.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { switchMap, take, map } from 'rxjs/operators';
-import { homeArticles, getArticles } from './user.action';
+import { getUser, login } from './user.action';
+import { UserService } from 'src/app/api/user.service';
 
 @Injectable()
 export class TestEffect {
     constructor(
         private acction: Actions,
-        private userService: userService
+        private userService: UserService
     ) {}
     isloading = false;
 
     loadArticles$ = createEffect( () => 
         this.acction.pipe(
-            ofType(homeArticles),
+            ofType(login),
             switchMap((res) => {
-                const offset = res.offset;
                 this.isloading = true;
-                return this.userService.getAll(res.limit, res.offset).pipe(
+                const user = {
+                    username: res.username,
+                    password: res.password
+                }
+                return this.userService.login(user).pipe(
                     take(1),
                     map((res1) => {
                         this.isloading = false;
-                        return getArticles({data: res1, page: (Math.ceil((offset + 1)/10))});
+                        return getUser({data: res1});
                     })
                 );
             }),

@@ -19,3 +19,13 @@ export const getArticles = createAction(
     'Get home Articles',
     props<{data: any, page: number}>()
 );
+
+export const setUser = createAction(
+    'Set User',
+    props<{data: any}>()
+);
+
+export const getUser = createAction(
+    'Get User',
+    props<{data: any}>()
+);

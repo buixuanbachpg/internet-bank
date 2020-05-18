@@ -23,4 +23,8 @@ export class UserService {
     return this.http.post<T>(`${this.base_path}/login`, JSON.stringify(user), { headers: this.httpOptions(), withCredentials: false });
   }
 
+  resetPassword<T>() {
+    return this.http.post<T>(`${this.base_path}/resetPassword`, null, { headers: this.httpOptions(), withCredentials: false });
+  }
+
 }
