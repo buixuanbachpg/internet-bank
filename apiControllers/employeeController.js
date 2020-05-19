@@ -142,7 +142,7 @@ router.post('/Account/', authRepo.verifyAccessToken, (req, res) => {
         });
     }
 });
-router.put('/changePassword', (req, res) => {
+router.put('/changePassword', authRepo.verifyAccessToken, (req, res) => {
     const { email, new_password, old_password } = req.body;
     employeeRepo.changePassword(email, new_password, old_password)
         .then(changedRows => {
@@ -173,7 +173,7 @@ router.put('/changePassword', (req, res) => {
             res.end();
         });
 });
-router.put('/', (req, res) => {
+router.put('/', authRepo.verifyAccessToken, (req, res) => {
     employeeRepo.update(req.body)
         .then(changedRows => {
             res.statusCode = 201;

@@ -110,19 +110,19 @@ router.put('/changePassword', (req, res) => {
                 res.statusCode = 201;
                 res.json({
                     changedRows: changedRows,
-                    message:"thay đổi mật khẩu thành công"
+                    message:"change password success"
                 });
             }
             else if(false==changedRows){
                 res.statusCode = 400;
             res.json({
-                message:"Mật khẩu cũ không khớp"
+                message:"old password wrong"
             });
             }
             else{
                 res.statusCode = 500;
             res.json({
-                message:"Thay đổi không thành công"
+                message:"changed fail"
             });
             }
         })
@@ -269,9 +269,9 @@ router.post('/transfer',authRepo.verifyAccessToken,verifyOtpMail, (req, res) => 
 
 
 });
-router.post('/recipient ',authRepo.verifyAccessToken, (req, res) => {
+router.post('/recipient',authRepo.verifyAccessToken, (req, res) => {
 
-    userRepo.add(req.body)
+    userRepo.addListRecipient(req.body)
         .then(insertId => {
             res.status(201).json({
                 "message": "thêm thành công",
@@ -282,6 +282,79 @@ router.post('/recipient ',authRepo.verifyAccessToken, (req, res) => {
             console.log(err);
             res.statusCode = 500;
             res.end();
+        });
+});
+router.put('/recipient',authRepo.verifyAccessToken, (req, res) => {
+    const {account_number,account_number_receive,name_reminiscent}=req.body;
+    userRepo.updateListRecipient(account_number,account_number_receive,name_reminiscent)
+    .then(changedRows => {
+        res.statusCode = 201;
+        res.json({
+            changedRows: changedRows
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+        res.end();
+    });
+});
+router.delete('/recipient',authRepo.verifyAccessToken, (req, res) => {
+    const {account_number,account_number_receive}=req.body;
+    userRepo.deleteListRecipient(account_number,account_number_receive)
+        .then(affectedRows => {
+            res.json({
+                affectedRows: affectedRows
+            });
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+});
+
+router.post('/indebit', authRepo.verifyAccessToken,(req, res) => {
+
+    userRepo.addInDebit(req.body)
+        .then(insertId => {
+            res.status(201).json({
+                "message": "thêm thành công",
+                "insertId": insertId
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end();
+        });
+});
+router.get('/indebit',authRepo.verifyAccessToken, (req, res) => {
+    const {account_number,opt}=req.body;
+    userRepo.loadInDebit(account_number,opt)
+    .then(rows => {
+        if (rows.length > 0) {
+            res.json(rows[0]);
+        } else {
+            res.statusCode = 204;
+            res.end();
+        }
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+        res.end('View error log on console.');
+    });
+});
+router.delete('/indebit',authRepo.verifyAccessToken, (req, res) => {
+    const {account_number,account_number_debit}=req.body;
+    userRepo.deleteInDebit(account_number,account_number_debit)
+        .then(affectedRows => {
+            res.json({
+                affectedRows: affectedRows
+            });
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
         });
 });
 
@@ -396,7 +469,7 @@ router.get('/:name', authRepo.verifyAccessToken,(req, res) => {
     }
 });
 router.post('/resetPassword',authRepo.verifyAccessToken,verifyOtpMail, (req,res)=>{
-    userRepo.updatePassword(req.body).then(changedRows=>{
+    userRepo.changePassword(req.body).then(changedRows=>{
         if(changedRows){
             res.status(200).json({
                 message:"changed success"
@@ -415,7 +488,7 @@ router.post('/resetPassword',authRepo.verifyAccessToken,verifyOtpMail, (req,res)
     })
 });
 
-router.post('/query_info/:bank/:id', (req, res) => {
+router.post('/query_info/:bank/:id',authRepo.verifyAccessToken, (req, res) => {
     bank=req.params.bank;
     account_number=req.params.id;
     var secret_key="";
@@ -476,7 +549,7 @@ router.get('/',authRepo.verifyAccessToken, (req, res) => {
 
 });
 
-router.put('/', (req, res) => {
+router.put('/',authRepo.verifyAccessToken, (req, res) => {
     userRepo.update(req.body)
         .then(changedRows => {
             res.statusCode = 201;
