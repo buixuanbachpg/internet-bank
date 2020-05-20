@@ -31,14 +31,26 @@ export class AuthSigninComponent implements OnInit {
    ngOnInit() {}
 
   async submit(){
+    console.log("submit")
     if (grecaptcha.getResponse()) {
+      console.log("submit2")
       if (this.userForm.dirty && this.userForm.valid) {
+        console.log("submit3")
         const user = {
           username: this.userForm.controls['username'].value,
           password: this.userForm.controls['password'].value
         }
         this.userService.login(user).subscribe(res => {
           if (res && res.auth) {
+            console.log("submit4")
+            const user = {
+              username: res.user.username,
+              account_number: res.user.account_number,
+              account_balance: res.user.account_balance,
+              full_name: res.user.full_name,
+              email: res.user.email
+            }
+            localStorage.setItem('USER_ifo', JSON.stringify(user));
             localStorage.setItem('TOKEN', JSON.stringify(res.access_token))
             this.router.navigateByUrl("/dashboard/default");
           } else {
