@@ -19,11 +19,36 @@ exports.loadAll = function() {
     return db.load(sql);
 }
 
-
 exports.addListRecipient=function(poco){
     var sql = `insert into danh_sach_nguoi_nhan(account_number, account_number_receive, name_reminiscent) values('${poco.account_number}','${poco.account_number_receive}','${poco.name_reminiscent}')`;
     return db.insert(sql);
 }
+exports.deleteListRecipient=function(account_number,account_number_receive){
+    var sql = `DELETE FROM danh_sach_nguoi_nhan WHERE account_number_receive =  '${account_number_receive}' and account_number='${account_number}'`;
+     return db.delete(sql);
+}
+exports.updateListRecipient=function(account_number,account_number_receive,name_reminiscent){
+    var sql = `update danh_sach_nguoi_nhan SET name_reminiscent='${name_reminiscent}' where account_number = '${account_number}'and account_number_receive = '${account_number_receive}' `;
+    return db.update(sql);
+}
+
+exports.addInDebit=function(poco){
+    var sql = `insert into nhac_no(account_number, account_number_debit, message, seen) values('${poco.account_number}','${poco.account_number_debit}','${poco.message}',${poco.seen})`;
+    return db.insert(sql);
+}
+exports.deleteInDebit=function(account_number,account_number_debit){
+    var sql = `DELETE FROM nhac_no WHERE account_number_debit =  '${account_number_debit}' and account_number='${account_number}'`;
+     return db.delete(sql);
+}
+exports.loadInDebit=function(account_number,opt){
+    if(1==opt)
+    var sql = `select * from nhac_no where account_number = '${account_number}' `;
+    else
+    var sql = `select * from nhac_no where account_number_debit = '${account_number}' `;
+
+    return db.load(sql);
+}
+
 exports.update = async function (poco) {
     // {
     //     "full_name":"bui xuan bach",
