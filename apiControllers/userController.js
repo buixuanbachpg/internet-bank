@@ -1,4 +1,4 @@
-var express = require('express'),
+﻿var express = require('express'),
     axios = require('axios'),
     opts = require('../fn/opts'),
     fs = require('fs');
@@ -299,7 +299,7 @@ router.put('/recipient',authRepo.verifyAccessToken, (req, res) => {
         res.end();
     });
 });
-router.delete('/recipient',authRepo.verifyAccessToken, (req, res) => {
+router.post('/recipient/delete',authRepo.verifyAccessToken, (req, res) => {
     const {account_number,account_number_receive}=req.body;
     userRepo.deleteListRecipient(account_number,account_number_receive)
         .then(affectedRows => {
@@ -562,5 +562,38 @@ router.put('/',authRepo.verifyAccessToken, (req, res) => {
             res.statusCode = 500;
             res.end();
         });
+});
+
+router.get('/recipient/:account_number', (req, res) => {
+    const account_number=req.params.account_number;
+    userRepo.loadListRecipient(account_number)
+    .then(rows => {
+        if (rows.length > 0) {
+            res.json(rows);
+        } else {
+            res.statusCode = 204;
+            res.end();
+        }
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+        res.end('View error log on console.');
+    });
+});
+router.get('/getbyacc/:account_number', (req, res) => {
+    const account_number=req.params.account_number;
+    userRepo.getUserByAccNuber(account_number)
+    .then(rows => {
+        if (rows.length > 0) {
+            res.json(rows);
+        } else {
+            res.statusCode = 204;
+            res.end();
+        }
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+        res.end('View error log on console.');
+    });
 });
 module.exports = router;

@@ -2,22 +2,81 @@
   <!-- project and team member start -->
   <div class="col-xl-12 col-md-12">
     <app-card cardTitle="Recipient List" cardClass="table-card" blockClass="p-0">
+      <button type="button" class="btn btn-block btn-primary mb-4" (click)="gridSystemModal.show()">Add</button>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
           <tr>
             <th> Account number receive </th>
             <th> Recipient's name </th>
+            <th> Action </th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let item of listRecipient">
             <td>{{item.account_number_receive}}</td>
             <td>{{item.name_reminiscent}}</td>
+            <td>
+              <button type="button" class="btn btn-icon btn-outline-warning" (click)="chooseItemEdit(item)" style="margin-right: 10px;"><i class="feather icon-edit"></i></button>
+              <button type="button" class="btn btn-icon btn-outline-danger" (click)="deleteDetail(item)" style="margin-right: 10px;"><i class="feather icon-trash"></i></button>
+            </td>
           </tr>
           </tbody>
         </table>
       </div>
     </app-card>
+  </div>
+  <div class="col-xl-4 col-md-6">
+    <app-ui-modal #gridSystemModal>
+      <div class="app-modal-header">
+        <h5 class="modal-title">Create Recipient</h5>
+        <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="gridSystemModal.hide()"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="app-modal-body">
+        <div class="container-fluid bd-example-row">
+          <div action="javascript:" [formGroup]="receiveForm">
+            <div class="form-group">
+              <label for="accountnumber">Account number receive</label>
+              <input type="text" class="form-control" formControlName="account_number_rev" id="accountnumber" aria-describedby="accountHelp" (focusout)="focusoutAccNumber($event)" placeholder="Enter account number">
+              <span *ngIf="!isExist" style="color: red; font-size:10px;">User not exist</span>
+            </div>
+            <div class="form-group">
+              <label for="bank">Full Name</label>
+              <input type="text" class="form-control" formControlName="full_name" id="bank" placeholder="Enter bank">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="app-modal-footer">
+        <button type="button" style="margin-right: 10px;" id="closeBTN" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModal.hide()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="addRecipient()">Insert</button>
+      </div>
+    </app-ui-modal>
+  </div>
+  <div class="col-xl-4 col-md-6">
+    <app-ui-modal #gridSystemModalupdate>
+      <div class="app-modal-header">
+        <h5 class="modal-title">Update Recipient</h5>
+        <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="gridSystemModalupdate.hide()"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="app-modal-body">
+        <div class="container-fluid bd-example-row">
+          <div action="javascript:" [formGroup]="receiveFormUpdate">
+            <div class="form-group">
+              <label for="accountnumber">Account number receive</label>
+              <input type="text" disabled class="form-control" formControlName="account_number_rev" id="accountnumber" aria-describedby="accountHelp" (focusout)="focusoutAccNumber($event)" placeholder="Enter account number">
+            </div>
+            <div class="form-group">
+              <label for="bank">Full Name</label>
+              <input type="text" class="form-control" formControlName="full_name" id="bank" placeholder="Enter bank">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="app-modal-footer">
+        <button type="button" style="margin-right: 10px;" id="closeBTNupdate" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModalupdate.hide()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="updateRecipient()">Update</button>
+      </div>
+    </app-ui-modal>
   </div>
 </div>

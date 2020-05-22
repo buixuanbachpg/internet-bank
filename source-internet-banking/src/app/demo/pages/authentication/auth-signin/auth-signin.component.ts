@@ -51,22 +51,12 @@ export class AuthSigninComponent implements OnInit {
               email: res.user.email
             }
             localStorage.setItem('USER_ifo', JSON.stringify(user));
-            localStorage.setItem('TOKEN', JSON.stringify(res.access_token))
+            localStorage.setItem('TOKEN', res.access_token)
             this.router.navigateByUrl("/dashboard/default");
           } else {
-            
+            alert("Username or password incorrect!!!");
           }
         });
-      //   await this.store.dispatch(login({username: this.userForm.controls['username'].value, password: this.userForm.controls['password'].value}));
-        
-      //   console.log("111111")
-      //   this.store.pipe(select('user')).subscribe(res => {
-      //     if (res.data && res.data.auth) {
-      //       this.router.navigateByUrl("/dashboard/default");
-      //     } else {
-            
-      //     }
-      //   })
        }
      }
      else{

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import {SharedModule} from '../../../theme/shared/shared.module';
 import { RecipientListComponent } from './recipient-list.component';
 import { RecipientListRoutingModule } from './recipient-list-routing.module';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { RecipientListRoutingModule } from './recipient-list-routing.module';
   imports: [
     CommonModule,
     RecipientListRoutingModule,
-    SharedModule
+    FormsModule,
+    SharedModule,
   ]
 })
 export class RecipientListModule { }

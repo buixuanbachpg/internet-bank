@@ -19,6 +19,11 @@ exports.loadAll = function() {
     return db.load(sql);
 }
 
+exports.loadListRecipient=function(account_number){
+    var sql = `select * from danh_sach_nguoi_nhan where account_number = '${account_number}' `;
+    return db.load(sql);
+}
+
 exports.addListRecipient=function(poco){
     var sql = `insert into danh_sach_nguoi_nhan(account_number, account_number_receive, name_reminiscent) values('${poco.account_number}','${poco.account_number_receive}','${poco.name_reminiscent}')`;
     return db.insert(sql);
@@ -123,4 +128,9 @@ exports.changePassword = async function (username, new_password, old_password) {
             })
 
     });
+}
+
+exports.getUserByAccNuber = async function (account_number){
+    var sql = `select * from khach_hang where account_number = '${account_number}'`;   
+    return db.load(sql);
 }
