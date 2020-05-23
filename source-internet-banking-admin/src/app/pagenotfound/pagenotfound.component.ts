@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pagenotfound',
@@ -7,13 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PagenotfoundComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router,
+  ) { }
 
   ngOnInit() {
   }
 
   gotoHomePage() {
-    window.history.back();
+    if (localStorage.getItem('permission') === '1') {
+      this.router.navigate(['/manager'], { replaceUrl: true });
+    } else if (localStorage.getItem('permission') === '0') {
+      this.router.navigate(['/customer'], { replaceUrl: true });
+    } else {
+      this.router.navigate([''], { replaceUrl: true });
+    }
   }
 
 }

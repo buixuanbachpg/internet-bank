@@ -53,7 +53,9 @@ export class SidebarComponent implements OnInit {
     //     { path: '/reviewtrade', title: 'Trade Review', icon: 'ni-money-coins text-primary', class: '' },
     //   ];
     ROUTES = RoutePath;
-    this.menuItems = ROUTES.filter(menuItem => menuItem.permission === localStorage.getItem('permission'));
+    this.menuItems = ROUTES.filter(menuItem =>
+      menuItem.permission === localStorage.getItem('permission')
+      && menuItem.path !== '/user-profile');
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;
     });
