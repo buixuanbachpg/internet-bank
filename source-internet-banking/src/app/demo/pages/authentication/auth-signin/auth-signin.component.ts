@@ -6,6 +6,7 @@ import { Store, select } from '@ngrx/store';
 import * as appReducer from 'src/store/appStore.reducer';
 import { login } from 'src/store/user/user.action';
 import { UserService } from 'src/app/api/user.service';
+import { TransferService } from 'src/app/api/transfer.service';
 
 @Component({
   selector: 'app-auth-signin',
@@ -16,12 +17,14 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
   public userForm: FormGroup;
   public messageErrCaptcha: string;
   public isInterval: number;
+  public email:string;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private store: Store<appReducer.AppState>,
     protected userService: UserService,
+    private transferService: TransferService
   ) {
     this.userForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
@@ -62,6 +65,7 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
               sex: res.user.sex,
               address: res.user.address
             }
+            this.email = res.user.email;
             localStorage.setItem('USER_ifo', JSON.stringify(user));
             localStorage.setItem('TOKEN', res.access_token)
             this.router.navigateByUrl("/dashboard/default");
@@ -74,6 +78,18 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
      else{
        this.messageErrCaptcha = 'Please check reCaptcha to continue.';
      }
+  }
+
+  resetPass() {
+    this.transferService.sendOTP(this.email).subscribe(
+      res => {
+      if(res) {
+        // this.issendOTP = true;
+      }
+    },
+    err => {
+      alert("Error. Please again!!")
+    });
   }
 
 }

@@ -13,6 +13,7 @@ export class InternalTransferComponent implements OnInit {
   public user_info;
   public issendOTP = false
   public listRecipient = [];
+  public isExist = true;
   
   constructor(
     private formBuilder: FormBuilder,
@@ -98,5 +99,17 @@ export class InternalTransferComponent implements OnInit {
         alert('Error. Please create again!!');
       }
     );
+  }
+
+  focusoutAccNumber(evt){
+    this.userService.getUserByAccNumber(this.intrabankForm.controls['beneficiaryAccount'].value).subscribe(res => {
+      if (res) {
+        this.intrabankForm.controls['accountname'].setValue(res[0].full_name);
+        this.isExist = !this.isExist;
+      } else {
+        this.isExist = !this.isExist;
+        this.intrabankForm.controls['accountname'].setValue('');
+      }
+    });
   }
 }

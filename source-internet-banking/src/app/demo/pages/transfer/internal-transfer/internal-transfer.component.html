@@ -12,7 +12,8 @@
               <div class="form-group col-md-6">
                 <label for="beneficiaryAccount">Beneficiary account</label>
                 <div style="display: flex;">
-                  <input type="text" formControlName="beneficiaryAccount" class="form-control" id="beneficiaryAccount1" aria-describedby="beneficiaryAccount" placeholder="Enter beneficiary account">
+                  <input type="text" formControlName="beneficiaryAccount" (focusout)="focusoutAccNumber($event)" class="form-control" id="beneficiaryAccount1" aria-describedby="beneficiaryAccount" placeholder="Enter beneficiary account">
+                  <span *ngIf="!isExist" style="color: red; font-size:10px;">User not exist</span>
                   <div class="input-group-append dropdown" ngbDropdown placement="auto">
                     <button type="button" class="btn btn-secondary dropdown-toggle-split" ngbDropdownToggle><span class="sr-only">Toggle Dropdown</span></button>
                     <div ngbDropdownMenu>
