@@ -1,0 +1,68 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="Profile" [options]="false">
+      <div class="row">
+        <div class="col-md-12">
+          <div action="javascript:" [formGroup]="profileForm">
+            <div class="form-group">
+              <label for="account_number">Account number:</label>
+              <input type="text" disabled formControlName="account_number" class="form-control" id="account_number">
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label for="username">Username:</label>
+                <div style="display: flex;">
+                  <input type="text" formControlName="username" class="form-control" id="username" aria-describedby="username" placeholder="Enter username">
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="full_name">Full name:</label>
+                <input type="text" formControlName="full_name" class="form-control" id="full_name" placeholder="Enter full name">
+              </div>
+              <div class="form-group col-md-6" style="display: flex;">
+                <label for="full_name">Sex:</label>
+                <div class="chk-option col-md-2">
+                  <label class="check-task custom-control custom-checkbox d-flex justify-content-center done-task">
+                    <input type="checkbox" formControlName="female" class="custom-control-input" value="1">
+                    <span class="custom-control-label"></span>
+                    <h6>Female</h6>
+                  </label>
+                </div>
+                <div class="chk-option col-md-2">
+                  <label class="check-task custom-control custom-checkbox d-flex justify-content-center done-task">
+                    <input type="checkbox" formControlName="male" class="custom-control-input" value="0">
+                    <span class="custom-control-label"></span>
+                    <h6>Male</h6>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone:</label>
+              <input type="text" formControlName="phone" class="form-control" id="phone" placeholder="Enter yours phone">
+            </div>
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" formControlName="address" class="form-control" placeholder="Enter yours address">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>              
+              <input type="text" formControlName="email" class="form-control" placeholder="Enter yours email">
+            </div>
+            <button type="submit" *ngIf="!issendOTP" class="btn btn-primary" (click)="changePassword()">Change Password</button>
+          </div>
+        </div>
+        <div class="col-md-12" *ngIf="issendOTP">
+          <div class="form-group col-md-6" style="margin-top: 10px;">
+            <label>OTP</label>
+            <input type="text" class="form-control" id="otp">
+          </div>
+          <div class="form-group col-md-6" style="margin-top: 20px;">
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;" (click)="submitTransfer()">Submit</button>
+            <button type="submit" class="btn btn-warning" (click)="changePassword()">Resend OTP</button>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>

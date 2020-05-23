@@ -6,7 +6,7 @@
           <div action="javascript:" [formGroup]="intrabankForm">
             <div class="form-group">
               <label for="sourcebillingaccount">Source billing account</label>
-              <input type="text" formControlName="sourcebillingaccount" class="form-control" id="sourcebillingaccount">
+              <input type="text" disabled formControlName="sourcebillingaccount" class="form-control" id="sourcebillingaccount">
             </div>
             <div class="row">
               <div class="form-group col-md-6">
@@ -16,7 +16,9 @@
                   <div class="input-group-append dropdown" ngbDropdown placement="auto">
                     <button type="button" class="btn btn-secondary dropdown-toggle-split" ngbDropdownToggle><span class="sr-only">Toggle Dropdown</span></button>
                     <div ngbDropdownMenu>
-                      <a class="dropdown-item" href="javascript:">Action</a>
+                      <a *ngFor="let item of listRecipient" (click)="chooseRecipient(item)" class="dropdown-item" href="javascript:">
+                        {{item.account_number_receive}}/{{item.name_reminiscent}}
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -26,7 +28,7 @@
                 <input type="text" formControlName="accountname" class="form-control" id="accountname" placeholder="Account name">
               </div>
               <div class="form-group col-md-6">
-                <button type="button" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="feather icon-check-circle"></i></button>
+                <button type="button" (click)="addRecipient()" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="feather icon-check-circle"></i></button>
                 <label class="form-check-label" for="exampleCheck1">Save beneficiary</label>
               </div>
             </div>
@@ -38,17 +40,17 @@
               <label for="transactionDetail1">Transaction detail</label>
               <textarea class="form-control" formControlName="transactionDetail" id="transactionDetail" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary" (click)="continue()">Continue</button>
+            <button type="submit" *ngIf="!issendOTP" class="btn btn-primary" (click)="continue()">Continue</button>
           </div>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" *ngIf="issendOTP">
           <div class="form-group col-md-6" style="margin-top: 10px;">
             <label>OTP</label>
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" id="otp">
           </div>
           <div class="form-group col-md-6" style="margin-top: 20px;">
-            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Submit</button>
-            <button type="submit" class="btn btn-warning">Resend OTP</button>
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;" (click)="submitTransfer()">Submit</button>
+            <button type="submit" class="btn btn-warning" (click)="continue()">Resend OTP</button>
           </div>
         </div>
       </div>

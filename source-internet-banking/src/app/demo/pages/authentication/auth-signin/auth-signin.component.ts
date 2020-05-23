@@ -48,7 +48,10 @@ export class AuthSigninComponent implements OnInit {
               account_number: res.user.account_number,
               account_balance: res.user.account_balance,
               full_name: res.user.full_name,
-              email: res.user.email
+              email: res.user.email,
+              phone: res.user.phone,
+              sex: res.user.sex,
+              address: res.user.address
             }
             localStorage.setItem('USER_ifo', JSON.stringify(user));
             localStorage.setItem('TOKEN', res.access_token)

@@ -9,18 +9,23 @@ import { retry, catchError } from 'rxjs/operators';
 export class TransferService {
 
   private base_path = 'http://localhost:3000/users';
+  private otp_path = 'http://localhost:3000/otp';
   constructor(
     private http: HttpClient
   ) { }
-  httpOptions = (token = '') => {
+  httpOptions = (otp?) => {
     return new HttpHeaders({
       'Content-Type': 'application/json; charset=utf-8',
-      'x-access-token': localStorage.getItem('TOKEN')
+      'x-access-token': localStorage.getItem('TOKEN'),
+      'x-access-otp': otp
     });
   }
 
-  transfer<T>(data) {
-    return this.http.post<T>(`${this.base_path}/transfer`, JSON.stringify(data), { headers: this.httpOptions(), withCredentials: false });
+  transferInternal<T>(data, otp) {
+    return this.http.post<T>(`${this.base_path}/transfer`, data, { headers: this.httpOptions(otp), withCredentials: false });
   }
 
+  sendOTP<T>(email) {
+    return this.http.post<T>(`${this.otp_path}/${email}`, null, {});
+  }
 }
