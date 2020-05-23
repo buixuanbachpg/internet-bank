@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { UserService } from 'src/app/api/user.service';
 import { TransferService } from 'src/app/api/transfer.service';
 
@@ -25,8 +25,7 @@ export class ProfileComponent implements OnInit {
       email: [''],
       full_name: [''],
       phone: [''],
-      female: ['', [Validators.required]],
-      male: ['', [Validators.required]],
+      sex: [1, [Validators.required]],
       username: ['', [Validators.required]]
     });
 
@@ -38,8 +37,8 @@ export class ProfileComponent implements OnInit {
     this.profileForm.controls['full_name'].setValue(this.user_info.full_name);
     this.profileForm.controls['phone'].setValue(this.user_info.phone);
     this.user_info.email === 'nu'
-    ? this.profileForm.controls['female'].setValue(1)
-    :this.profileForm.controls['male'].setValue(0);
+    ? this.profileForm.controls['sex'].setValue('1')
+    :this.profileForm.controls['sex'].setValue(0);
     this.profileForm.controls['username'].setValue(this.user_info.username);
   }
 

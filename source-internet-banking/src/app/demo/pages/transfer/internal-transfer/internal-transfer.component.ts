@@ -86,9 +86,9 @@ export class InternalTransferComponent implements OnInit {
             $('#closeBTN').click();
           }
           this.listRecipient.push({
-            account_number: this.account_number,
-            account_number_receive: this.receiveForm.controls['account_number_rev'].value,
-            name_reminiscent: this.receiveForm.controls['full_name'].value
+            account_number: this.user_info.account_number,
+            account_number_receive: this.intrabankForm.controls['beneficiaryAccount'].value,
+            name_reminiscent: this.intrabankForm.controls['accountname'].value
           });
         } else {
           alert('Error. Please create again!!');
