@@ -63,6 +63,10 @@ export class UserService {
     return this.http.put<T>(`${this.base_path}/recipient`, data, { headers: this.httpOptions(), withCredentials: false });
   }
 
+  changePassword<T>(data) {
+    return this.http.put<T>(`${this.base_path}/changePassword`, data, { headers: this.httpOptions(), withCredentials: false });
+  }
+
   renewToken<T>() {
     return this.http.post<T>(`${this.base_path}/renew-token`, JSON.stringify({ refreshToken: localStorage.getItem('refresh-token') }),
       { headers: this.httpOptions(), withCredentials: false });
@@ -81,5 +85,4 @@ export class UserService {
     return this.http.delete<T>(`${this.base_path}/indebit?account_number:${account}&account_number_debit:${accountdebit}`,
       { headers: this.httpOptions(), withCredentials: false });
   }
-
 }

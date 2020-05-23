@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ValidationService } from 'src/service/validation-service';
@@ -12,9 +12,10 @@ import { UserService } from 'src/app/api/user.service';
   templateUrl: './auth-signin.component.html',
   styleUrls: ['./auth-signin.component.scss']
 })
-export class AuthSigninComponent implements OnInit {
+export class AuthSigninComponent implements OnInit, OnDestroy {
   public userForm: FormGroup;
   public messageErrCaptcha: string;
+  public isInterval: number;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -28,14 +29,22 @@ export class AuthSigninComponent implements OnInit {
     });
    }
 
-   ngOnInit() {}
+   
+   ngOnInit() {
+     this.isInterval = setInterval(() => {
+       if(grecaptcha.getResponse()) {
+         this.messageErrCaptcha = '';
+        }
+      });
+    }
+    
+  ngOnDestroy(): void {
+    clearInterval(this.isInterval);
+  }
 
   async submit(){
-    console.log("submit")
     if (grecaptcha.getResponse()) {
-      console.log("submit2")
       if (this.userForm.dirty && this.userForm.valid) {
-        console.log("submit3")
         const user = {
           username: this.userForm.controls['username'].value,
           password: this.userForm.controls['password'].value

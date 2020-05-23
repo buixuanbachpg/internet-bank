@@ -29,4 +29,8 @@ export class NavRightComponent implements OnInit {
       }
     });
   }
+
+  gotoProfilepage() {
+    this.router.navigateByUrl("/profile");
+  }
 }

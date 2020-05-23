@@ -49,20 +49,40 @@
               <label for="email">Email</label>              
               <input type="text" formControlName="email" class="form-control" placeholder="Enter yours email">
             </div>
-            <button type="submit" *ngIf="!issendOTP" class="btn btn-primary" (click)="changePassword()">Change Password</button>
-          </div>
-        </div>
-        <div class="col-md-12" *ngIf="issendOTP">
-          <div class="form-group col-md-6" style="margin-top: 10px;">
-            <label>OTP</label>
-            <input type="text" class="form-control" id="otp">
-          </div>
-          <div class="form-group col-md-6" style="margin-top: 20px;">
-            <button type="submit" class="btn btn-primary" style="margin-right: 10px;" (click)="submitTransfer()">Submit</button>
-            <button type="submit" class="btn btn-warning" (click)="changePassword()">Resend OTP</button>
+            <button type="submit" class="btn btn-primary" (click)="gridSystemModal.show()">Change Password</button>
           </div>
         </div>
       </div>
     </app-card>
+  </div>
+  <div class="col-xl-4 col-md-6">
+    <app-ui-modal #gridSystemModal>
+      <div class="app-modal-header">
+        <h5 class="modal-title">Change Password</h5>
+        <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="gridSystemModal.hide()"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="app-modal-body">
+        <div class="container-fluid bd-example-row">
+          <div action="javascript:" [formGroup]="changepassword">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" disabled class="form-control" formControlName="username" id="username" aria-describedby="accountHelp" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+              <label for="new_password">New password</label>
+              <input type="password" class="form-control" formControlName="new_password" id="new_password" placeholder="Enter new password">
+            </div>
+            <div class="form-group">
+              <label for="old_password">Old password</label>
+              <input type="password" class="form-control" formControlName="old_password" id="old_password" placeholder="Enter old password">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="app-modal-footer">
+        <button type="button" style="margin-right: 10px;" id="closeBTNupdate" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModal.hide()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="changePassword()">OK</button>
+      </div>
+    </app-ui-modal>
   </div>
 </div>
