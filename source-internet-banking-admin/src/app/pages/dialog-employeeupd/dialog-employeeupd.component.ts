@@ -75,7 +75,12 @@ export class DialogEmployeeupdComponent implements OnInit {
             this.Update_Employee().subscribe(
               complete => {
                 if (complete) {
-                  this.openDialog({ Text: 'Cập nhật thành công!', Title: 0 });
+                  this.openDialog({ Text: 'Cập nhật thành công!', Title: 0 })
+                    .afterClosed().subscribe(
+                      after => {
+                        this.matDialogRef.close(true);
+                      }
+                    );
                 } else {
                   this.openDialog({ Text: 'Cập nhật không thành công!', Title: 0 });
                 }
@@ -88,7 +93,12 @@ export class DialogEmployeeupdComponent implements OnInit {
                         this.Update_Employee().subscribe(
                           caseComplete => {
                             if (caseComplete) {
-                              this.openDialog({ Text: 'Cập nhật thành công!', Title: 0 });
+                              this.openDialog({ Text: 'Cập nhật thành công!', Title: 0 })
+                                .afterClosed().subscribe(
+                                  after => {
+                                    this.matDialogRef.close(true);
+                                  }
+                                );
                             } else {
                               this.openDialog({ Text: 'Cập nhật không thành công!', Title: 0 });
                             }

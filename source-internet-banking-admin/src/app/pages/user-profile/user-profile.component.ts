@@ -90,7 +90,17 @@ export class UserProfileComponent implements OnInit {
                           }
                         },
                         errors => {
-                          this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+                          this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 }).afterClosed().subscribe(
+                            after => {
+                              if (localStorage.getItem('permission') === '1') {
+                                this.router.navigate(['/manager'], { replaceUrl: true });
+                              } else if (localStorage.getItem('permission') === '0') {
+                                this.router.navigate(['/customer'], { replaceUrl: true });
+                              } else {
+                                this.router.navigate([''], { replaceUrl: true });
+                              }
+                            }
+                          );
                         });
                   } else {
                     this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
@@ -103,7 +113,17 @@ export class UserProfileComponent implements OnInit {
                 }
               );
             } else {
-              this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
+              this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 }).afterClosed().subscribe(
+                after => {
+                  if (localStorage.getItem('permission') === '1') {
+                    this.router.navigate(['/manager'], { replaceUrl: true });
+                  } else if (localStorage.getItem('permission') === '0') {
+                    this.router.navigate(['/customer'], { replaceUrl: true });
+                  } else {
+                    this.router.navigate([''], { replaceUrl: true });
+                  }
+                }
+              );
             }
           }
         );
