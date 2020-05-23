@@ -347,7 +347,6 @@
     border-top: none;
     background-color: $primary-color;
     color: #fff;
-
     h4,
     h6 {
         color: #fff;
@@ -356,6 +355,10 @@
     .row-table {
         &:first-child {
             border-bottom: none;
+        }
+
+        &:hover {
+            background-color: darken($primary-color, 10%);
         }
 
         > [class*=col-] {

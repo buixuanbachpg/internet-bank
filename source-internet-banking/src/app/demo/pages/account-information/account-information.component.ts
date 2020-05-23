@@ -19,7 +19,10 @@ export class AccountInformationComponent implements OnInit {
           account_number: res[0].account_number,
           account_balance: res[0].account_balance,
           full_name: res[0].full_name,
-          email: res[0].email
+          email: res[0].email,
+          phone: res[0].phone,
+          sex: res[0].sex,
+          address: res[0].address
         }
         localStorage.setItem('USER_ifo', JSON.stringify(user));
       }

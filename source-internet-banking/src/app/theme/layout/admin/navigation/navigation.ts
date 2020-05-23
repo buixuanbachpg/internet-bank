@@ -124,7 +124,7 @@ const NavigationItems = [
         type: 'item',
         url: '/transaction-history',
         classes: 'nav-item',
-        icon: 'fa fa-comment-dollar'
+        icon: 'feather icon-clock'
       }
     ]
   },

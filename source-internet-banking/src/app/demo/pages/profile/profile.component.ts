@@ -10,6 +10,8 @@ import { TransferService } from 'src/app/api/transfer.service';
 })
 export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
+  changepassword: FormGroup;
+
   public user_info;
   public issendOTP = false
   public listRecipient = [];
@@ -29,7 +31,14 @@ export class ProfileComponent implements OnInit {
       username: ['', [Validators.required]]
     });
 
+    this.changepassword = this.formBuilder.group({
+      username: ['', [Validators.required]],
+      new_password: ['', [Validators.required]],
+      old_password: ['', [Validators.required]]
+    });
     this.user_info = JSON.parse(localStorage.getItem("USER_ifo"));
+
+    this.changepassword.controls['username'].setValue(this.user_info.username);
 
     this.profileForm.controls['account_number'].setValue(this.user_info.account_number);
     this.profileForm.controls['address'].setValue(this.user_info.address);
@@ -46,64 +55,17 @@ export class ProfileComponent implements OnInit {
   }
 
   changePassword() {
-    this.transferService.sendOTP(this.user_info.email).subscribe(
+    this.userService.changePassword(this.changepassword.value).subscribe(
       res => {
-      if(res) {
-        this.issendOTP = true;
+      if(res && res.changedRows === 1){
+        alert(res.message);
+      } else {
+        alert(res.message);
       }
     },
     err => {
-      alert("Error!!")
-    });
+      alert("Error. Please again!!");
+    })
   }
 
-  submitTransfer() {
-    const otp = $("#otp").val();
-    console.log('otp', otp);
-
-    const data = {
-      username: this.user_info.username,
-      to_account_number: this.intrabankForm.controls['beneficiaryAccount'].value,
-      amount: this.intrabankForm.controls['currency'].value,
-      message: this.intrabankForm.controls['transactionDetail'].value,
-      pay_debit: 0,
-      email: this.user_info.email
-    }
-    
-    this.transferService.transferInternal(data,otp).subscribe(res => {
-      console.log(res);
-    }); 
-  }
-
-  chooseRecipient(item) {
-    this.intrabankForm.controls['beneficiaryAccount'].setValue(item.account_number_receive);
-    this.intrabankForm.controls['accountname'].setValue(item.name_reminiscent);
-  }
-
-  addRecipient() {
-    const data = {
-      account_number_receive: this.intrabankForm.controls['beneficiaryAccount'].value,
-      name_reminiscent: this.intrabankForm.controls['accountname'].value
-    }
-    
-    this.userService.addRecipient(data, this.user_info.account_number).subscribe(
-      res => {
-        if(res && !res.insertId) {
-          if (confirm(res.message)) {
-            $('#closeBTN').click();
-          }
-          this.listRecipient.push({
-            account_number: this.account_number,
-            account_number_receive: this.receiveForm.controls['account_number_rev'].value,
-            name_reminiscent: this.receiveForm.controls['full_name'].value
-          });
-        } else {
-          alert('Error. Please create again!!');
-        }
-      },
-      err => {
-        alert('Error. Please create again!!');
-      }
-    );
-  }
 }

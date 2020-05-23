@@ -113,7 +113,7 @@
         </div>
       </div>
     </app-card> -->
-    <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-purple-card">
+    <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-primary-card">
       <div class="row-table" (click)="goToRecipientList()">
         <div class="col-sm-3 card-body">
           <i class="feather icon-list"></i>
@@ -125,13 +125,49 @@
     </app-card>
   </div>
   <div class="col-md-12 col-xl-4">
-    <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-danger-card">
+    <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-primary-card">
       <div class="row-table" (click)="goToDebtReminderManagement()">
+        <div class="col-sm-3 card-body">
+          <i class="feather icon-bell"></i>
+        </div>
+        <div class="col-sm-9">
+          <h6>Debt reminder management</h6>
+        </div>
+      </div>
+    </app-card>
+  </div>
+  <div class="col-md-12 col-xl-4">
+    <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-primary-card">
+      <div class="row-table" (click)="goToInternal()">
+        <div class="col-sm-3 card-body">
+          <i class="fa fa-money-bill-alt"></i>
+        </div>
+        <div class="col-sm-9">
+          <h6>Intra-bank transfer</h6>
+        </div>
+      </div>
+    </app-card>
+  </div>
+  <div class="col-md-12 col-xl-4">
+    <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-primary-card">
+      <div class="row-table" (click)="goToInterbank()">
+        <div class="col-sm-3 card-body">
+          <i class="fa fa-money-bill-wave"></i>
+        </div>
+        <div class="col-sm-9">
+          <h6>Inter-bank transfer</h6>
+        </div>
+      </div>
+    </app-card>
+  </div>
+  <div class="col-md-12 col-xl-4">
+    <app-card [hidHeader]="true" blockClass="p-0" cardClass="flat-card widget-primary-card">
+      <div class="row-table" (click)="goToTransactionHistory()">
         <div class="col-sm-3 card-body">
           <i class="feather icon-clock"></i>
         </div>
         <div class="col-sm-9">
-          <h6>Debt reminder management</h6>
+          <h6>Transaction history</h6>
         </div>
       </div>
     </app-card>

@@ -56,4 +56,15 @@ export class DashDefaultComponent implements OnInit {
     this.router.navigateByUrl("/debt-reminder-management");
   }
 
+  goToInternal() {
+    this.router.navigateByUrl("/transfer/internal");
+  }
+
+  goToInterbank() {
+    this.router.navigateByUrl("/transfer/interbank");
+  }
+
+  goToTransactionHistory() {
+    this.router.navigateByUrl("/transaction-history");
+  }
 }

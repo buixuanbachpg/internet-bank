@@ -63,4 +63,7 @@ export class UserService {
     return this.http.put<T>(`${this.base_path}/recipient`, data, { headers: this.httpOptions(), withCredentials: false });
   }
 
+  changePassword<T>(data) {
+    return this.http.put<T>(`${this.base_path}/changePassword`, data, { headers: this.httpOptions(), withCredentials: false });
+  }
 }

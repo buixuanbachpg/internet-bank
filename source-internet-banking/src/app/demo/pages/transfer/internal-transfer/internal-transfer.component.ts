@@ -46,7 +46,7 @@ export class InternalTransferComponent implements OnInit {
       }
     },
     err => {
-      alert("Error!!")
+      alert("Error. Please again!!")
     });
   }
 
