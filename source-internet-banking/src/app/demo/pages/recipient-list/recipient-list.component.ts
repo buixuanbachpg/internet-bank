@@ -31,7 +31,6 @@ export class RecipientListComponent implements OnInit {
     });
     this.account_number = JSON.parse(localStorage.getItem("USER_ifo")).account_number;
     this.userService.getRecipient(this.account_number).subscribe(res => {
-      console.log('res', res)
       this.listRecipient = res;
     });
     

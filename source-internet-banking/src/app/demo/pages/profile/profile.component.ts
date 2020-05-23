@@ -4,12 +4,12 @@ import { UserService } from 'src/app/api/user.service';
 import { TransferService } from 'src/app/api/transfer.service';
 
 @Component({
-  selector: 'app-internal-transfer',
-  templateUrl: './internal-transfer.component.html',
-  styleUrls: ['./internal-transfer.component.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
-export class InternalTransferComponent implements OnInit {
-  intrabankForm: FormGroup;
+export class ProfileComponent implements OnInit {
+  profileForm: FormGroup;
   public user_info;
   public issendOTP = false
   public listRecipient = [];
@@ -19,26 +19,34 @@ export class InternalTransferComponent implements OnInit {
     protected userService: UserService,
     private transferService: TransferService
   ) { 
-    this.intrabankForm = this.formBuilder.group({
-      sourcebillingaccount: ['', [Validators.required]],
-      beneficiaryAccount: ['', [Validators.required]],
-      accountname: ['', [Validators.required]],
-      currency: ['', [Validators.required]],
-      transactionDetail: ['', [Validators.required]]
+    this.profileForm = this.formBuilder.group({
+      account_number: ['', [Validators.required]],
+      address: [''],
+      email: [''],
+      full_name: [''],
+      phone: [''],
+      female: ['', [Validators.required]],
+      male: ['', [Validators.required]],
+      username: ['', [Validators.required]]
     });
 
     this.user_info = JSON.parse(localStorage.getItem("USER_ifo"));
-    this.intrabankForm.controls['sourcebillingaccount'].setValue(this.user_info.account_number);
 
-    this.userService.getRecipient(this.user_info.account_number).subscribe(res => {
-      this.listRecipient = res;
-    });
+    this.profileForm.controls['account_number'].setValue(this.user_info.account_number);
+    this.profileForm.controls['address'].setValue(this.user_info.address);
+    this.profileForm.controls['email'].setValue(this.user_info.email);
+    this.profileForm.controls['full_name'].setValue(this.user_info.full_name);
+    this.profileForm.controls['phone'].setValue(this.user_info.phone);
+    this.user_info.email === 'nu'
+    ? this.profileForm.controls['female'].setValue(1)
+    :this.profileForm.controls['male'].setValue(0);
+    this.profileForm.controls['username'].setValue(this.user_info.username);
   }
 
   ngOnInit() {
   }
 
-  continue() {
+  changePassword() {
     this.transferService.sendOTP(this.user_info.email).subscribe(
       res => {
       if(res) {
