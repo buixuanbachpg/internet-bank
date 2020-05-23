@@ -33,7 +33,9 @@ export class AppComponent implements OnInit {
           if (!localStorage.getItem('permission')) {
             this.router.navigateByUrl('', { replaceUrl: true });
           } else {
-            if (this.path.filter(
+            if (this.router.url === '/login') {
+              this.router.navigateByUrl('', { replaceUrl: true });
+            } else if (this.path.filter(
               x => x.permission === localStorage.getItem('permission') && x.path === this.router.url
             ).length === 0) {
               this.router.navigateByUrl('**', { replaceUrl: true });
