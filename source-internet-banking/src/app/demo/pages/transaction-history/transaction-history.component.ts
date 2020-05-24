@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/api/user.service';
 import { Observer, Observable } from 'rxjs';
 import { CurrencyPipe, DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-transaction-history',
@@ -21,7 +22,8 @@ export class TransactionhistoryComponent implements OnInit {
   constructor(
     private userService: UserService,
     private currencyPipe: CurrencyPipe,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private router: Router,
   ) {
   }
 
@@ -93,7 +95,8 @@ export class TransactionhistoryComponent implements OnInit {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                // het thoi han refresh token nen cho ve page login
+                localStorage.clear();
+                this.router.navigateByUrl("/auth/signin");
               }
             }
           );
@@ -164,7 +167,8 @@ export class TransactionhistoryComponent implements OnInit {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                // het thoi han refresh token nen cho ve page login
+                localStorage.clear();
+                this.router.navigateByUrl("/auth/signin");
               }
             }
           );
@@ -217,7 +221,8 @@ export class TransactionhistoryComponent implements OnInit {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                // het thoi han refresh token nen cho ve page login
+                localStorage.clear();
+                this.router.navigateByUrl("/auth/signin");
               }
             }
           );
