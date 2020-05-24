@@ -22,6 +22,8 @@ export class DashDefaultComponent implements OnInit {
   public powerCardChartData1: any;
   public powerCardChartData2: any;
 
+  public userInfo;
+
   constructor(
     private router: Router
   ) {
@@ -35,6 +37,8 @@ export class DashDefaultComponent implements OnInit {
     if (!localStorage.getItem("TOKEN")){
       this.router.navigateByUrl("/auth/signin");
     }
+
+    this.userInfo = JSON.parse(localStorage.getItem('USER_ifo'));
   }
 
   ngOnInit() {
@@ -52,4 +56,15 @@ export class DashDefaultComponent implements OnInit {
     this.router.navigateByUrl("/debt-reminder-management");
   }
 
+  goToInternal() {
+    this.router.navigateByUrl("/transfer/internal");
+  }
+
+  goToInterbank() {
+    this.router.navigateByUrl("/transfer/interbank");
+  }
+
+  goToTransactionHistory() {
+    this.router.navigateByUrl("/transaction-history");
+  }
 }

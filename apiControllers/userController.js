@@ -1,4 +1,4 @@
-var express = require('express'),
+﻿var express = require('express'),
     axios = require('axios'),
     opts = require('../fn/opts'),
     fs = require('fs');
@@ -70,8 +70,7 @@ router.post('/renew-token', (req, res) => {
 
                 throw new Error('abort-chain'); // break promise chain
 
-            }
-            else if (currentTime - rows[0].expiresIn > 1800) {
+            } else if (currentTime - rows[0].expiresIn > 1800) {
                 res.statusCode = 403;
                 res.json({
                     msg: 'refresh-token expired'
@@ -79,13 +78,11 @@ router.post('/renew-token', (req, res) => {
 
                 throw new Error('abort-chain'); // break promise chain
 
-            }
-
-            else {
+            } else {
                 return rows[0].username;
             }
         })
-        .then(id => userRepo.loadAccounts(id))
+        .then(id => userRepo.loadAccount(id))
         .then(rows => {
             var userObj = rows[0];
             var token = authRepo.generateAccessToken(userObj);
@@ -102,7 +99,11 @@ router.post('/renew-token', (req, res) => {
         });
 });
 router.put('/changePassword', (req, res) => {
-    const { username, new_password, old_password } = req.body;
+    const {
+        username,
+        new_password,
+        old_password
+    } = req.body;
     userRepo.changePassword(username, new_password, old_password)
         .then(changedRows => {
             if (changedRows > 0) {
@@ -111,14 +112,12 @@ router.put('/changePassword', (req, res) => {
                     changedRows: changedRows,
                     message: "change password success"
                 });
-            }
-            else if (false == changedRows) {
+            } else if (false == changedRows) {
                 res.statusCode = 400;
                 res.json({
                     message: "old password wrong"
                 });
-            }
-            else {
+            } else {
                 res.statusCode = 500;
                 res.json({
                     message: "changed fail"
@@ -131,168 +130,94 @@ router.put('/changePassword', (req, res) => {
             res.end();
         });
 });
-router.post('/transfer/:bank',  authRepo.verifyAccessToken, verifyOtpMail,async (req, res) => {
+router.post('/transfer/:bank', authRepo.verifyAccessToken, verifyOtpMail, async (req, res) => {
     var secret_key = "";
     var partner_code = "";
     var signature = "";
-    var genHmac = "";
-    var url = "";
-    bank = req.params.bank;
+    bank = req.param.bank;
     let timestamp = +new Date();
-    const { from_account_number, to_account_number, amount, message } = req.body;
-
+    const {
+        from_account_number,
+        to_account_number,
+        amount,
+        message,
+        pay_debit
+    } = req.body;
+    let strToHash = `${partner_code}|${timestamp}|${from_account_number}|${to_account_number}|${amount}|${message}`;
+    let genHmac = transRepo.hashMd5(strToHash, secret_key);
     if ("bkt.bank" === bank) {
-        url = `http://bkt-banking.herokuapp.com/api/transactions/receive_external`;
+        var url = `http://bkt-banking.herokuapp.com/api/transactions/receive_external`;
         partner_code = "bbd.bank";
         secret_key = "QK6A-JI6S-7ETR-0A6C";
         RSAprivateKeyArmored = fs.readFileSync('./fn/rsaPrivateKey.txt', 'utf8');
-        let strToHash = `${partner_code}|${timestamp}|${from_account_number}|${to_account_number}|${amount}|${message}`;
-        genHmac = transRepo.hashMd5(strToHash, secret_key);
         signature = await transRepo.signRSA(RSAprivateKeyArmored, genHmac)
-    }
-    else if ("ta.bank" === bank) {
-        url = `https://titi-bank-server.herokuapp.com/api/transactions/receive_external`;
+    } else if ("ta.bank" === bank) {
+        var url = `https://ibserver.herokuapp.com/api/transactions/receive_external`;
         secret_key = "374e9e67-8838-400b-acb6-55a8428ae5fa";
         partner_code = "20929a37-5e69-44e2-94e4-c640bd4e33cd";
         PGPprivateKeyArmored = fs.readFileSync('./fn/0xC4BDB84C-sec.asc', 'utf8');
-        let strToHash = `${partner_code}|${timestamp}|${from_account_number}|${to_account_number}|${amount}|${message}`;
-        genHmac = transRepo.hashMd5(strToHash, secret_key);
         signature = await transRepo.signPGP(PGPprivateKeyArmored, "p7gMVCAVStC9c3mMKhEuxspS21UfhCS8", genHmac);
-    }
-    else {
+    } else {
         res.status(400).json({
             message: "wrong bank name"
         });
     }
-    let users=await userRepo.loadAccounts(from_account_number);
-    if(!users)
-    {
-        res.status(500).json({
-            message: "account not exist"
-        })
-    }
-    new_amount = Number(users[0].account_balance) - Number(amount);
-    let rs = await axios({
-        url: url,
-        method: 'POST',
-        params: Object.assign({
-            partner_code: partner_code,
-            timestamp: timestamp,
-            hash: genHmac,
-            signature: signature
-        }),
-        data: {
-            from_account_number: from_account_number,
-            to_account_number: to_account_number,
-            amount: amount,
-            message: message
-
+    userRepo.loadAccount(from_account_number).then(rows => {
+        if (rows.length > 0) {
+            users = rows[0];
+            return users;
+        } else {
+            return null;
         }
-    }).then(function (response) {
-        return response;
-    }).catch(function (error) {
-        return error;
-    });
-    if(rs.response)
-    {
-        res.status(400).json
-        ({
-            message: rs.response.data.message,
-            error:rs.response.data.error
-        })
-    }
-    else if(200==rs.status)
-    {
-        userRepo.updateAccountBalance(from_account_number,new_amount).then(changedRows=>{
-            if (1 == changedRows){
-                res.status(200).json
-                ({
-                    message: "success"
-                })
-            }
-            else{
-                res.status(500).json
-                ({
-                    message: "trừ tiền thất bại"
-                })
-            }
-        }).catch(err=>{
-            console.log(err);
-            res.end("view log on console");
-        })
-        
-    }
-    else{
-        res.status(500).json
-        ({
-            message: "transaction fail"
-        })
-    }
+    }).then(users => {
+        if (users.account_balance > amount) {
+            new_amount = Number(users.account_balance) - Number(amount);
+            userRepo.updateAccountBalance(to_account_number, new_amount).then(changedRows => {
+                if (1 == changedRows) {
+                    axios({
+                        url: url,
+                        method: 'POST',
+                        params: Object.assign({
+                            partner_code: partner_code,
+                            timestamp: timestamp,
+                            hash: genHmac,
+                            signature: signature
+                        }),
+                        data: {
+                            from_account_number: from_account_number,
+                            to_account_number: to_account_number,
+                            amount: amount,
+                            message: message
+
+                        }
+                    }).then(function (response) {
+                        res.json(response.data)
+                    }).catch(function (error) {
+                        console.log(error);
+                        res.json(error.response.data)
+                    });
+                } else {
+                    res.status(500).json({
+                        message: "view log on console"
+                    })
+                }
+            })
+        }
+    })
 
 
 
 });
-router.post('/query_info',  authRepo.verifyAccessToken, async (req, res) => {
-    bank = req.body.bank;
-    account_number = req.body.account_number;
-    var secret_key = "";
-    var partner_code = "";
-    var url = "";
+
+router.post('/transfer', authRepo.verifyAccessToken, verifyOtpMail, (req, res) => {
     let timestamp = +new Date();
-    if (bank && account_number) {
-        if ("bkt.bank" === bank) {
-            url = `http://bkt-banking.herokuapp.com/api/transactions/query_info`;
-            secret_key = "QK6A-JI6S-7ETR-0A6C";
-            partner_code = "bbd.bank";
-        }
-        else if ("ta.bank" === bank) {
-            url = `https://titi-bank-server.herokuapp.com/api/transactions/query_info`;
-            secret_key = "374e9e67-8838-400b-acb6-55a8428ae5fa";
-            partner_code = "20929a37-5e69-44e2-94e4-c640bd4e33cd";
-        }
-    }
-    let strToHash = `${partner_code}|${timestamp}|${account_number}`;
-    let genHmac = transRepo.hashMd5(strToHash, secret_key);
-    let rs = await axios({
-        url: url,
-        method: 'POST',
-        params: Object.assign({
-            partner_code: partner_code,
-            timestamp: timestamp,
-            hash: genHmac
-        }),
-        data: {
-            account_number: account_number
-        }
-    }).then(function (response) {
-        return response;
-    }).catch(function (error) {
-        return error;
-    });
-    if(rs.response)
-    {
-        // res.status(400).json
-        // ({
-        //     message: rs.response.data.message,
-        //     error:rs.response.data.error
-        // })
-        res.json(rs.response.data);
-    }
-    else(200==rs.status)
-    {
-        // res.status(200).json
-        // ({
-        //     email: rs.data.email,
-        //     account_number :rs.data.error,
-        //     username:rs.data.username,
-        //     full_name:rs.response.data.full_name
-        // })
-        res.json(rs.data);
-    }
-});
-router.post('/transfer', (req, res) => {
-    let timestamp = +new Date();
-    const { username, to_account_number, amount, message, pay_debit } = req.body;
+    const {
+        username,
+        to_account_number,
+        amount,
+        message,
+        pay_debit
+    } = req.body;
     poco = {
         username: username,
         account_number: to_account_number
@@ -300,7 +225,7 @@ router.post('/transfer', (req, res) => {
     userRepo.loadAccount(poco).then(rows => {
         return rows;
     }).then(rows => {
-        if (2 == rows.length && null != rows[0] && null != rows[1] && 1==rows[0].status && 1==rows[1].status ) {
+        if (2 == rows.length && null != rows[0] && null != rows[1]) {
             var from_users = rows[0];
             var to_users = rows[1];
 
@@ -324,24 +249,21 @@ router.post('/transfer', (req, res) => {
                             res.end('View error log on console.');
 
                         })
-                    }
-                    else {
+                    } else {
                         console.log("update fail");
                         res.status(500).json({
                             message: "view log on console"
                         })
                     }
                 })
-            }
-            else {
+            } else {
                 res.status(400).json({
                     message: "account balance not enough"
                 })
             }
-        }
-        else if ((2 == rows.length && null != rows[0] && null != rows[1]) || 1==rows[0] || 1==rows[1]) {
+        } else {
             res.status(400).json({
-                message: "account is closed"
+                message: "account does not exist"
             })
         }
 
@@ -366,7 +288,11 @@ router.post('/recipient', authRepo.verifyAccessToken, (req, res) => {
         });
 });
 router.put('/recipient', authRepo.verifyAccessToken, (req, res) => {
-    const { account_number, account_number_receive, name_reminiscent } = req.body;
+    const {
+        account_number,
+        account_number_receive,
+        name_reminiscent
+    } = req.body;
     userRepo.updateListRecipient(account_number, account_number_receive, name_reminiscent)
         .then(changedRows => {
             res.statusCode = 201;
@@ -380,8 +306,11 @@ router.put('/recipient', authRepo.verifyAccessToken, (req, res) => {
             res.end();
         });
 });
-router.delete('/recipient', authRepo.verifyAccessToken, (req, res) => {
-    const { account_number, account_number_receive } = req.body;
+router.post('/recipient/delete', authRepo.verifyAccessToken, (req, res) => {
+    const {
+        account_number,
+        account_number_receive
+    } = req.body;
     userRepo.deleteListRecipient(account_number, account_number_receive)
         .then(affectedRows => {
             res.json({
@@ -393,23 +322,8 @@ router.delete('/recipient', authRepo.verifyAccessToken, (req, res) => {
             res.end('View error log on console.');
         });
 });
-router.get('/recipient', authRepo.verifyAccessToken, (req, res) => {
-    const { account_number } = req.body;
-    userRepo.loadListRecipient(account_number)
-        .then(rows => {
-            if (rows.length > 0) {
-                res.json(rows);
-            } else {
-                res.statusCode = 204;
-                res.end();
-            }
-        }).catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-});
-router.post('/indebit', (req, res) => {
+
+router.post('/indebit', authRepo.verifyAccessToken, (req, res) => {
 
     userRepo.addInDebit(req.body)
         .then(insertId => {
@@ -424,8 +338,11 @@ router.post('/indebit', (req, res) => {
             res.end();
         });
 });
-router.get('/indebit', (req, res) => {
-    const { account_number, opt } = req.query;
+router.get('/indebit', authRepo.verifyAccessToken, (req, res) => {
+    const {
+        account_number,
+        opt
+    } = req.query;
     userRepo.loadInDebit(account_number, opt)
         .then(rows => {
             if (rows.length > 0) {
@@ -441,7 +358,10 @@ router.get('/indebit', (req, res) => {
         });
 });
 router.delete('/indebit', authRepo.verifyAccessToken, (req, res) => {
-    const { account_number, account_number_debit } = req.body;
+    const {
+        account_number,
+        account_number_debit
+    } = req.query;
     userRepo.deleteInDebit(account_number, account_number_debit)
         .then(affectedRows => {
             res.json({
@@ -478,10 +398,7 @@ router.get('/history/receive/:id', authRepo.verifyAccessToken, async (req, res) 
             global: global
         }
         res.status(200).json(data);
-    }
-
-
-    else {
+    } else {
         res.statusCode = 400;
         res.json({
             msg: 'number_acccount not found'
@@ -512,10 +429,7 @@ router.get('/history/transfer/:id', authRepo.verifyAccessToken, async (req, res)
             global: global
         }
         res.status(200).json(data);
-    }
-
-
-    else {
+    } else {
         res.statusCode = 400;
         res.json({
             msg: 'number_acccount not found'
@@ -532,15 +446,14 @@ router.get('/history/paydebit/:id', authRepo.verifyAccessToken, async (req, res)
             console.log(err);
             res.status(500).send("view log on console");
         })
-    }
-    else {
+    } else {
         res.statusCode = 400;
         res.json({
             msg: 'number_acccount not found'
         });
     }
 });
-router.get('/:name', (req, res) => {
+router.get('/:name', authRepo.verifyAccessToken, (req, res) => {
 
     if (req.params.name) {
         var id = req.params.name;
@@ -565,13 +478,12 @@ router.get('/:name', (req, res) => {
     }
 });
 router.post('/resetPassword', authRepo.verifyAccessToken, verifyOtpMail, (req, res) => {
-    userRepo.resetPassword(req.body).then(changedRows => {
+    userRepo.changePassword(req.body).then(changedRows => {
         if (changedRows) {
             res.status(200).json({
                 message: "changed success"
             })
-        }
-        else {
+        } else {
             res.status(500).json({
                 message: "changed failed"
             })
@@ -584,7 +496,43 @@ router.post('/resetPassword', authRepo.verifyAccessToken, verifyOtpMail, (req, r
     })
 });
 
-
+router.post('/query_info/:bank/:id', authRepo.verifyAccessToken, (req, res) => {
+    bank = req.params.bank;
+    account_number = req.params.id;
+    var secret_key = "";
+    var partner_code = "";
+    let timestamp = +new Date();
+    if (bank && id) {
+        if ("bkt.bank" === bank) {
+            var url = `http://bkt-banking.herokuapp.com/api/transactions/query_info`;
+            secret_key = "QK6A-JI6S-7ETR-0A6C";
+            partner_code = "bbd.bank";
+        } else if ("ta.bank" === bank) {
+            var url = `https://ibserver.herokuapp.com/api/transactions/query_info`;
+            secret_key = "374e9e67-8838-400b-acb6-55a8428ae5fa";
+            partner_code = "20929a37-5e69-44e2-94e4-c640bd4e33cd";
+        }
+    }
+    let strToHash = `${partner_code}|${timestamp}|${account_number}`;
+    let genHmac = transRepo.hashMd5(strToHash, secret_key);
+    let rs = axios({
+        url: url,
+        method: 'POST',
+        params: Object.assign({
+            partner_code: partner_code,
+            timestamp: timestamp,
+            hash: genHmac
+        }),
+        data: {
+            account_number: account_number
+        }
+    }).then(function (response) {
+        res.json(response.data)
+    }).catch(function (error) {
+        res.json(error.response.data)
+    });
+    console.log(rs);
+});
 
 router.get('/', authRepo.verifyAccessToken, (req, res) => {
     var poco = {
@@ -619,6 +567,39 @@ router.put('/', authRepo.verifyAccessToken, (req, res) => {
             console.log(err);
             res.statusCode = 500;
             res.end();
+        });
+});
+
+router.get('/recipient/:account_number', (req, res) => {
+    const account_number = req.params.account_number;
+    userRepo.loadListRecipient(account_number)
+        .then(rows => {
+            if (rows.length > 0) {
+                res.json(rows);
+            } else {
+                res.statusCode = 204;
+                res.end();
+            }
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+});
+router.get('/getbyacc/:account_number', (req, res) => {
+    const account_number = req.params.account_number;
+    userRepo.getUserByAccNuber(account_number)
+        .then(rows => {
+            if (rows.length > 0) {
+                res.json(rows);
+            } else {
+                res.statusCode = 204;
+                res.end();
+            }
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
         });
 });
 module.exports = router;

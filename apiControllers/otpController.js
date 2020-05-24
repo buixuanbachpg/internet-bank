@@ -25,7 +25,7 @@ router.post('/:email', (req, res) => {
     otpRepo.load(email).then(rows=>{
         return rows;
     }).then(rows=>{
-        if(0 === rows.length )
+        if(!rows)
         {
             otpRepo.add(email, otp).then(insertId => {
                 if (insertId) {

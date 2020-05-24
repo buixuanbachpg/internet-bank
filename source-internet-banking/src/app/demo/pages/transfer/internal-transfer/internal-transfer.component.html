@@ -1,84 +1,60 @@
 <div class="row">
-  <!-- project and team member start -->
-  <div class="col-xl-12 col-md-12">
-    <app-card cardTitle="Source billing account" cardClass="table-card" blockClass="p-0">
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead>
-          <tr>
-            <th>
-              Account number
-            </th>
-            <th>Account type</th>
-            <th class="text-right">Balance</th>
-            <!-- <th class="text-right">Priority</th> -->
-          </tr>
-          </thead>
-          <tbody>
-          <tr class="tr_hover" (click)="gridSystemModal.show()">
-            <td>
-              <div class="d-inline-block align-middle">
-                <img src="assets/images/user/avatar-4.jpg" alt="user image" class="img-radius wid-40 align-top m-r-15">
-                <div class="d-inline-block">
-                  <h6>John Deo</h6>
-                  <p class="text-muted m-b-0">Graphics Designer</p>
-                </div>
-              </div>
-            </td>
-            <td>Flat Able</td>
-            <td class="text-right">Jun, 26</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </app-card>
-  </div>
-  <div class="col-xl-4 col-md-6">
-      <app-ui-modal #gridSystemModal>
-        <div class="app-modal-header">
-          <h5 class="modal-title">Recipient Information</h5>
-          <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="gridSystemModal.hide()"><span aria-hidden="true">&times;</span></button>
-        </div>
-        <div class="app-modal-body">
-          <div class="container-fluid bd-example-row">
-            <form action="javascript:">
-              <div class="form-group">
-                <label for="accountnumber">Account number</label>
+  <div class="col-sm-12">
+    <app-card cardTitle="Intra-bank transfer" [options]="false">
+      <div class="row">
+        <div class="col-md-12">
+          <div action="javascript:" [formGroup]="intrabankForm">
+            <div class="form-group">
+              <label for="sourcebillingaccount">Source billing account</label>
+              <input type="text" disabled formControlName="sourcebillingaccount" class="form-control" id="sourcebillingaccount">
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label for="beneficiaryAccount">Beneficiary account</label>
                 <div style="display: flex;">
-                  <input type="text" class="form-control" id="accountnumber" aria-describedby="accountHelp" placeholder="Enter account number">
+                  <input type="text" formControlName="beneficiaryAccount" (focusout)="focusoutAccNumber($event)" class="form-control" id="beneficiaryAccount1" aria-describedby="beneficiaryAccount" placeholder="Enter beneficiary account">
+                  <span *ngIf="!isExist" style="color: red; font-size:10px;">User not exist</span>
                   <div class="input-group-append dropdown" ngbDropdown placement="auto">
                     <button type="button" class="btn btn-secondary dropdown-toggle-split" ngbDropdownToggle><span class="sr-only">Toggle Dropdown</span></button>
                     <div ngbDropdownMenu>
-                      <a class="dropdown-item" href="javascript:">Action</a>
+                      <a *ngFor="let item of listRecipient" (click)="chooseRecipient(item)" class="dropdown-item" href="javascript:">
+                        {{item.account_number_receive}}/{{item.name_reminiscent}}
+                      </a>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="amount">Amount</label>
-                <input type="text" class="form-control" id="amount" placeholder="Enter account">
+              <div class="form-group col-md-6">
+                <label for="accountname">Account name</label>
+                <input type="text" formControlName="accountname" class="form-control" id="accountname" placeholder="Account name">
               </div>
-              <div class="form-group">
-                <label for="transactionDetail">Transaction detail</label>
-                <input type="text" class="form-control" id="transactionDetail" placeholder="Enter transaction detail">
+              <div class="form-group col-md-6">
+                <button type="button" (click)="addRecipient()" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="feather icon-check-circle"></i></button>
+                <label class="form-check-label" for="exampleCheck1">Save beneficiary</label>
               </div>
-              <div class="form-group">
-                <label for="transactionDetail">Fee charged for</label>
-                <select id="transactionDetail" class="form-control">
-                  <option selected>Sender</option>
-                  <option>Receiver</option>
-                </select>
-              </div>
-              <div class="form-group form-check">
-                
-              </div>
-            </form>
+            </div>
+            <div class="form-group">
+              <label>Currency</label>
+              <input type="text" formControlName="currency" class="form-control" placeholder="VND">
+            </div>
+            <div class="form-group">
+              <label for="transactionDetail1">Transaction detail</label>
+              <textarea class="form-control" formControlName="transactionDetail" id="transactionDetail" rows="3"></textarea>
+            </div>
+            <button type="submit" *ngIf="!issendOTP" class="btn btn-primary" (click)="continue()">Continue</button>
           </div>
         </div>
-        <div class="app-modal-footer">
-          <button type="button" style="margin-right: 10px;" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModal.hide()">Close</button>
-          <button type="button" class="btn btn-primary">Continue</button>
+        <div class="col-md-12" *ngIf="issendOTP">
+          <div class="form-group col-md-6" style="margin-top: 10px;">
+            <label>OTP</label>
+            <input type="text" class="form-control" id="otp">
+          </div>
+          <div class="form-group col-md-6" style="margin-top: 20px;">
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;" (click)="submitTransfer()">Submit</button>
+            <button type="submit" class="btn btn-warning" (click)="continue()">Resend OTP</button>
+          </div>
         </div>
-      </app-ui-modal>
+      </div>
+    </app-card>
   </div>
 </div>

@@ -24,11 +24,11 @@
             </div>
             <button type="submit" class="btn btn-block btn-primary mb-4" [disabled]="!userForm.valid" (click)="submit()">Signin</button>
             <p class="mb-2 text-muted text-center">Forgot password?
-              <a [routerLink]="['/auth/reset-password']" class="f-w-400">Reset</a>
+              <a class="f-w-400" (click)="resetPass()">Reset</a>
             </p>
-            <p class="mb-0 text-muted text-center">Don’t have an account?
+            <!-- <p class="mb-0 text-muted text-center">Don’t have an account?
               <a [routerLink]="['/auth/signup']" class="f-w-400">Signup</a>
-            </p>
+            </p> -->
           </div>
         </div>
       </div>

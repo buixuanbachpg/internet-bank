@@ -3,6 +3,7 @@ import { NavigationItem } from '../navigation';
 import { NextConfig } from '../../../../../app-config';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/api/user.service';
 
 @Component({
   selector: 'app-nav-content',
@@ -20,6 +21,8 @@ export class NavContentComponent implements OnInit, AfterViewInit {
   public windowWidth: number;
   public isNavProfile: boolean;
 
+  public userInfo;
+
   @Output() onNavMobCollapse = new EventEmitter();
 
   @ViewChild('navbarContent') navbarContent: ElementRef;
@@ -29,7 +32,8 @@ export class NavContentComponent implements OnInit, AfterViewInit {
     public nav: NavigationItem,
     private zone: NgZone,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private userService: UserService
     ) {
     this.flatConfig = NextConfig.config;
     this.windowWidth = window.innerWidth;
@@ -41,6 +45,7 @@ export class NavContentComponent implements OnInit, AfterViewInit {
     this.contentWidth = 0;
 
     this.isNavProfile = false;
+    this.userInfo = JSON.parse(localStorage.getItem('USER_ifo'));
   }
 
   ngOnInit() {
@@ -153,7 +158,12 @@ export class NavContentComponent implements OnInit, AfterViewInit {
   }
 
   signout() {
-    this.router.navigateByUrl("/auth/signin");
+    this.userService.logout(this.userInfo).subscribe(res => {
+      if(res && res.msg) {
+        this.router.navigateByUrl("/auth/signin");
+        localStorage.clear();
+      }
+    });
   }
 
 }

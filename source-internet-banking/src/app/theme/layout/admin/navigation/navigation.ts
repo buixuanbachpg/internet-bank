@@ -98,13 +98,13 @@ const NavigationItems = [
         children: [
           {
             id: 'internal-transfer',
-            title: 'Internal Transfer (Same Bank)',
+            title: 'Intra-bank transfer',
             type: 'item',
             url: '/transfer/internal'
           },
           {
             id: 'interbank-transfer',
-            title: 'Interbank Transfer',
+            title: 'Inter-bank transfer',
             type: 'item',
             url: '/transfer/interbank'
           }
@@ -124,7 +124,7 @@ const NavigationItems = [
         type: 'item',
         url: '/transaction-history',
         classes: 'nav-item',
-        icon: 'fa fa-comment-dollar'
+        icon: 'feather icon-clock'
       }
     ]
   },

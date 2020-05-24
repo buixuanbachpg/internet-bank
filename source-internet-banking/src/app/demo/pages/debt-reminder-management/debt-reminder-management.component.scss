@@ -1,20 +1,6 @@
-.hovericonedit{
-    margin-right: 10px;
-    &:hover{
-        color: orange;
-    }
-}
-
-.hovericondelete{
-    &:hover{
-        color: red;
-    }
-}
-
-.hovericonadd{
-    margin-right: 10px;
-    &:hover{
-        color: #2ecc71;
-    }
+.btn-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
 }
 

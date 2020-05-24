@@ -72,6 +72,12 @@ export class DialogEmployeeaddComponent implements OnInit {
     this.Insert_Employee().subscribe(
       insComplete => {
         if (insComplete) {
+          this.insForm.get('name').setValue('');
+          this.insForm.get('email').setValue('');
+          this.insForm.get('phone').setValue('');
+          this.insForm.get('sex').setValue('Nam');
+          this.insForm.get('permission').setValue('0');
+          this.insForm.get('address').setValue('');
           this.openDialog({ Text: 'Thêm nhân viên thành công!', Title: 1 });
         } else {
           this.openDialog({ Text: 'Thêm nhân viên thất bại!', Title: 0 });
@@ -83,7 +89,19 @@ export class DialogEmployeeaddComponent implements OnInit {
             result => {
               if (result) {
                 this.Insert_Employee().subscribe(
-                  () => { },
+                  insComplete2 => {
+                    if (insComplete2) {
+                      this.insForm.get('name').setValue('');
+                      this.insForm.get('email').setValue('');
+                      this.insForm.get('phone').setValue('');
+                      this.insForm.get('sex').setValue('Nam');
+                      this.insForm.get('permission').setValue('0');
+                      this.insForm.get('address').setValue('');
+                      this.openDialog({ Text: 'Thêm nhân viên thành công!', Title: 1 });
+                    } else {
+                      this.openDialog({ Text: 'Thêm nhân viên thất bại!', Title: 0 });
+                    }
+                  },
                   errors => {
                     this.openDialog({ Text: 'Hệ thống đang bị lỗi!', Title: 0 });
                   });

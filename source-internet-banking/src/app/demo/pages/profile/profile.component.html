@@ -1,0 +1,88 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card cardTitle="Profile" [options]="false">
+      <div class="row">
+        <div class="col-md-12">
+          <div action="javascript:" [formGroup]="profileForm">
+            <div class="form-group">
+              <label for="account_number">Account number:</label>
+              <input type="text" disabled formControlName="account_number" class="form-control" id="account_number">
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label for="username">Username:</label>
+                <div style="display: flex;">
+                  <input type="text" formControlName="username" class="form-control" id="username" aria-describedby="username" placeholder="Enter username">
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="full_name">Full name:</label>
+                <input type="text" formControlName="full_name" class="form-control" id="full_name" placeholder="Enter full name">
+              </div>
+              <div class="form-group col-md-6" style="display: flex; margin-top: 10px;">
+                <label for="full_name">Sex:</label>
+                  <div class="chk-option col-md-2">
+                    <label class="check-task custom-control custom-checkbox d-flex justify-content-center done-task">
+                      <input type="checkbox" formControlName="sex" class="custom-control-input" value="1">
+                      <span class="custom-control-label"></span>
+                      <h6>Female</h6>
+                    </label>
+                  </div>
+                  <div class="chk-option col-md-2">
+                    <label class="check-task custom-control custom-checkbox d-flex justify-content-center done-task">
+                      <input type="checkbox" class="custom-control-input" value="0">
+                      <span class="custom-control-label"></span>
+                      <h6>Male</h6>
+                    </label>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone:</label>
+              <input type="text" formControlName="phone" class="form-control" id="phone" placeholder="Enter yours phone">
+            </div>
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" formControlName="address" class="form-control" placeholder="Enter yours address">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>              
+              <input type="text" formControlName="email" class="form-control" placeholder="Enter yours email">
+            </div>
+            <button type="submit" class="btn btn-primary" (click)="gridSystemModal.show()">Change Password</button>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+  <div class="col-xl-4 col-md-6">
+    <app-ui-modal #gridSystemModal>
+      <div class="app-modal-header">
+        <h5 class="modal-title">Change Password</h5>
+        <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="gridSystemModal.hide()"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="app-modal-body">
+        <div class="container-fluid bd-example-row">
+          <div action="javascript:" [formGroup]="changepassword">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" disabled class="form-control" formControlName="username" id="username" aria-describedby="accountHelp" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+              <label for="new_password">New password</label>
+              <input type="password" class="form-control" formControlName="new_password" id="new_password" placeholder="Enter new password">
+            </div>
+            <div class="form-group">
+              <label for="old_password">Old password</label>
+              <input type="password" class="form-control" formControlName="old_password" id="old_password" placeholder="Enter old password">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="app-modal-footer">
+        <button type="button" style="margin-right: 10px;" id="closeBTNupdate" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModal.hide()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="changePassword()">OK</button>
+      </div>
+    </app-ui-modal>
+  </div>
+</div>

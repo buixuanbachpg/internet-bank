@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AuthSigninRoutingModule } from './auth-signin-routing.module';
 import { AuthSigninComponent } from './auth-signin.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RecaptchaModule, RecaptchaFormsModule, RECAPTCHA_LANGUAGE, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
+import { RecaptchaModule, RECAPTCHA_LANGUAGE, RecaptchaSettings, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 import { ControlMessages } from '../../control-messages/control-messages.component';
 
 

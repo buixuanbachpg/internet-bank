@@ -45,5 +45,5 @@ export let RoutePath: RouteInfo[] = [
     { path: '/user-profile', title: 'Thông tin cá nhân', icon: 'ni-single-02 text-primary', class: '', permission: '0' },
     { path: '/customer', title: 'Đăng ký khách hàng', icon: 'ni-paper-diploma text-primary', class: '', permission: '0' },
     { path: '/trade', title: 'Nạp tiền', icon: 'ni-credit-card text-primary', class: '', permission: '0' },
-    { path: '/reviewtrade', title: 'Báo cáo tài chính cá nhân', icon: 'ni-money-coins text-primary', class: '', permission: '0' }
+    { path: '/reviewtrade', title: 'Lịch sử giao dịch', icon: 'ni-money-coins text-primary', class: '', permission: '0' }
 ];
