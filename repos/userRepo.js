@@ -10,6 +10,10 @@ exports.loadAccount = function(poco) {
     var sql = `select username, account_number, account_balance, full_name, email, phone, sex, address from khach_hang where username='${poco.username}' or account_number='${poco.account_number}' or email='${poco.email}'`;
     return db.load(sql);
 }
+exports.loadAccounts = function(id) {
+    var sql = `select username, account_number, account_balance, full_name, email, phone, sex, address from khach_hang where username='${id}' or account_number='${id}' or email='${id}'`;
+    return db.load(sql);
+}
 exports.loadSaving = function(id) {
     var sql = `select * from tiet_kiem where account_number='${id}' `;
     return db.load(sql);
@@ -31,9 +35,13 @@ exports.updateListRecipient=function(account_number,account_number_receive,name_
     var sql = `update danh_sach_nguoi_nhan SET name_reminiscent='${name_reminiscent}' where account_number = '${account_number}'and account_number_receive = '${account_number_receive}' `;
     return db.update(sql);
 }
+exports.loadListRecipient=function(account_number){
+    var sql = `select * from danh_sach_nguoi_nhan where account_number = '${account_number}' `;    
 
+    return db.load(sql);
+}
 exports.addInDebit=function(poco){
-    var sql = `insert into nhac_no(account_number, account_number_debit, message, seen) values('${poco.account_number}','${poco.account_number_debit}','${poco.message}',${poco.seen})`;
+    var sql = `insert into nhac_no(account_number, account_number_debit, message) values('${poco.account_number}','${poco.account_number_debit}','${poco.message}'`;
     return db.insert(sql);
 }
 exports.deleteInDebit=function(account_number,account_number_debit){
@@ -123,4 +131,14 @@ exports.changePassword = async function (username, new_password, old_password) {
             })
 
     });
+}
+
+exports.resetPassword = async function (username, new_password) {
+    bcryptPassword = await bcrypt.hash(new_password, saltRound).then(hash => {
+        return hash;
+    }).catch(error => {
+        console.log(error);
+    });
+    var sql = `update khach_hang SET password= '${bcryptPassword}'  where username ='${username}' `;
+    return db.update(sql);
 }

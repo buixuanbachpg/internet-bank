@@ -1,9 +1,9 @@
 var crypto= require('crypto');	
-var OpenPGP = require('openpgp');
+var OpenPGP = require('OpenPGP');
 var db = require('../fn/mysql-db'),
 fs = require('fs');
 
-OpenPGP.initWorker({ path:'openpgp.worker.js' })
+OpenPGP.initWorker({ path:'OpenPGP.worker.js' })
 
 // exports.signPGP1= async (data) => {
 //     const privateKeyArmored = fs.readFileSync('./fn/0xC4BDB84C-sec.asc', 'utf8');
@@ -20,11 +20,11 @@ OpenPGP.initWorker({ path:'openpgp.worker.js' })
 // }
 exports.signPGP=( async (privateKeyArmored,passphrase,data) =>{
     try {
-     const { keys: [privateKey] } = await openpgp.key.readArmored(privateKeyArmored);
+     const { keys: [privateKey] } = await OpenPGP.key.readArmored(privateKeyArmored);
      await privateKey.decrypt(passphrase);
  
-     const { signature: detachedSignature } = await openpgp.sign({
-         message: openpgp.cleartext.fromText(data), // CleartextMessage or Message object
+     const { signature: detachedSignature } = await OpenPGP.sign({
+         message: OpenPGP.cleartext.fromText(data), // CleartextMessage or Message object
          privateKeys: [privateKey],                            // for signing
          detached: true
      });
@@ -38,10 +38,10 @@ exports.signPGP=( async (privateKeyArmored,passphrase,data) =>{
 			
     exports.verifyPGP=( async(publicKeyArmored, detachedSignature, data) =>{
         try{
-            const { signatures } = await openpgp.verify({
-                message: openpgp.cleartext.fromText(data),              // CleartextMessage or Message object
-                signature: await openpgp.signature.readArmored(detachedSignature), // parse detached signature
-                publicKeys: (await openpgp.key.readArmored(publicKeyArmored)).keys // for verification
+            const { signatures } = await OpenPGP.verify({
+                message: OpenPGP.cleartext.fromText(data),              // CleartextMessage or Message object
+                signature: await OpenPGP.signature.readArmored(detachedSignature), // parse detached signature
+                publicKeys: (await OpenPGP.key.readArmored(publicKeyArmored)).keys // for verification
             });
             const { valid } = signatures[0];
             console.log("CHÚ Ý DÒNG NÀY "+ valid);
