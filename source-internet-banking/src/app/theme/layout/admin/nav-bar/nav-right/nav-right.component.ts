@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {NgbDropdownConfig} from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit } from '@angular/core';
+import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/api/user.service';
 
@@ -15,7 +15,7 @@ export class NavRightComponent implements OnInit {
   constructor(
     private router: Router,
     private userService: UserService
-  ) { 
+  ) {
     this.userInfo = JSON.parse(localStorage.getItem('USER_ifo'));
   }
 
@@ -23,11 +23,15 @@ export class NavRightComponent implements OnInit {
 
   signout() {
     this.userService.logout(this.userInfo).subscribe(res => {
-      if(res && res.msg) {
-        this.router.navigateByUrl("/auth/signin");
+      if (res && res.msg) {
         localStorage.clear();
+        this.router.navigateByUrl("/auth/signin");
       }
-    });
+    },
+      err => {
+        localStorage.clear();
+        this.router.navigateByUrl("/auth/signin");
+      });
   }
 
   gotoProfilepage() {
