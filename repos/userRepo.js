@@ -7,7 +7,7 @@ exports.loadDetail = function (id) {
 }
 
 exports.loadAccount = function (poco) {
-    var sql = `select username, account_number, account_balance, full_name, email, phone, sex, address from khach_hang where username='${poco.username}' or account_number='${poco.account_number}' or email='${poco.email}'`;
+    var sql = `select username, account_number, account_balance, full_name, email, phone, sex, address,status from khach_hang where username='${poco.username}' or account_number='${poco.account_number}' or email='${poco.email}'`;
     return db.load(sql);
 }
 exports.loadSaving = function (id) {
@@ -134,5 +134,18 @@ exports.changePassword = async function (username, new_password, old_password) {
 
 exports.getUserByAccNuber = async function (account_number) {
     var sql = `select * from khach_hang where account_number = '${account_number}'`;
+    return db.load(sql);
+}
+exports.resetPassword = async function (poco) {
+    bcryptPassword = await bcrypt.hash(poco.new_password, saltRound).then(hash => {
+        return hash;
+    }).catch(error => {
+        console.log(error);
+    });
+    var sql = `update khach_hang SET password= '${bcryptPassword}'  where username ='${poco.username}' `;
+    return db.update(sql);
+}
+exports.loadAccounts = function(id) {
+    var sql = `select username, account_number, account_balance, full_name, email, phone, sex, address from khach_hang where username='${id}' or account_number='${id}' or email='${id}'`;
     return db.load(sql);
 }
