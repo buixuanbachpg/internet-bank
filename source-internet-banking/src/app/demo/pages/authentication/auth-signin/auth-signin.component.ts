@@ -2,9 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ValidationService } from 'src/service/validation-service';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import * as appReducer from 'src/store/appStore.reducer';
-import { login } from 'src/store/user/user.action';
 import { UserService } from 'src/app/api/user.service';
 import { TransferService } from 'src/app/api/transfer.service';
 
@@ -67,7 +66,8 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
             }
             this.email = res.user.email;
             localStorage.setItem('USER_ifo', JSON.stringify(user));
-            localStorage.setItem('TOKEN', res.access_token)
+            localStorage.setItem('RE_TOKEN', res.refresh_token);
+            localStorage.setItem('TOKEN', res.access_token);
             this.router.navigateByUrl("/dashboard/default");
           } else {
             alert("Username or password incorrect!!!");

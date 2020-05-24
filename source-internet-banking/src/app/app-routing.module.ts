@@ -44,6 +44,10 @@ const routes: Routes = [
         loadChildren: () => import('./demo/pages/debt-reminder-management/debt-reminder-management.module').then(module => module.DebtReminderManagementModule)
       },
       {
+        path: 'transaction-history',
+        loadChildren: () => import('./demo/pages/transaction-history/transaction-history.module').then(module => module.TransactionhistoryModule)
+      },
+      {
         path: 'profile',
         loadChildren: () => import('./demo/pages/profile/profile.module').then(module => module.ProfileModule)
       },

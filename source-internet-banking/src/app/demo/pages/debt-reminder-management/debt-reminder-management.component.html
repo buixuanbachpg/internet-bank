@@ -4,7 +4,7 @@
 
     <app-card [hidHeader]="true" cardClass="tab-card">
       <h5 class="mb-3">Debt reminder management</h5>
-      <ngb-tabset type="pills">
+      <ngb-tabset type="pills" (tabChange)="getDetail()">
         <ngb-tab title="Make by me" class="mb-3">
           <ng-template ngbTabContent>
             <button type="button" class="btn btn-outline-primary" (click)="gridSystemModal.show()" ngbTooltip="btn-outline-primary" style="margin-bottom: 10px;"><i class="feather icon-plus-square" style="margin-right: 5px;"></i>Add</button>     
@@ -17,9 +17,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>àasfasfa</td>
-                  <td>Flat Able</td>
+                <tr *ngIf="!listdebit.length"><td><span style="color: red;">No detail</span></td></tr>
+                <tr *ngFor="let item of listdebit">
+                  <td>{{item.account_number_debit}}</td>
+                  <td>{{item.message}}</td>
                   <td>
                     <button type="button" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="feather icon-eye"></i></button>
                     <button type="button" class="btn btn-icon btn-outline-warning" (click)="gridSystemModalupdate.show()" style="margin-right: 10px;"><i class="feather icon-edit"></i></button>
@@ -42,9 +43,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>aaaaaaa</td>
-                  <td>bbbbbbbb</td>
+                <tr *ngIf="!listdebit.length"><td><span style="color: red;">No detail</span></td></tr>
+                <tr *ngFor="let item of listdebit">
+                  <td>{{item.account_number_debit}}</td>
+                  <td>{{item.message}}</td>
                   <td>
                     <button type="button" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="feather icon-eye"></i></button>
                     <button type="button" class="btn btn-icon btn-outline-warning" style="margin-right: 10px;" (click)="gridSystemModalupdate.show()"><i class="feather icon-edit"></i></button>
@@ -70,17 +72,19 @@
             <div class="form-group">
               <label for="account_number_debit">Account number debit</label>
               <input type="text" class="form-control" formControlName="account_number_debit" id="account_number_debit" aria-describedby="accountHelp" placeholder="Enter account number">
+              <!-- <control-messages [control]="makebyme.get('account_number_debit')"></control-messages> -->
             </div>
             <div class="form-group">
               <label for="message">Message</label>
               <input type="text" class="form-control" formControlName="message" id="message" placeholder="Enter message">
+              <!-- <control-messages [control]="makebyme.get('message')"></control-messages> -->
             </div>
           </div>
         </div>
       </div>
       <div class="app-modal-footer">
         <button type="button" style="margin-right: 10px;" id="closeBTN" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModal.hide()">Close</button>
-        <button type="button" class="btn btn-primary">Insert</button>
+        <button type="button" [disable]="this.makebyme.valid" class="btn btn-primary" (click)="addDebit()">Insert</button>
       </div>
     </app-ui-modal>
   </div>
@@ -99,7 +103,7 @@
             </div>
             <div class="form-group">
               <label for="message">Message</label>
-              <input type="text" class="form-control" formControlName="message" id="message" placeholder="Enter message">
+              <input type="text" class="form-control" formControlName="message" id="message2" placeholder="Enter message">
             </div>
           </div>
         </div>

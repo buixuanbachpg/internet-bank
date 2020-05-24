@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UserService } from 'src/app/api/user.service';
 import { Observable, Observer } from 'rxjs';
+import { Router } from '@angular/router';
+import { UiModalComponent } from 'src/app/theme/shared/components/modal/ui-modal/ui-modal.component';
 
 @Component({
   selector: 'app-debt-reminder-management',
@@ -14,13 +16,18 @@ export class DebtReminderManagementComponent implements OnInit {
   public multiCollapsed1: boolean;
   public multiCollapsed2: boolean;
 
+  @ViewChild ('gridSystemModal') gridSystemModal : UiModalComponent;
+
+  public user_info;
   public makebyme: FormGroup;
   public orther: FormGroup;
   listdebit: any[];
+  public opt = 1
 
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
+    private router: Router
   ) {
     this.makebyme = this.formBuilder.group({
       account_number_debit: ['', [Validators.required]],
@@ -30,6 +37,8 @@ export class DebtReminderManagementComponent implements OnInit {
       account_number_debit: ['', [Validators.required]],
       message: ['', [Validators.required]]
     });
+
+    this.user_info = JSON.parse(localStorage.getItem('USER_ifo'));
   }
 
   ngOnInit() {
@@ -41,24 +50,36 @@ export class DebtReminderManagementComponent implements OnInit {
   }
 
   getDetail() {
-    this.Get_Detail_Debit('182536813595', '1').subscribe(
-      () => {
-        // ket qua tra ve o day
+    this.Get_Detail_Debit(this.user_info.account_number, this.opt).subscribe(
+      (res) => {
+        if(res){
+          if(this.opt === 1) {
+            this.opt = 0;
+          } else {
+            this.opt = 1;
+          }
+        }
       },
       error => {
         if (error.status === 401) {
           this.Renew_Token().subscribe(
             result => {
               if (result) {
-                this.Get_Detail_Debit('182536813595', '1').subscribe(
-                  () => {
-                    // ket qua tra ve o day
+                this.Get_Detail_Debit(this.user_info.account_number, this.opt).subscribe(
+                  (res) => {
+                    if(res){
+                      if(this.opt === 1) {
+                        this.opt = 0;
+                      } else {
+                        this.opt = 1;
+                      }
+                    }
                   },
                   errors => {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                // tai day thi tro ve page login lun ket thuc phien lam viec vi het thoi gian token
+                this.router.navigateByUrl("/auth/signin");
               }
             }
           );
@@ -70,24 +91,36 @@ export class DebtReminderManagementComponent implements OnInit {
   }
 
   addDebit() {
-    this.Add_Debit('556664697916', 'thieu tien thi tra dung de doi').subscribe(
-      () => {
-        // ket qua tra ve o day
+    const data = {
+      account_number_debit: this.makebyme.controls['account_number_debit'].value,
+      message: this.makebyme.controls['message'].value
+    }
+    this.Add_Debit(data).subscribe(
+      (res) => {
+        console.log(res);
+        if(res){
+          this.makebyme.reset();
+          this.getDetail();
+          this.gridSystemModal.hide();
+        } else {
+          alert("Error. Please angain");
+        }
       },
       error => {
         if (error.status === 401) {
           this.Renew_Token().subscribe(
             result => {
               if (result) {
-                this.Add_Debit('556664697916', 'thieu tien thi tra dung de doi').subscribe(
-                  () => {
-                    // ket qua tra ve o day
+                this.Add_Debit(data).subscribe(
+                  (res) => {
+                    console.log(res);
+                    
                   },
                   errors => {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                // tai day thi tro ve page login lun ket thuc phien lam viec vi het thoi gian token
+                this.router.navigateByUrl("/auth/signin");
               }
             }
           );
@@ -158,12 +191,12 @@ export class DebtReminderManagementComponent implements OnInit {
   }
 
 
-  private Add_Debit(account, mess): Observable<boolean> {
+  private Add_Debit(data): Observable<boolean> {
     return Observable.create((observer: Observer<boolean>) => {
       this.userService.addindebit({
-        account_number: localStorage.getItem('USER_ifo'),
-        account_number_debit: account,
-        message: mess
+        account_number: this.user_info.account_number,
+        account_number_debit: data.account_number_debit,
+        message: data.message
       }).subscribe(
         result => {
           if (result) {

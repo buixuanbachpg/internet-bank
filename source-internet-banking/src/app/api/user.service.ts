@@ -6,7 +6,8 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 })
 export class UserService {
 
-  private base_path = 'https://bank-demo-server.herokuapp.com/users';
+  // private base_path = 'https://bank-demo-server.herokuapp.com/users';
+  private base_path = 'http://localhost:3000/users';
   constructor(
     private http: HttpClient
   ) { }
@@ -77,7 +78,7 @@ export class UserService {
   }
 
   getindebit<T>(account, opt) {
-    return this.http.get<T>(`${this.base_path}/indebit?account_number:${account}&opt:${opt}`,
+    return this.http.get<T>(`${this.base_path}/indebit?account_number=${account}&opt=${opt}`,
       { headers: this.httpOptions(), withCredentials: false });
   }
 

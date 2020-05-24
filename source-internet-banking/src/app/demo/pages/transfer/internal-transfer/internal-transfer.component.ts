@@ -32,7 +32,7 @@ export class InternalTransferComponent implements OnInit {
     this.intrabankForm.controls['sourcebillingaccount'].setValue(this.user_info.account_number);
 
     this.userService.getRecipient(this.user_info.account_number).subscribe(res => {
-      this.listRecipient = res;
+      this.listRecipient = JSON.parse(JSON.stringify(res));
     });
   }
 
