@@ -69,7 +69,7 @@ export class UserService {
   }
 
   renewToken<T>() {
-    return this.http.post<T>(`${this.base_path}/renew-token`, JSON.stringify({ refreshToken: localStorage.getItem('refresh-token') }),
+    return this.http.post<T>(`${this.base_path}/renew-token`, JSON.stringify({ refreshToken: localStorage.getItem('RE_TOKEN') }),
       { headers: this.httpOptions(), withCredentials: false });
   }
 
@@ -85,5 +85,23 @@ export class UserService {
   deleteindebit<T>(account, accountdebit) {
     return this.http.delete<T>(`${this.base_path}/indebit?account_number:${account}&account_number_debit:${accountdebit}`,
       { headers: this.httpOptions(), withCredentials: false });
+  }
+
+  getHistoryDebit<T>(id) {
+    return this.http.get<T>(`${this.base_path}/history/paydebit/${id}`,
+      { headers: this.httpOptions(), withCredentials: false }
+    );
+  }
+
+  getHistoryTransfer<T>(id) {
+    return this.http.get<T>(`${this.base_path}/history/transfer/${id}`,
+      { headers: this.httpOptions(), withCredentials: false }
+    );
+  }
+
+  getHistoryReceive<T>(id) {
+    return this.http.get<T>(`${this.base_path}/history/receive/${id}`,
+      { headers: this.httpOptions(), withCredentials: false }
+    );
   }
 }
