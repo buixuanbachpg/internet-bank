@@ -83,7 +83,7 @@ router.post('/renew-token', (req, res) => {
                 return rows[0].username;
             }
         })
-        .then(id => userRepo.loadAccount(id))
+        .then(id => userRepo.loadAccounts(id))
         .then(rows => {
             var userObj = rows[0];
             var token = authRepo.generateAccessToken(userObj);
@@ -127,7 +127,7 @@ router.put('/changePassword', (req, res) => {
             res.end();
         });
 });
-router.post('/transfer/:bank',  async (req, res) => {
+router.post('/transfer/:bank',authRepo.verifyAccessToken, verifyOtpMail,   async (req, res) => {
     var secret_key = "";
     var partner_code = "";
     var signature = "";
@@ -575,6 +575,38 @@ router.post('/resetPassword', authRepo.verifyAccessToken, verifyOtpMail, (req, r
         })
     })
 });
+router.get('/recipient/:account_number', authRepo.verifyAccessToken,(req, res) => {
+    const account_number = req.params.account_number;
+    userRepo.loadListRecipient(account_number)
+        .then(rows => {
+            if (rows.length > 0) {
+                res.json(rows);
+            } else {
+                res.statusCode = 204;
+                res.end();
+            }
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+});
+router.get('/getbyacc/:account_number', authRepo.verifyAccessToken,(req, res) => {
+    const account_number = req.params.account_number;
+    userRepo.getUserByAccNuber(account_number)
+        .then(rows => {
+            if (rows.length > 0) {
+                res.json(rows);
+            } else {
+                res.statusCode = 204;
+                res.end();
+            }
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+});
 
 router.get('/', authRepo.verifyAccessToken, (req, res) => {
     var poco = {
@@ -612,38 +644,6 @@ router.put('/', authRepo.verifyAccessToken, (req, res) => {
         });
 });
 
-router.get('/recipient/:account_number', (req, res) => {
-    const account_number = req.params.account_number;
-    userRepo.loadListRecipient(account_number)
-        .then(rows => {
-            if (rows.length > 0) {
-                res.json(rows);
-            } else {
-                res.statusCode = 204;
-                res.end();
-            }
-        }).catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-});
-router.get('/getbyacc/:account_number', (req, res) => {
-    const account_number = req.params.account_number;
-    userRepo.getUserByAccNuber(account_number)
-        .then(rows => {
-            if (rows.length > 0) {
-                res.json(rows);
-            } else {
-                res.statusCode = 204;
-                res.end();
-            }
-        }).catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('View error log on console.');
-        });
-});
 
 
 module.exports = router;
