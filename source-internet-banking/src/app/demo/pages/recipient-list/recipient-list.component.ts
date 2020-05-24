@@ -34,7 +34,7 @@ export class RecipientListComponent implements OnInit {
     });
     this.account_number = JSON.parse(localStorage.getItem("USER_ifo")).account_number;
     this.userService.getRecipient(this.account_number).subscribe(res => {
-      this.listRecipient = res;
+      this.listRecipient = JSON.parse(JSON.stringify(res));
     },
       err => {
         if (err.status === 401) {
@@ -42,14 +42,16 @@ export class RecipientListComponent implements OnInit {
             result => {
               if (result) {
                 this.userService.getRecipient(this.account_number).subscribe(res2 => {
-                  this.listRecipient = res2;
+                  this.listRecipient = JSON.parse(JSON.stringify(res2));
                 },
                   errs => {
                     // loi khac
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
               }
             });
         } else {
@@ -111,8 +113,10 @@ export class RecipientListComponent implements OnInit {
                     alert('Error. Please create again!!');
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
               }
             });
         } else {
@@ -150,8 +154,10 @@ export class RecipientListComponent implements OnInit {
                     // loi khac
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
               }
             });
         } else {
@@ -182,8 +188,10 @@ export class RecipientListComponent implements OnInit {
                     alert('Error. Please delete again!!');
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
               }
             });
         } else {
@@ -245,8 +253,10 @@ export class RecipientListComponent implements OnInit {
                     // loi khac
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
               }
             });
         } else {

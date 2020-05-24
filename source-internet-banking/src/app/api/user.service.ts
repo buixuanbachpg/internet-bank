@@ -83,7 +83,7 @@ export class UserService {
   }
 
   deleteindebit<T>(account, accountdebit) {
-    return this.http.delete<T>(`${this.base_path}/indebit?account_number:${account}&account_number_debit:${accountdebit}`,
+    return this.http.delete<T>(`${this.base_path}/indebit?account_number=${account}&account_number_debit=${accountdebit}`,
       { headers: this.httpOptions(), withCredentials: false });
   }
 

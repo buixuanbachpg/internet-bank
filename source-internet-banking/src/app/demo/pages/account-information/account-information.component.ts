@@ -51,8 +51,10 @@ export class AccountInformationComponent implements OnInit {
                   }
                 });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
               }
             });
         }

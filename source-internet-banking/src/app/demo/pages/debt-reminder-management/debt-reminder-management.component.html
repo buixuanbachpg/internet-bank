@@ -4,8 +4,8 @@
 
     <app-card [hidHeader]="true" cardClass="tab-card">
       <h5 class="mb-3">Debt reminder management</h5>
-      <ngb-tabset type="pills" (tabChange)="getDetail()">
-        <ngb-tab title="Make by me" class="mb-3">
+      <ngb-tabset type="pills" (tabChange)="getDetail($event)">
+        <ngb-tab title="Make by me" [id]="0" class="mb-3">
           <ng-template ngbTabContent>
             <button type="button" class="btn btn-outline-primary" (click)="gridSystemModal.show()" ngbTooltip="btn-outline-primary" style="margin-bottom: 10px;"><i class="feather icon-plus-square" style="margin-right: 5px;"></i>Add</button>     
             <table class="table table-hover mb-0" style="border: 1px solid #e2e5e8;">
@@ -22,22 +22,20 @@
                   <td>{{item.account_number_debit}}</td>
                   <td>{{item.message}}</td>
                   <td>
-                    <button type="button" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="feather icon-eye"></i></button>
-                    <button type="button" class="btn btn-icon btn-outline-warning" (click)="gridSystemModalupdate.show()" style="margin-right: 10px;"><i class="feather icon-edit"></i></button>
-                    <button type="button" class="btn btn-icon btn-outline-danger" style="margin-right: 10px;"><i class="feather icon-trash"></i></button>
+                    <button type="button" class="btn btn-icon btn-outline-danger" style="margin-right: 10px;" (click)="deleteDebit(item)"><i class="feather icon-trash"></i></button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </ng-template>
         </ngb-tab>
-        <ngb-tab title="Others">
+        <ngb-tab title="Others" [id]="1">
           <ng-template ngbTabContent>
-            <button type="button" class="btn btn-outline-primary" (click)="gridSystemModal.show()" ngbTooltip="btn-outline-primary" style="margin-bottom: 10px;"><i class="feather icon-plus-square" style="margin-right: 5px;"></i>Add</button>     
             <table class="table table-hover mb-0" style="border: 1px solid #e2e5e8;">
               <thead>
                 <tr>
                   <th>Account number debit</th>
+                  <th>Amount</th>
                   <th>Message</th>
                   <th>Action</th>
                 </tr>
@@ -45,12 +43,12 @@
               <tbody>
                 <tr *ngIf="!listdebit.length"><td><span style="color: red;">No detail</span></td></tr>
                 <tr *ngFor="let item of listdebit">
-                  <td>{{item.account_number_debit}}</td>
+                  <td>{{item.account_number}}</td>
+                  <td></td>
                   <td>{{item.message}}</td>
                   <td>
-                    <button type="button" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="feather icon-eye"></i></button>
-                    <button type="button" class="btn btn-icon btn-outline-warning" style="margin-right: 10px;" (click)="gridSystemModalupdate.show()"><i class="feather icon-edit"></i></button>
-                    <button type="button" class="btn btn-icon btn-outline-danger" style="margin-right: 10px;"><i class="feather icon-trash"></i></button>
+                    <button type="button" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="fa fa-hand-holding-usd"></i></button>
+                    <button type="button" class="btn btn-icon btn-outline-danger" style="margin-right: 10px;" (click)="deleteDebit(item)"><i class="feather icon-trash"></i></button>
                   </td>
                 </tr>
               </tbody>
@@ -64,14 +62,15 @@
     <app-ui-modal #gridSystemModal>
       <div class="app-modal-header">
         <h5 class="modal-title">Create Debt Reminder</h5>
-        <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="gridSystemModal.hide()"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="closeModal()"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="app-modal-body">
         <div class="container-fluid bd-example-row">
           <div action="javascript:" [formGroup]="makebyme">
             <div class="form-group">
               <label for="account_number_debit">Account number debit</label>
-              <input type="text" class="form-control" formControlName="account_number_debit" id="account_number_debit" aria-describedby="accountHelp" placeholder="Enter account number">
+              <input type="text" class="form-control" formControlName="account_number_debit" id="account_number_debit" (focusout)="focusoutAccNumber($event)" aria-describedby="accountHelp" placeholder="Enter account number">
+              <span *ngIf="!isExist" style="color: red; font-size:10px;">User not exist</span>
               <!-- <control-messages [control]="makebyme.get('account_number_debit')"></control-messages> -->
             </div>
             <div class="form-group">
@@ -83,34 +82,8 @@
         </div>
       </div>
       <div class="app-modal-footer">
-        <button type="button" style="margin-right: 10px;" id="closeBTN" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModal.hide()">Close</button>
-        <button type="button" [disable]="this.makebyme.valid" class="btn btn-primary" (click)="addDebit()">Insert</button>
-      </div>
-    </app-ui-modal>
-  </div>
-  <div class="col-xl-4 col-md-6">
-    <app-ui-modal #gridSystemModalupdate>
-      <div class="app-modal-header">
-        <h5 class="modal-title">Update Debt Reminder</h5>
-        <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="gridSystemModalupdate.hide()"><span aria-hidden="true">&times;</span></button>
-      </div>
-      <div class="app-modal-body">
-        <div class="container-fluid bd-example-row">
-          <div action="javascript:" [formGroup]="orther">
-            <div class="form-group">
-              <label for="account_number_debit">Account number debit</label>
-              <input type="text" disabled class="form-control" formControlName="account_number_debit" id="accountnumber" aria-describedby="accountHelp" placeholder="Enter account number">
-            </div>
-            <div class="form-group">
-              <label for="message">Message</label>
-              <input type="text" class="form-control" formControlName="message" id="message2" placeholder="Enter message">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="app-modal-footer">
-        <button type="button" style="margin-right: 10px;" id="closeBTNupdate" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModalupdate.hide()">Close</button>
-        <button type="button" class="btn btn-primary">Update</button>
+        <button type="button" style="margin-right: 10px;" id="closeBTN" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">Close</button>
+        <button type="button" [disabled]="!this.makebyme.valid" class="btn btn-primary" (click)="addDebit()">Insert</button>
       </div>
     </app-ui-modal>
   </div>

@@ -17,12 +17,14 @@ export class DebtReminderManagementComponent implements OnInit {
   public multiCollapsed2: boolean;
 
   @ViewChild ('gridSystemModal') gridSystemModal : UiModalComponent;
+  @ViewChild ('gridSystemModalupdate') gridSystemModalupdate : UiModalComponent;
+
 
   public user_info;
   public makebyme: FormGroup;
-  public orther: FormGroup;
   listdebit: any[];
   public opt = 1
+  public isExist = true;
 
   constructor(
     private userService: UserService,
@@ -30,10 +32,6 @@ export class DebtReminderManagementComponent implements OnInit {
     private router: Router
   ) {
     this.makebyme = this.formBuilder.group({
-      account_number_debit: ['', [Validators.required]],
-      message: ['', [Validators.required]]
-    });
-    this.orther = this.formBuilder.group({
       account_number_debit: ['', [Validators.required]],
       message: ['', [Validators.required]]
     });
@@ -49,16 +47,22 @@ export class DebtReminderManagementComponent implements OnInit {
     this.getDetail();
   }
 
-  getDetail() {
+  closeModal() {
+    this.makebyme.reset();
+    this.gridSystemModal.hide()
+  }
+
+  getDetail(event?) {
+    
+    if(event && event.nextId === 1) {
+      this.opt = 0
+    } else if (event && event.nextId === 0){
+      this.opt = 1;
+    }
+    
     this.Get_Detail_Debit(this.user_info.account_number, this.opt).subscribe(
       (res) => {
-        if(res){
-          if(this.opt === 1) {
-            this.opt = 0;
-          } else {
-            this.opt = 1;
-          }
-        }
+        console.log(res);
       },
       error => {
         if (error.status === 401) {
@@ -67,19 +71,16 @@ export class DebtReminderManagementComponent implements OnInit {
               if (result) {
                 this.Get_Detail_Debit(this.user_info.account_number, this.opt).subscribe(
                   (res) => {
-                    if(res){
-                      if(this.opt === 1) {
-                        this.opt = 0;
-                      } else {
-                        this.opt = 1;
-                      }
-                    }
+                    console.log(res);
                   },
                   errors => {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
               }
             }
           );
@@ -114,13 +115,22 @@ export class DebtReminderManagementComponent implements OnInit {
                 this.Add_Debit(data).subscribe(
                   (res) => {
                     console.log(res);
-                    
+                    if(res){
+                      this.makebyme.reset();
+                      this.getDetail();
+                      this.gridSystemModal.hide();
+                    } else {
+                      alert("Error. Please angain");
+                    }
                   },
                   errors => {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
               }
             }
           );
@@ -131,25 +141,31 @@ export class DebtReminderManagementComponent implements OnInit {
     );
   }
 
-  deleteDebit() {
-    this.Delete_Debit('182536813595').subscribe(
-      () => {
-        // ket qua tra ve o day
+  deleteDebit(item) {
+    this.Delete_Debit(item.account_number_debit).subscribe(
+      (res) => {
+        if(res) {
+          this.getDetail();
+        }
       },
       error => {
         if (error.status === 401) {
           this.Renew_Token().subscribe(
             result => {
               if (result) {
-                this.Delete_Debit('182536813595').subscribe(
-                  () => {
+                this.Delete_Debit(item.account_number_debit).subscribe(
+                  (res) => {
+                    console.log(res);
                     // ket qua tra ve o day
                   },
                   errors => {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                // tai day thi tro ve page login lun ket thuc phien lam viec vi het thoi gian token
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
               }
             }
           );
@@ -167,6 +183,7 @@ export class DebtReminderManagementComponent implements OnInit {
       this.userService.getindebit(account, opt).subscribe(
         result => {
           if (result instanceof Array) {
+            this.listdebit = [];
             result.forEach(element => {
               this.listdebit.push({
                 account_number: element.account_number,
@@ -215,7 +232,7 @@ export class DebtReminderManagementComponent implements OnInit {
   private Delete_Debit(accountdebit): Observable<boolean> {
     return Observable.create((observer: Observer<boolean>) => {
       this.userService.deleteindebit(
-        localStorage.getItem('USER_ifo'),
+        this.user_info.account_number,
         accountdebit  // tai khoan bi nhac no
       ).subscribe(
         result => {
@@ -246,6 +263,42 @@ export class DebtReminderManagementComponent implements OnInit {
         }
       );
     });
+  }
+
+  focusoutAccNumber(evt) {
+    this.userService.getUserByAccNumber(this.makebyme.controls['account_number_debit'].value).subscribe(res => {
+      if (res) {
+        this.isExist = true;
+      } else {
+        this.isExist = false;
+      }
+    },
+      err => {
+        if (err.status === 401) {
+          this.Renew_Token().subscribe(
+            result => {
+              if (result) {
+                this.userService.getUserByAccNumber(this.makebyme.controls['account_number_debit'].value).subscribe(res2 => {
+                  if (res2) {
+                    this.isExist = true;
+                  } else {
+                    this.isExist = false;
+                  }
+                },
+                  errs => {
+                    // loi khac
+                  });
+              } else {
+                if(confirm('Session has been expired. Please re-login.')){
+                  localStorage.clear();
+                  this.router.navigateByUrl("/auth/signin");
+                }
+              }
+            });
+        } else {
+          // loi khac
+        }
+      });
   }
 
 }

@@ -18,6 +18,7 @@ export class TransactionhistoryComponent implements OnInit {
   dataReceive: any[];
   dataTransfer: any[];
   dataDebit: any[];
+  islogout = false;
 
   constructor(
     private userService: UserService,
@@ -25,21 +26,28 @@ export class TransactionhistoryComponent implements OnInit {
     private datePipe: DatePipe,
     private router: Router,
   ) {
+    this.userIfo = JSON.parse(localStorage.getItem('USER_ifo'));
   }
 
   ngOnInit() {
     this.dataReceive = [];
     this.dataTransfer = [];
     this.dataDebit = [];
+    this.getReceive();
+    this.getTransfer();
+    this.getDebit();
   }
 
   getReceive() {
-    this.Get_Detail_Receive('tham so tu truyen vao').subscribe(
+    this.Get_Detail_Receive(this.userIfo.account_number).subscribe(
       result => {
+        console.log(result);
+        
         this.dataReceive = [];
         const array = [];
         result.local.forEach(data => {
           array.push({
+            to_account_number: data.to_account_number,
             amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
             message: data.message,
@@ -49,6 +57,7 @@ export class TransactionhistoryComponent implements OnInit {
 
         result.global.forEach(data => {
           array.push({
+            to_account_number: data.to_account_number,
             amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
             message: data.message,
@@ -65,12 +74,13 @@ export class TransactionhistoryComponent implements OnInit {
           this.Renew_Token().subscribe(
             result => {
               if (result) {
-                this.Get_Detail_Receive('tham so tu truyen vao').subscribe(
+                this.Get_Detail_Receive(this.userIfo.account_number).subscribe(
                   result2 => {
                     this.dataReceive = [];
                     const array = [];
                     result2.local.forEach(data => {
                       array.push({
+                        to_account_number: data.to_account_number,
                         amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                         from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                         message: data.message,
@@ -80,6 +90,7 @@ export class TransactionhistoryComponent implements OnInit {
 
                     result2.global.forEach(data => {
                       array.push({
+                        to_account_number: data.to_account_number,
                         amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                         from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                         message: data.message,
@@ -95,8 +106,7 @@ export class TransactionhistoryComponent implements OnInit {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                
               }
             }
           );
@@ -108,11 +118,13 @@ export class TransactionhistoryComponent implements OnInit {
   }
 
   getTransfer() {
-    this.Get_Detail_Transfer('tham so tu truyen vao').subscribe(
+    this.Get_Detail_Transfer(this.userIfo.account_number).subscribe(
       result => {
+        console.log(result);
         this.dataTransfer = [];
         result.local.forEach(data => {
           this.dataTransfer.push({
+            to_account_number: data.to_account_number,
             amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
             message: data.message,
@@ -122,6 +134,7 @@ export class TransactionhistoryComponent implements OnInit {
 
         result.global.forEach(data => {
           this.dataTransfer.push({
+            to_account_number: data.to_account_number,
             amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
             message: data.message,
@@ -138,11 +151,12 @@ export class TransactionhistoryComponent implements OnInit {
           this.Renew_Token().subscribe(
             result => {
               if (result) {
-                this.Get_Detail_Transfer('tham so tu truyen vao').subscribe(
+                this.Get_Detail_Transfer(this.userIfo.account_number).subscribe(
                   result2 => {
                     this.dataTransfer = [];
                     result2.local.forEach(data => {
                       this.dataTransfer.push({
+                        to_account_number: data.to_account_number,
                         amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                         from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                         message: data.message,
@@ -152,6 +166,7 @@ export class TransactionhistoryComponent implements OnInit {
 
                     result2.global.forEach(data => {
                       this.dataTransfer.push({
+                        to_account_number: data.to_account_number,
                         amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                         from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                         message: data.message,
@@ -167,8 +182,7 @@ export class TransactionhistoryComponent implements OnInit {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+      
               }
             }
           );
@@ -180,11 +194,12 @@ export class TransactionhistoryComponent implements OnInit {
   }
 
   getDebit() {
-    this.Get_Detail_Debit('tham so tu truyen vao').subscribe(
+    this.Get_Detail_Debit(this.userIfo.account_number).subscribe(
       result => {
         this.dataDebit = [];
         result.forEach(data => {
           this.dataDebit.push({
+            to_account_number: data.to_account_number,
             amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
             message: data.message,
@@ -201,11 +216,12 @@ export class TransactionhistoryComponent implements OnInit {
           this.Renew_Token().subscribe(
             result => {
               if (result) {
-                this.Get_Detail_Debit('tham so tu truyen vao').subscribe(
+                this.Get_Detail_Debit(this.userIfo.account_number).subscribe(
                   result2 => {
                     this.dataDebit = [];
                     result2.forEach(data => {
                       this.dataDebit.push({
+                        to_account_number: data.to_account_number,
                         amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                         from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                         message: data.message,
@@ -221,8 +237,7 @@ export class TransactionhistoryComponent implements OnInit {
                     // he thong co ve bi loi do db cu chuoi
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                
               }
             }
           );
@@ -303,6 +318,10 @@ export class TransactionhistoryComponent implements OnInit {
         },
         error => {
           observer.next(false);
+          if(confirm('Session has been expired. Please re-login.')){
+            localStorage.clear();
+            this.router.navigateByUrl("/auth/signin");
+          }
           observer.complete();
         }
       );
