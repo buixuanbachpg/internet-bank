@@ -109,6 +109,7 @@ export class DialogEmployeeaddComponent implements OnInit {
                 this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
                   .subscribe(
                     Prosc => {
+                      this.matDialogRef.close(false);
                       this.router.navigateByUrl('', { replaceUrl: true });
                     }
                   );

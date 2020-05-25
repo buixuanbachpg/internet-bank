@@ -62,7 +62,7 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                 amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                 from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                 message: data.message,
-                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
               });
             });
 
@@ -71,10 +71,10 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                 amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                 from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                 message: data.message,
-                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
               });
             });
-            this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+            this.dataSource.data = array.sort((a, b) => a.time > b.time ? -1 : 1);
             if (this.dataSource.data.length === 0) {
               this.openDialog({ Text: 'Không có dữ giao dịch liệu nhận tiền!', Title: 0 });
             }
@@ -93,7 +93,7 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                             amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                             message: data.message,
-                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
                           });
                         });
 
@@ -102,10 +102,10 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                             amount: `+${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                             message: data.message,
-                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
                           });
                         });
-                        this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+                        this.dataSource.data = array.sort((a, b) => a.time > b.time ? -1 : 1);
                         if (this.dataSource.data.length === 0) {
 
                           this.openDialog({ Text: 'Không có dữ liệu giao dịch nhận tiền!', Title: 0 });
@@ -118,6 +118,7 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                     this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
                       .subscribe(
                         Prosc => {
+                          this.matDialogRef.close(false);
                           this.router.navigateByUrl('', { replaceUrl: true });
                         }
                       );
@@ -140,7 +141,7 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                 amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                 from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                 message: data.message,
-                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
               });
             });
 
@@ -149,10 +150,10 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                 amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                 from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                 message: data.message,
-                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
               });
             });
-            this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+            this.dataSource.data = array.sort((a, b) => a.time > b.time ? -1 : 1);
             if (this.dataSource.data.length === 0) {
               this.openDialog({ Text: 'Không có dữ liệu giao dịch chuyển khoản!', Title: 0 });
             }
@@ -171,7 +172,7 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                             amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                             message: data.message,
-                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
                           });
                         });
 
@@ -180,10 +181,10 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                             amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                             message: data.message,
-                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
                           });
                         });
-                        this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+                        this.dataSource.data = array.sort((a, b) => a.time > b.time ? -1 : 1);
                         if (this.dataSource.data.length === 0) {
                           this.openDialog({ Text: 'Không có dữ liệu giao dịch chuyển khoản!', Title: 0 });
                         }
@@ -195,6 +196,7 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                     this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
                       .subscribe(
                         Prosc => {
+                          this.matDialogRef.close(false);
                           this.router.navigateByUrl('', { replaceUrl: true });
                         }
                       );
@@ -217,10 +219,10 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                 amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                 from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                 message: data.message,
-                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
               });
             });
-            this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+            this.dataSource.data = array.sort((a, b) => a.time > b.time ? -1 : 1);
             if (this.dataSource.data.length === 0) {
               this.openDialog({ Text: 'Không có dữ liệu giao dịch thanh toán nhắc nợ!', Title: 0 });
             }
@@ -239,10 +241,10 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                             amount: `-${this.currencyPipe.transform(data.amount, 'VND').substr(1)}`,
                             from_account_number: data.from_account_number === '0000' ? 'BBD Bank' : data.from_account_number,
                             message: data.message,
-                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm a'),
+                            time: this.datePipe.transform(data.time, 'dd/MM/yyyy hh:mm:ss a'),
                           });
                         });
-                        this.dataSource.data = array.sort((a, b) => a.time > b.time ? 1 : -1);
+                        this.dataSource.data = array.sort((a, b) => a.time > b.time ? -1 : 1);
                         if (this.dataSource.data.length === 0) {
                           this.openDialog({ Text: 'Không có dữ liệu giao dịch thanh toán nhắc nợ!', Title: 0 });
                         }
@@ -254,6 +256,7 @@ export class DialogDetailComponent implements OnInit, AfterViewInit {
                     this.openDialog({ Text: 'Phiên làm việc đã kết thúc!', Title: 2 }).afterClosed()
                       .subscribe(
                         Prosc => {
+                          this.matDialogRef.close(false);
                           this.router.navigateByUrl('', { replaceUrl: true });
                         }
                       );
