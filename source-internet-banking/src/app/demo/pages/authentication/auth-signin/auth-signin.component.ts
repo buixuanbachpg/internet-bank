@@ -93,7 +93,7 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
   getnamebyUsername() {
     const param = $("#usernameOtp").val();
     this.userService.getUserbyUsername(param).subscribe(res => {
-      if(res && res.length) {
+      if(res && res.length === 1) {
         this.email = res[0].email;
         this.resetForm.controls['username'].setValue(res[0].username);
         this.transferService.sendOTP(this.email).subscribe(

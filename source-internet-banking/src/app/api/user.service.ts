@@ -14,13 +14,13 @@ export class UserService {
   httpOptions = (otp?) => {
     return new HttpHeaders({
       'Content-Type': 'application/json; charset=utf-8',
-      'x-access-token': localStorage.getItem('TOKEN'),
+      'x-access-token': localStorage.getItem('TOKEN')? localStorage.getItem('TOKEN'):'',
       'x-access-otp': otp
     });
   }
 
   login<T>(user) {
-    return this.http.post<T>(`${this.base_path}/login`, JSON.stringify(user), { headers: this.httpOptions(), withCredentials: false });
+    return this.http.post<T>(`${this.base_path}/login`, user, {});
   }
 
   logout<T>(user) {
