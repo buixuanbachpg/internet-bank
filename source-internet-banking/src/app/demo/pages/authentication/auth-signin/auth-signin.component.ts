@@ -91,8 +91,6 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
   }
 
   getnamebyUsername() {
-    console.log("hhhhhhh");
-    
     const param = $("#usernameOtp").val();
     this.userService.getUserbyUsername(param).subscribe(res => {
       if(res && res.length) {
@@ -141,19 +139,18 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
     }
     this.userService.resetPassword(data,this.otp).subscribe(res => {
       if(res && res.message) {
-        console.log("res", res)
-        // if(res.message == 'changed success' && confirm(res.message)) {
-        //   this.issendOTP = false;
-        //   this.isReset = false;
-        // } else {
-        //   alert(res.message + '. Please try again');
-        // }
+        if(res.message == 'changed success' && confirm(res.message)) {
+          this.issendOTP = false;
+          this.isReset = false;
+        } else {
+          alert(res.message + '. Please try again');
+        }
       }
     },
     err => {
       console.log("err", err);
       
-      alert('Error.ssssssssssssss Please try again');
+      alert('Error. Please try again');
     });
   }
 
