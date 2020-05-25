@@ -99,7 +99,7 @@ router.post('/renew-token', (req, res) => {
             }
         });
 });
-router.put('/changePassword', (req, res) => {
+router.put('/changePassword',authRepo.verifyAccessToken, (req, res) => {
     const { username, new_password, old_password } = req.body;
     userRepo.changePassword(username, new_password, old_password)
         .then(changedRows => {
@@ -615,7 +615,7 @@ router.get('/:name', authRepo.verifyAccessToken, (req, res) => {
         });
     }
 });
-router.post('/resetPassword', authRepo.verifyAccessToken, verifyOtpMail, (req, res) => {
+router.post('/resetPassword', verifyOtpMail, (req, res) => {
     userRepo.resetPassword(req.body).then(changedRows => {
         if (changedRows) {
             res.status(200).json({
