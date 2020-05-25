@@ -25,6 +25,10 @@ export class TransferService {
     return this.http.post<T>(`${this.base_path}/transfer`, data, { headers: this.httpOptions(otp), withCredentials: false });
   }
 
+  transferInterbank<T>(data,bank) {
+    return this.http.post<T>(`${this.base_path}/transfer/${bank}`, data, { headers: this.httpOptions(), withCredentials: false });
+  }
+
   sendOTP<T>(email) {
     return this.http.post<T>(`${this.otp_path}/${email}`, null, {});
   }

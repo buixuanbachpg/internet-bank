@@ -29,12 +29,12 @@ export class RecipientListComponent implements OnInit {
       full_name: ['', [Validators.required]]
     });
     this.receiveFormUpdate = this.formBuilder.group({
-      account_number_rev: ['', [Validators.required]],
-      full_name: ['', [Validators.required]]
+      account_number_revUpdate: ['', [Validators.required]],
+      full_nameUpdate: ['', [Validators.required]]
     });
     this.account_number = JSON.parse(localStorage.getItem("USER_ifo")).account_number;
     this.userService.getRecipient(this.account_number).subscribe(res => {
-      this.listRecipient = res;
+      this.listRecipient = JSON.parse(JSON.stringify(res));
     },
       err => {
         if (err.status === 401) {
@@ -42,18 +42,20 @@ export class RecipientListComponent implements OnInit {
             result => {
               if (result) {
                 this.userService.getRecipient(this.account_number).subscribe(res2 => {
-                  this.listRecipient = res2;
+                  this.listRecipient = JSON.parse(JSON.stringify(res2));
                 },
                   errs => {
-                    // loi khac
+                    alert('Error. Please again!!');
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
         } else {
-          // loi khac
+          alert('Error. Please again!!');
         }
       });
 
@@ -111,8 +113,10 @@ export class RecipientListComponent implements OnInit {
                     alert('Error. Please create again!!');
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
         } else {
@@ -147,15 +151,17 @@ export class RecipientListComponent implements OnInit {
                   }
                 },
                   errs => {
-                    // loi khac
+                    alert('Error. Please again!!');
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
         } else {
-          // loi khac
+          alert('Error. Please again!!');
         }
       });
   }
@@ -182,8 +188,10 @@ export class RecipientListComponent implements OnInit {
                     alert('Error. Please delete again!!');
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
         } else {
@@ -194,15 +202,15 @@ export class RecipientListComponent implements OnInit {
   }
 
   chooseItemEdit(item) {
-    this.receiveFormUpdate.controls['account_number_rev'].setValue(item.account_number_receive);
-    this.receiveFormUpdate.controls['full_name'].setValue(item.name_reminiscent);
+    this.receiveFormUpdate.controls['account_number_revUpdate'].setValue(item.account_number_receive);
+    this.receiveFormUpdate.controls['full_nameUpdate'].setValue(item.name_reminiscent);
     this.gridSystemModalupdate.show();
   }
 
   updateRecipient() {
     const data = {
-      account_number_receive: this.receiveFormUpdate.controls['account_number_rev'].value,
-      name_reminiscent: this.receiveFormUpdate.controls['full_name'].value
+      account_number_receive: this.receiveFormUpdate.controls['account_number_revUpdate'].value,
+      name_reminiscent: this.receiveFormUpdate.controls['full_nameUpdate'].value
     }
     this.userService.updateRecipient(data, this.account_number).subscribe(
       res => {
@@ -211,8 +219,8 @@ export class RecipientListComponent implements OnInit {
             $('#closeBTNupdate').click();
           }
           this.listRecipient.forEach(item => {
-            if (item.account_number_receive === this.receiveFormUpdate.controls['account_number_rev'].value) {
-              item.name_reminiscent = this.receiveFormUpdate.controls['full_name'].value;
+            if (item.account_number_receive === this.receiveFormUpdate.controls['account_number_revUpdate'].value) {
+              item.name_reminiscent = this.receiveFormUpdate.controls['full_nameUpdate'].value;
               return;
             }
           })
@@ -232,8 +240,8 @@ export class RecipientListComponent implements OnInit {
                         $('#closeBTNupdate').click();
                       }
                       this.listRecipient.forEach(item => {
-                        if (item.account_number_receive === this.receiveFormUpdate.controls['account_number_rev'].value) {
-                          item.name_reminiscent = this.receiveFormUpdate.controls['full_name'].value;
+                        if (item.account_number_receive === this.receiveFormUpdate.controls['account_number_revUpdate'].value) {
+                          item.name_reminiscent = this.receiveFormUpdate.controls['full_nameUpdate'].value;
                           return;
                         }
                       })
@@ -245,12 +253,14 @@ export class RecipientListComponent implements OnInit {
                     // loi khac
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
         } else {
-          // loi khac
+          alert('Error. Please create again!!');
         }
       }
     );

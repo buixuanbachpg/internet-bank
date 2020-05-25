@@ -26,8 +26,8 @@ export class UserService {
     return this.http.post<T>(`${this.base_path}/logout`, user, { headers: this.httpOptions(), withCredentials: false });
   }
 
-  resetPassword<T>() {
-    return this.http.post<T>(`${this.base_path}/resetPassword`, null, { headers: this.httpOptions(), withCredentials: false });
+  resetPassword<T>(data) {
+    return this.http.post<T>(`${this.base_path}/resetPassword`, data, { headers: this.httpOptions(), withCredentials: false });
   }
 
   getRecipient<T>(account_number) {
@@ -83,7 +83,7 @@ export class UserService {
   }
 
   deleteindebit<T>(account, accountdebit) {
-    return this.http.delete<T>(`${this.base_path}/indebit?account_number:${account}&account_number_debit:${accountdebit}`,
+    return this.http.delete<T>(`${this.base_path}/indebit?account_number=${account}&account_number_debit=${accountdebit}`,
       { headers: this.httpOptions(), withCredentials: false });
   }
 
@@ -101,6 +101,13 @@ export class UserService {
 
   getHistoryReceive<T>(id) {
     return this.http.get<T>(`${this.base_path}/history/receive/${id}`,
+      { headers: this.httpOptions(), withCredentials: false }
+    );
+  }
+
+  queryInfo<T>(data) {
+    return this.http.post<T>(`${this.base_path}/query_info`,
+      data,
       { headers: this.httpOptions(), withCredentials: false }
     );
   }

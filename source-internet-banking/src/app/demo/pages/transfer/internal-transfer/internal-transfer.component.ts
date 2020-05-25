@@ -46,10 +46,14 @@ export class InternalTransferComponent implements OnInit {
                   this.listRecipient = JSON.parse(JSON.stringify(res2));
                 });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
+        } else {
+          alert('Error. Please again!!');
         }
       });
   }
@@ -80,8 +84,10 @@ export class InternalTransferComponent implements OnInit {
                   }
                 );
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
         } else {
@@ -115,10 +121,14 @@ export class InternalTransferComponent implements OnInit {
                   console.log(res2);
                 });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
+        } else {
+          alert('Error. Please again!!');
         }
       });
   }
@@ -173,8 +183,10 @@ export class InternalTransferComponent implements OnInit {
                     alert('Error. Please create again!!');
                   });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
         } else {
@@ -209,10 +221,14 @@ export class InternalTransferComponent implements OnInit {
                   }
                 });
               } else {
-                localStorage.clear();
-                this.router.navigateByUrl("/auth/signin");
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             });
+        } else {
+          alert('Error. Please again!!');
         }
       });
   }

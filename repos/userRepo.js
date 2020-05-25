@@ -38,7 +38,7 @@ exports.updateListRecipient = function (account_number, account_number_receive, 
 }
 
 exports.addInDebit = function (poco) {
-    var sql = `insert into nhac_no(account_number, account_number_debit, message) values('${poco.account_number}','${poco.account_number_debit}','${poco.message}')`;
+    var sql = `insert into nhac_no(account_number, account_number_debit, message,amount) values('${poco.account_number}','${poco.account_number_debit}','${poco.message}','${poco.amount}')`;
     return db.insert(sql);
 }
 exports.deleteInDebit = function (account_number, account_number_debit) {
@@ -54,6 +54,30 @@ exports.loadInDebit = function (account_number, opt) {
     return db.load(sql);
 }
 
+exports.addNotify = function (poco) {
+    var sql = `insert into notify(username, message, user_send_notify) values('${poco.username}','${poco.message}','${poco.user_send_notify}')`;
+    return db.insert(sql);
+}
+exports.deleteNotify = function (username) {
+    var sql = `DELETE FROM notify WHERE username =  '${username}' `;
+    return db.delete(sql);
+}
+exports.loadNotify = function (username) {
+        var sql = `select * from notify where username = '${username}' `;
+    return db.load(sql);
+}
+exports.updateNotify = async function (username) {
+    // {
+    //     "full_name":"bui xuan bach",
+    //     "password":"12346789",
+    //     "permission":1,
+    //     "address":"277 nguyen van cu",
+    //     "email":"test",
+    //     "phone":"123456789"
+    //     }
+    var sql = `update notify SET  seen = '1' where username ='${username}' `;
+    return db.update(sql);
+}
 exports.update = async function (poco) {
     // {
     //     "full_name":"bui xuan bach",

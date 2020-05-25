@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TransactionhistoryRoutingModule } from './transaction-history-routing.module';
 import {SharedModule} from '../../../theme/shared/shared.module';
 import { TransactionhistoryComponent } from './transaction-history.component';
+import { NgbCollapseModule, NgbTabsetModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -11,7 +12,10 @@ import { TransactionhistoryComponent } from './transaction-history.component';
   imports: [
     CommonModule,
     TransactionhistoryRoutingModule,
-    SharedModule
+    SharedModule,
+    NgbCollapseModule,
+    NgbAccordionModule,
+    NgbTabsetModule
   ]
 })
 export class TransactionhistoryModule { }
