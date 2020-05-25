@@ -5,7 +5,7 @@
     </div>
     <div class="card borderless">
       <div class="row align-items-center">
-        <div class="col-md-12" *ngIf="!issendOTP">
+        <div class="col-md-12" *ngIf="!issendOTP && !isReset">
           <div class="card-body" [formGroup]="userForm">
             <h4 class="mb-3 f-w-400 text-center">Signin</h4>
             <div class="mb-3">
@@ -32,19 +32,35 @@
             </p> -->
           </div>
         </div>
-        <div class="col-md-12" [formGroup]="resetForm" *ngIf="issendOTP" style="padding: 0 30px 0 30px;">
+        <div class="col-md-12" *ngIf="issendOTP" style="padding: 0 30px 0 30px;">
           <div class="form-group" style="margin-top: 10px;">
             <label>Username</label>
-            <input type="text" formControlName="username" class="form-control" id="username">
+            <input type="text" class="form-control" (focusout)="getnamebyUsername()" id="usernameOtp">
+            <span *ngIf="!isExist" style="color: red; font-size:10px;">User not exist</span>
           </div>
           <div class="form-group" style="margin-top: 10px;">
             <label>OTP</label>
-            <input type="text" formControlName="otp" class="form-control" id="otp">
+            <input type="text" class="form-control" id="otp">
+          </div>
+          <div class="form-group" style="margin-top: 20px; float: right;">
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;"
+              (click)="submitOTP()">OK</button>
+            <button type="submit" class="btn btn-warning" style="margin-right: 10px;" (click)="resetPass()">Resend OTP</button>
+            <button type="submit" class="btn btn-warning" (click)="cancelBTN()">Cancel</button>
+          </div>
+        </div>
+        <div class="col-md-12" *ngIf="isReset" [formGroup]="resetForm" style="padding: 0 30px 0 30px;">
+          <div class="form-group" style="margin-top: 10px;">
+            <label>Username</label>
+            <input type="text" disabled formControlName="username" class="form-control" id="username">
+          </div>
+          <div class="form-group" style="margin-top: 10px;">
+            <label>New password</label>
+            <input type="password" formControlName="newpass" class="form-control" id="newpass">
           </div>
           <div class="form-group" style="margin-top: 20px; float: right;">
             <button type="submit" class="btn btn-primary" style="margin-right: 10px;"
               (click)="submitResetPass()">Submit</button>
-            <button type="submit" class="btn btn-warning" (click)="resetPass()">Resend OTP</button>
           </div>
         </div>
       </div>

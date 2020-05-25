@@ -19,7 +19,9 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
   public isInterval: number;
   public email:string;
   public issendOTP = false;
-  public OTP = '';
+  public isReset = false;
+  public isExist = true;
+  public otp;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,17 +37,17 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
 
     this.resetForm = this.formBuilder.group({
       username: ['', [Validators.required]],
-      otp: ['', [Validators.required]],
+      newpass: ['', [Validators.required]],
     });
    }
 
    
    ngOnInit() {
-     this.isInterval = setInterval(() => {
-       if(grecaptcha.getResponse()) {
-         this.messageErrCaptcha = '';
-        }
-      });
+    //  this.isInterval = setInterval(() => {
+    //    if(grecaptcha.getResponse()) {
+    //      this.messageErrCaptcha = '';
+    //     }
+    //   });
     }
     
   ngOnDestroy(): void {
@@ -88,35 +90,70 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
      }
   }
 
-  resetPass() {
-    this.issendOTP = true;
-    this.transferService.sendOTP(this.email).subscribe(
-      res => {
-      if(res) {
-        this.issendOTP = false;
+  getnamebyUsername() {
+    console.log("hhhhhhh");
+    
+    const param = $("#usernameOtp").val();
+    this.userService.getUserbyUsername(param).subscribe(res => {
+      if(res && res.length) {
+        this.email = res[0].email;
+        this.resetForm.controls['username'].setValue(res[0].username);
+        this.transferService.sendOTP(this.email).subscribe(
+        res => {
+        if(res) {
+          this.issendOTP = true;
+        }
+      },
+      err => {
+        alert("Error. Please again!!")
+      });
+        this.isExist = true;
+      } else {
+        this.isExist = false;
       }
     },
     err => {
-      alert("Error. Please again!!")
+      this.isExist = false;
     });
   }
 
+  resetPass() {
+    this.issendOTP = true;
+  }
+
+  submitOTP() {
+    this.otp =  $("#otp").val();
+    this.isReset = true;
+    this.issendOTP = false;
+  }
+
+  cancelBTN() {
+    this.issendOTP = false;
+    this.isReset = false;
+  }
+
   submitResetPass() {
+    console.log("submitResetPass")
     const data = {
       username: this.resetForm.controls['username'].value,
-      otp: this.resetForm.controls['otp'].value
+      new_password: this.resetForm.controls['newpass'].value,
+      email: this.email
     }
-    this.userService.resetPassword(data).subscribe(res => {
+    this.userService.resetPassword(data,this.otp).subscribe(res => {
       if(res && res.message) {
-        if(res.message == 'changed success' && confirm(res.message)) {
-          this.issendOTP = false;
-        } else {
-          alert(res.message + '. Please try again');
-        }
+        console.log("res", res)
+        // if(res.message == 'changed success' && confirm(res.message)) {
+        //   this.issendOTP = false;
+        //   this.isReset = false;
+        // } else {
+        //   alert(res.message + '. Please try again');
+        // }
       }
     },
     err => {
-      alert('Error. Please try again');
+      console.log("err", err);
+      
+      alert('Error.ssssssssssssss Please try again');
     });
   }
 

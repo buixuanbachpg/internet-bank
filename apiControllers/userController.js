@@ -666,6 +666,23 @@ router.get('/getbyacc/:account_number', authRepo.verifyAccessToken, (req, res) =
         });
 });
 
+router.get('/getbyusername/:username', (req, res) => {
+    const username = req.params.username;
+    userRepo.loadDetail(username)
+        .then(rows => {
+            if (rows) {
+                res.json(rows);
+            } else {
+                res.statusCode = 204;
+                res.end();
+            }
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on console.');
+        });
+});
+
 router.get('/', authRepo.verifyAccessToken, (req, res) => {
     var poco = {
         email: req.query.email,

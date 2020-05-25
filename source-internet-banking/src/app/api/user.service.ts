@@ -11,10 +11,11 @@ export class UserService {
   constructor(
     private http: HttpClient
   ) { }
-  httpOptions = (token = localStorage.getItem('TOKEN') ? localStorage.getItem('TOKEN') : '') => {
+  httpOptions = (otp?) => {
     return new HttpHeaders({
       'Content-Type': 'application/json; charset=utf-8',
-      'x-access-token': token
+      'x-access-token': localStorage.getItem('TOKEN'),
+      'x-access-otp': otp
     });
   }
 
@@ -26,8 +27,10 @@ export class UserService {
     return this.http.post<T>(`${this.base_path}/logout`, user, { headers: this.httpOptions(), withCredentials: false });
   }
 
-  resetPassword<T>(data) {
-    return this.http.post<T>(`${this.base_path}/resetPassword`, data, { headers: this.httpOptions(), withCredentials: false });
+  resetPassword<T>(data,otp) {
+    console.log("otp", otp)
+    console.log("data", data)
+    return this.http.post<T>(`${this.base_path}/resetPassword`, data, { headers: this.httpOptions(otp), withCredentials: false });
   }
 
   getRecipient<T>(account_number) {
@@ -36,6 +39,10 @@ export class UserService {
 
   getUserByAccNumber<T>(account_number) {
     return this.http.get<T>(`${this.base_path}/getbyacc/${account_number}`, { headers: this.httpOptions(), withCredentials: false });
+  }
+
+  getUserbyUsername<T>(username) {
+    return this.http.get<T>(`${this.base_path}/getbyusername/${username}`, {});
   }
 
   addRecipient<T>(user_Recipient, account_number) {
