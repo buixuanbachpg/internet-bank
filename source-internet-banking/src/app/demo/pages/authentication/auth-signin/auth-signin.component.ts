@@ -43,11 +43,11 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
 
    
    ngOnInit() {
-    //  this.isInterval = setInterval(() => {
-    //    if(grecaptcha.getResponse()) {
-    //      this.messageErrCaptcha = '';
-    //     }
-    //   });
+     this.isInterval = setInterval(() => {
+       if(grecaptcha.getResponse()) {
+         this.messageErrCaptcha = '';
+        }
+      });
     }
     
   ngOnDestroy(): void {
@@ -63,7 +63,6 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
         }
         this.userService.login(user).subscribe(res => {
           if (res && res.auth) {
-            console.log("submit4")
             const user = {
               username: res.user.username,
               account_number: res.user.account_number,
@@ -116,6 +115,7 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
   }
 
   resetPass() {
+    clearInterval(this.isInterval);
     this.issendOTP = true;
   }
 
@@ -131,7 +131,6 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
   }
 
   submitResetPass() {
-    console.log("submitResetPass")
     const data = {
       username: this.resetForm.controls['username'].value,
       new_password: this.resetForm.controls['newpass'].value,
@@ -142,14 +141,17 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
         if(res.message == 'changed success' && confirm(res.message)) {
           this.issendOTP = false;
           this.isReset = false;
+          this.isInterval = setInterval(() => {
+            if(grecaptcha.getResponse()) {
+              this.messageErrCaptcha = '';
+             }
+           });
         } else {
           alert(res.message + '. Please try again');
         }
       }
     },
     err => {
-      console.log("err", err);
-      
       alert('Error. Please try again');
     });
   }

@@ -15,7 +15,7 @@ export class UserService {
     return new HttpHeaders({
       'Content-Type': 'application/json; charset=utf-8',
       'x-access-token': localStorage.getItem('TOKEN')? localStorage.getItem('TOKEN'):'',
-      'x-access-otp': otp
+      'x-access-otp': otp ? otp:''
     });
   }
 
@@ -28,8 +28,6 @@ export class UserService {
   }
 
   resetPassword<T>(data,otp) {
-    console.log("otp", otp)
-    console.log("data", data)
     return this.http.post<T>(`${this.base_path}/resetPassword`, data, { headers: this.httpOptions(otp), withCredentials: false });
   }
 

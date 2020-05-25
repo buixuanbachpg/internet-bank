@@ -43,7 +43,9 @@ export class InterbankTransferComponent implements OnInit {
       account_number: this.interbankForm.controls['beneficiaryAccount'].value
     }
     this.userService.queryInfo(data).subscribe(res =>{
-      console.log(res);
+      if(res && res.messageCode === 'QUERY_ACCOUNT_SUCCESSFULLY'){
+        this.interbankForm.controls['accountname'].setValue(res.data.full_name);  
+      }
     },
     err =>{
       if (err.status === 401) {
@@ -51,8 +53,9 @@ export class InterbankTransferComponent implements OnInit {
           result => {
             if (result) {
               this.userService.queryInfo(data).subscribe(res =>{
-                console.log(res);
-                
+                if(res && res.messageCode === 'QUERY_ACCOUNT_SUCCESSFULLY'){
+                  this.interbankForm.controls['accountname'].setValue(res.data.full_name);  
+                }
               });
             } else {
               if(confirm('Session has been expired. Please re-login.')){

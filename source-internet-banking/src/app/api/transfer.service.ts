@@ -17,7 +17,7 @@ export class TransferService {
     return new HttpHeaders({
       'Content-Type': 'application/json; charset=utf-8',
       'x-access-token': localStorage.getItem('TOKEN')? localStorage.getItem('TOKEN'):'',
-      'x-access-otp': otp
+      'x-access-otp': otp ? otp : ''
     });
   }
 

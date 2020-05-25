@@ -98,8 +98,6 @@ export class InternalTransferComponent implements OnInit {
 
   submitTransfer() {
     const otp = $("#otp").val();
-    console.log('otp', otp);
-
     const data = {
       username: this.user_info.username,
       to_account_number: this.intrabankForm.controls['beneficiaryAccount'].value,
@@ -110,7 +108,10 @@ export class InternalTransferComponent implements OnInit {
     }
 
     this.transferService.transferInternal(data, otp).subscribe(res => {
-      console.log(res);
+      if(confirm(res.message)){
+        this.issendOTP = false;
+        this.intrabankForm.reset();
+      }
     },
       err => {
         if (err.status === 401) {
@@ -118,7 +119,10 @@ export class InternalTransferComponent implements OnInit {
             result => {
               if (result) {
                 this.transferService.transferInternal(data, otp).subscribe(res2 => {
-                  console.log(res2);
+                  if(confirm(res2.message)){
+                    this.issendOTP = false;
+                    this.intrabankForm.reset();
+                  }
                 });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
