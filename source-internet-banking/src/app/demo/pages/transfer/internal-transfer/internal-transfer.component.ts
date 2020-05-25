@@ -47,11 +47,13 @@ export class InternalTransferComponent implements OnInit {
                 });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             });
+        } else {
+          alert('Error. Please again!!');
         }
       });
   }
@@ -83,8 +85,8 @@ export class InternalTransferComponent implements OnInit {
                 );
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             });
@@ -120,11 +122,13 @@ export class InternalTransferComponent implements OnInit {
                 });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             });
+        } else {
+          alert('Error. Please again!!');
         }
       });
   }
@@ -180,8 +184,8 @@ export class InternalTransferComponent implements OnInit {
                   });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             });
@@ -218,11 +222,13 @@ export class InternalTransferComponent implements OnInit {
                 });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             });
+        } else {
+          alert('Error. Please again!!');
         }
       });
   }

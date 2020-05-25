@@ -319,8 +319,8 @@ export class TransactionhistoryComponent implements OnInit {
         error => {
           observer.next(false);
           if(confirm('Session has been expired. Please re-login.')){
-            localStorage.clear();
             this.router.navigateByUrl("/auth/signin");
+            localStorage.clear();
           }
           observer.complete();
         }

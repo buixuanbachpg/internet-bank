@@ -24,13 +24,13 @@ export class NavRightComponent implements OnInit {
   signout() {
     this.userService.logout(this.userInfo).subscribe(res => {
       if (res && res.msg) {
-        localStorage.clear();
         this.router.navigateByUrl("/auth/signin");
+        localStorage.clear();
       }
     },
       err => {
-        localStorage.clear();
         this.router.navigateByUrl("/auth/signin");
+        localStorage.clear();
       });
   }
 

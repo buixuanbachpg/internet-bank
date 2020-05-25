@@ -84,8 +84,8 @@ export class ProfileComponent implements OnInit {
                   });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             }

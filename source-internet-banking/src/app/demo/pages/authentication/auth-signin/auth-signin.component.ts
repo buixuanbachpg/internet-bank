@@ -14,9 +14,12 @@ import { TransferService } from 'src/app/api/transfer.service';
 })
 export class AuthSigninComponent implements OnInit, OnDestroy {
   public userForm: FormGroup;
+  public resetForm: FormGroup;
   public messageErrCaptcha: string;
   public isInterval: number;
   public email:string;
+  public issendOTP = false;
+  public OTP = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -28,6 +31,11 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
     this.userForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
       password: ['', [Validators.required, ValidationService.passwordValidator, Validators.minLength(6), Validators.maxLength(20)]]
+    });
+
+    this.resetForm = this.formBuilder.group({
+      username: ['', [Validators.required]],
+      otp: ['', [Validators.required]],
     });
    }
 
@@ -81,14 +89,34 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
   }
 
   resetPass() {
+    this.issendOTP = true;
     this.transferService.sendOTP(this.email).subscribe(
       res => {
       if(res) {
-        // this.issendOTP = true;
+        this.issendOTP = false;
       }
     },
     err => {
       alert("Error. Please again!!")
+    });
+  }
+
+  submitResetPass() {
+    const data = {
+      username: this.resetForm.controls['username'].value,
+      otp: this.resetForm.controls['otp'].value
+    }
+    this.userService.resetPassword(data).subscribe(res => {
+      if(res && res.message) {
+        if(res.message == 'changed success' && confirm(res.message)) {
+          this.issendOTP = false;
+        } else {
+          alert(res.message + '. Please try again');
+        }
+      }
+    },
+    err => {
+      alert('Error. Please try again');
     });
   }
 

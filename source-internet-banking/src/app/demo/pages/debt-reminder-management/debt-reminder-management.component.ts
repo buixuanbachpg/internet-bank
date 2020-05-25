@@ -74,18 +74,18 @@ export class DebtReminderManagementComponent implements OnInit {
                     console.log(res);
                   },
                   errors => {
-                    // he thong co ve bi loi do db cu chuoi
+                    alert('Error. Please again!!');
                   });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             }
           );
         } else {
-          // he thong co ve bi loi do db cu chuoi
+          alert('Error. Please again!!');
         }
       }
     );
@@ -124,18 +124,18 @@ export class DebtReminderManagementComponent implements OnInit {
                     }
                   },
                   errors => {
-                    // he thong co ve bi loi do db cu chuoi
+                    alert('Error. Please again!!');
                   });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             }
           );
         } else {
-          // he thong co ve bi loi do db cu chuoi
+          alert('Error. Please again!!');
         }
       }
     );
@@ -163,8 +163,8 @@ export class DebtReminderManagementComponent implements OnInit {
                   });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             }
@@ -286,17 +286,17 @@ export class DebtReminderManagementComponent implements OnInit {
                   }
                 },
                   errs => {
-                    // loi khac
+                    alert('Error. Please again!!');
                   });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){
-                  localStorage.clear();
                   this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
                 }
               }
             });
         } else {
-          // loi khac
+          alert('Error. Please again!!');
         }
       });
   }
