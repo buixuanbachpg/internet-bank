@@ -2,7 +2,7 @@ var db = require('../fn/mysql-db'),
     bcrypt = require('bcrypt');
 const saltRound = 10;
 exports.loadDetail = function (id) {
-    var sql = `select account_number,email,username,full_name from  khach_hang  where username = '${id}' or account_number='${id}'`;
+    var sql = `select account_number,email,username,full_name,status from  khach_hang  where username = '${id}' or account_number='${id}'`;
     return db.load(sql);
 }
 
@@ -87,7 +87,7 @@ exports.update = async function (poco) {
     //     "email":"test",
     //     "phone":"123456789"
     //     }
-    var sql = `update khach_hang SET  address = '${poco.address}',full_name = '${poco.full_name}', phone ='${poco.phone}',sex='${poco.sex}' where username ='${poco.username}' `;
+    var sql = `update khach_hang SET  address = '${poco.address}',full_name = '${poco.full_name}', phone ='${poco.phone}',sex='${poco.sex}',status='${poco.status}' where username ='${poco.username}' `;
     return db.update(sql);
 }
 

@@ -116,4 +116,11 @@ export class UserService {
       { headers: this.httpOptions(), withCredentials: false }
     );
   }
+
+  updateUserInfo<T>(data){
+    return this.http.put<T>(`${this.base_path}/`,
+      data,
+      { headers: this.httpOptions(), withCredentials: false }
+    );
+  }
 }

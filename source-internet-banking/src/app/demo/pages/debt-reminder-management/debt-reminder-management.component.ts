@@ -67,7 +67,7 @@ export class DebtReminderManagementComponent implements OnInit {
           this.Renew_Token().subscribe(
             result => {
               if (result) {
-                this.Get_Detail_Debit(this.user_info.account_number, 0).subscribe(
+                this.Get_Detail_Debit_Other(this.user_info.account_number, 0).subscribe(
                   (res) => {
                     console.log(res);
                   },
@@ -141,7 +141,6 @@ export class DebtReminderManagementComponent implements OnInit {
               if (result) {
                 this.Add_Debit(data).subscribe(
                   (res) => {
-                    console.log(res);
                     if(res){
                       this.makebyme.reset();
                       this.getDetail();
@@ -268,7 +267,6 @@ export class DebtReminderManagementComponent implements OnInit {
         message: data.message
       }).subscribe(
         result => {
-          console.log("result", result)
           if (result) {
             this.listdebitMakebyme.push({
               account_number: this.user_info.account_number,

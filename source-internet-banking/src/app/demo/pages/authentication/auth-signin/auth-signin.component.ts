@@ -160,4 +160,14 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
     });
   }
 
+  focusoutAccNumber(evt) {
+    this.userService.getUserbyUsername(this.userForm.controls['username'].value).subscribe(res => {
+      if (res) {
+       if(res[0].status == 0){
+          alert("Account is blocked.");
+          this.userForm.controls['username'].setValue('');
+        }
+      }
+    });
+  }
 }
