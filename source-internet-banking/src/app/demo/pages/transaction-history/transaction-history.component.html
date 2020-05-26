@@ -17,7 +17,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngIf="!dataReceive.length"><td><span style="color: red;">No detail</span></td></tr>
+                  <tr *ngIf="!dataReceive.length">
+                    <td><span style="color: red;">No detail</span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
                   <tr *ngFor="let item of dataReceive">
                     <td>{{item.from_account_number}}</td>
                     <td>{{item.to_account_number}}</td>
@@ -42,7 +48,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngIf="!dataTransfer.length"><td><span style="color: red;">No detail</span></td></tr>
+                  <tr *ngIf="!dataTransfer.length">
+                    <td><span style="color: red;">No detail</span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
                   <tr *ngFor="let item of dataTransfer">
                     <td>{{item.from_account_number}}</td>
                     <td>{{item.to_account_number}}</td>
@@ -67,7 +79,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngIf="!dataDebit.length"><td><span style="color: red;">No detail</span></td></tr>
+                  <tr *ngIf="!dataDebit.length">
+                    <td><span style="color: red;">No detail</span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
                   <tr *ngFor="let item of dataDebit">
                     <td>{{item.from_account_number}}</td>
                     <td>{{item.to_account_number}}</td>

@@ -43,15 +43,19 @@ export class AuthSigninComponent implements OnInit, OnDestroy {
 
    
    ngOnInit() {
-     this.isInterval = setInterval(() => {
-       if(grecaptcha.getResponse()) {
-         this.messageErrCaptcha = '';
-        }
-      });
+    //  this.isInterval = setInterval(() => {
+    //    if(grecaptcha.getResponse()) {
+    //      this.messageErrCaptcha = '';
+    //     }
+    //   });
     }
     
   ngOnDestroy(): void {
-    clearInterval(this.isInterval);
+    // clearInterval(this.isInterval);
+  }
+
+  resolved(event) {
+    this.messageErrCaptcha = '';
   }
 
   async submit(){

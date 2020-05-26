@@ -41,8 +41,6 @@ export class TransactionhistoryComponent implements OnInit {
   getReceive() {
     this.Get_Detail_Receive(this.userIfo.account_number).subscribe(
       result => {
-        console.log(result);
-        
         this.dataReceive = [];
         const array = [];
         result.local.forEach(data => {
@@ -120,7 +118,6 @@ export class TransactionhistoryComponent implements OnInit {
   getTransfer() {
     this.Get_Detail_Transfer(this.userIfo.account_number).subscribe(
       result => {
-        console.log(result);
         this.dataTransfer = [];
         result.local.forEach(data => {
           this.dataTransfer.push({
@@ -234,15 +231,18 @@ export class TransactionhistoryComponent implements OnInit {
                     }
                   },
                   errors => {
-                    // he thong co ve bi loi do db cu chuoi
+                    alert('Error. Please again!!');
                   });
               } else {
-                
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
               }
             }
           );
         } else {
-          // he thong co ve bi loi do db cu chuoi
+          alert('Error. Please again!!');
         }
       }
     );

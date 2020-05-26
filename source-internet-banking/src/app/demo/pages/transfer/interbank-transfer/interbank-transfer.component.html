@@ -11,15 +11,7 @@
             <div class="row">
               <div class="form-group col-md-6">
                 <label for="beneficiaryAccount">Beneficiary account</label>
-                <div style="display: flex;">
-                  <input type="text" class="form-control" formControlName="beneficiaryAccount" id="beneficiaryAccount1" aria-describedby="beneficiaryAccount" placeholder="Enter beneficiary account">
-                  <div class="input-group-append dropdown" ngbDropdown placement="auto">
-                    <button type="button" class="btn btn-secondary dropdown-toggle-split" ngbDropdownToggle><span class="sr-only">Toggle Dropdown</span></button>
-                    <div ngbDropdownMenu>
-                      <a class="dropdown-item" href="javascript:">Action</a>
-                    </div>
-                  </div>
-                </div>
+                <input type="text" class="form-control" formControlName="beneficiaryAccount" id="beneficiaryAccount1" aria-describedby="beneficiaryAccount" placeholder="Enter beneficiary account">
               </div>
               <div class="form-group col-md-6">
                 <label for="accountname">Account name</label>
@@ -36,10 +28,6 @@
                 <small id="beneficiaryAccount" class="form-text text-muted">Please check beneficiary information before make the transaction</small>
                 <button type="button" (click)="checkInfo()" class="btn btn-outline-primary" style="margin-top: 10px;" ngbTooltip="btn-outline-primary">Check</button> 
               </div>
-              <div class="form-group col-md-6">
-                <button type="button" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="feather icon-check-circle"></i></button>
-                <label class="form-check-label" for="exampleCheck1">Save beneficiary</label>
-              </div>
             </div>
             <div class="form-group">
               <label>Currency</label>
@@ -49,7 +37,7 @@
               <label for="transactionDetail1">Transaction detail</label>
               <textarea class="form-control" formControlName="transactionDetail" id="transactionDetail" rows="3"></textarea>
             </div>
-            <button type="submit" *ngIf="!issendOTP" class="btn btn-primary">Continue</button>
+            <button type="submit" *ngIf="!issendOTP" class="btn btn-primary" (click)="continue()">Continue</button>
           </div>
         </div>
       </div>
@@ -61,6 +49,7 @@
         <div class="form-group col-md-6" style="margin-top: 20px;">
           <button type="submit" class="btn btn-primary" style="margin-right: 10px;" (click)="submitTransfer()">Submit</button>
           <button type="submit" class="btn btn-warning" (click)="continue()">Resend OTP</button>
+          <button type="submit" class="btn btn-warning" (click)="cancelBTN()">Cancel</button>
         </div>
       </div>
     </app-card>

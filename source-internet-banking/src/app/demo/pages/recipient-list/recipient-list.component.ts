@@ -250,7 +250,7 @@ export class RecipientListComponent implements OnInit {
                     }
                   },
                   errs => {
-                    // loi khac
+                    alert('Error. Please again!!');
                   });
               } else {
                 if(confirm('Session has been expired. Please re-login.')){

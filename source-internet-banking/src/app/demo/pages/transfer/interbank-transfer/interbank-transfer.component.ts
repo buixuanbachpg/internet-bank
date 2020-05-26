@@ -37,14 +37,21 @@ export class InterbankTransferComponent implements OnInit {
   ngOnInit() {
   }
 
+  cancelBTN() {
+    this.issendOTP = false;
+  }
+
   checkInfo() {
     const data = {
       bank: this.interbankForm.controls['bank'].value,
       account_number: this.interbankForm.controls['beneficiaryAccount'].value
     }
     this.userService.queryInfo(data).subscribe(res =>{
-      if(res && res.messageCode === 'QUERY_ACCOUNT_SUCCESSFULLY'){
-        this.interbankForm.controls['accountname'].setValue(res.data.full_name);  
+      if(res){
+        if (this.interbankForm.controls['bank'].value == 'bkt.bank')
+          this.interbankForm.controls['accountname'].setValue(res.data.full_name); 
+        else if (this.interbankForm.controls['bank'].value == 'ta.bank')
+          this.interbankForm.controls['accountname'].setValue(res.full_name); 
       }
     },
     err =>{
@@ -84,6 +91,84 @@ export class InterbankTransferComponent implements OnInit {
         }
       );
     });
+  }
+
+  continue() {
+    this.transferService.sendOTP(this.user_info.email).subscribe(
+      res => {
+        if (res) {
+          this.issendOTP = true;
+        }
+      },
+      err => {
+        if (err.status === 401) {
+          this.Renew_Token().subscribe(
+            result => {
+              if (result) {
+                this.transferService.sendOTP(this.user_info.email).subscribe(
+                  res2 => {
+                    if (res2) {
+                      this.issendOTP = true;
+                    }
+                  },
+                  errs => {
+                    alert("Error. Please again!!")
+                  }
+                );
+              } else {
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
+              }
+            });
+        } else {
+          alert("Error. Please again!!")
+        }
+      });
+  }
+
+  submitTransfer() {
+    const otp = $("#otp").val();
+    const data = {
+      from_account_number: this.user_info.account_number + "",
+      to_account_number: this.interbankForm.controls['beneficiaryAccount'].value + "",
+      amount: +this.interbankForm.controls['currency'].value,
+      message: this.interbankForm.controls['transactionDetail'].value + "",
+      pay_debit: 0,
+      email: this.user_info.email + ""
+    }
+
+    const bank = this.interbankForm.controls['bank'].value;
+
+    this.transferService.transferInterbank(data, bank, otp).subscribe(res => {
+      if(confirm(res.message)){
+        this.issendOTP = false;
+        this.interbankForm.reset();
+      }
+    },
+      err => {
+        if (err.status === 401) {
+          this.Renew_Token().subscribe(
+            result => {
+              if (result) {
+                this.transferService.transferInternal(data, otp).subscribe(res2 => {
+                  if(confirm(res2.message)){
+                    this.issendOTP = false;
+                    this.interbankForm.reset();
+                  }
+                });
+              } else {
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
+              }
+            });
+        } else {
+          alert('Error. Please again!!');
+        }
+      });
   }
 
 }

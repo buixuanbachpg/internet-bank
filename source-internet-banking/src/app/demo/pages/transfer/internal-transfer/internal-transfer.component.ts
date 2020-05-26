@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class InternalTransferComponent implements OnInit {
   intrabankForm: FormGroup;
   public user_info;
-  public issendOTP = false
+  public issendOTP = false;
   public listRecipient = [];
   public isExist = true;
 
@@ -94,6 +94,10 @@ export class InternalTransferComponent implements OnInit {
           alert("Error. Please again!!")
         }
       });
+  }
+
+  cancelBTN() {
+    this.issendOTP = false;
   }
 
   submitTransfer() {

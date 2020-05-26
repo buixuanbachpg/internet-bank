@@ -134,9 +134,9 @@ router.post('/transfer/:bank', authRepo.verifyAccessToken, verifyOtpMail, async 
     var genHmac = "";
     bank = req.params.bank;
     let timestamp = +new Date();
+    var url = "";
     const { from_account_number, to_account_number, amount, message, } = req.body;
     if (!from_account_number || !to_account_number || !amount || !message) {
-        console.log("1");
         res.status(400).json({
             "statusCode": 400,
             "error": "Bad request",
@@ -145,7 +145,7 @@ router.post('/transfer/:bank', authRepo.verifyAccessToken, verifyOtpMail, async 
     }
 
     if ("bkt.bank" === bank) {
-        var url = `http://bkt-banking.herokuapp.com/api/transactions/receive_external`;
+        url = `http://bkt-banking.herokuapp.com/api/transactions/receive_external`;
         partner_code = "bbd.bank";
         secret_key = "QK6A-JI6S-7ETR-0A6C";
         RSAprivateKeyArmored = fs.readFileSync('./fn/rsaPrivateKey.txt', 'utf8');
@@ -153,7 +153,7 @@ router.post('/transfer/:bank', authRepo.verifyAccessToken, verifyOtpMail, async 
         genHmac = transRepo.hashMd5(strToHash, secret_key);
         signature = await transRepo.signRSA(RSAprivateKeyArmored, genHmac)
     } else if ("ta.bank" === bank) {
-        var url = `https://titi-bank-server.herokuapp.com/api/transactions/receive_external`;
+        url = `https://titi-bank-server.herokuapp.com/api/transactions/receive_external`;
         secret_key = "374e9e67-8838-400b-acb6-55a8428ae5fa";
         partner_code = "20929a37-5e69-44e2-94e4-c640bd4e33cd";
         PGPprivateKeyArmored = fs.readFileSync('./fn/0xC4BDB84C-sec.asc', 'utf8');
@@ -166,6 +166,7 @@ router.post('/transfer/:bank', authRepo.verifyAccessToken, verifyOtpMail, async 
         });
     }
     let users = await userRepo.loadAccounts(from_account_number);
+    console.log("users", users)
     if (!users) {
         res.status(500).json({
             message: "account not exist"
@@ -202,7 +203,7 @@ router.post('/transfer/:bank', authRepo.verifyAccessToken, verifyOtpMail, async 
     else if (200 == rs.status) {
         userRepo.updateAccountBalance(from_account_number, new_amount).then(changedRows => {
             if (1 == changedRows) {
-                transRepo.add(from_account_number, to_account_number, amount, message, timestamp, signatures, partner_code).then(insertId => {
+                transRepo.add(from_account_number, to_account_number, amount, message, timestamp, signature, partner_code).then(insertId => {
                     res.json("transaction success");
                 }).catch(err => {
                     console.log(err);

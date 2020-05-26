@@ -4,7 +4,7 @@
 
     <app-card [hidHeader]="true" cardClass="tab-card">
       <h5 class="mb-3">Debt reminder management</h5>
-      <ngb-tabset type="pills" (tabChange)="getDetail($event)">
+      <ngb-tabset type="pills">
         <ngb-tab title="Make by me" [id]="0" class="mb-3">
           <ng-template ngbTabContent>
             <button type="button" class="btn btn-outline-primary" (click)="gridSystemModal.show()" ngbTooltip="btn-outline-primary" style="margin-bottom: 10px;"><i class="feather icon-plus-square" style="margin-right: 5px;"></i>Add</button>     
@@ -12,14 +12,21 @@
               <thead>
                 <tr>
                   <th>Account number debit</th>
+                  <th>Amount</th>
                   <th>Message</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngIf="!listdebit.length"><td><span style="color: red;">No detail</span></td></tr>
-                <tr *ngFor="let item of listdebit">
+                <tr *ngIf="!listdebitMakebyme.length">
+                  <td><span style="color: red;">No detail</span></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr *ngFor="let item of listdebitMakebyme">
                   <td>{{item.account_number_debit}}</td>
+                  <td>{{item.amount}}</td>
                   <td>{{item.message}}</td>
                   <td>
                     <button type="button" class="btn btn-icon btn-outline-danger" style="margin-right: 10px;" (click)="deleteDebit(item)"><i class="feather icon-trash"></i></button>
@@ -41,13 +48,18 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngIf="!listdebit.length"><td><span style="color: red;">No detail</span></td></tr>
-                <tr *ngFor="let item of listdebit">
-                  <td>{{item.account_number}}</td>
+                <tr *ngIf="!listdebitOrther.length">
+                  <td><span style="color: red;">No detail</span></td>
                   <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr *ngFor="let item of listdebitOrther">
+                  <td>{{item.account_number}}</td>
+                  <td>{{item.amount}}</td>
                   <td>{{item.message}}</td>
                   <td>
-                    <button type="button" class="btn btn-icon btn-outline-success" style="margin-right: 10px;"><i class="fa fa-hand-holding-usd"></i></button>
+                    <button type="button" class="btn btn-icon btn-outline-success" style="margin-right: 10px;" (click)="continue(item)"><i class="fa fa-hand-holding-usd"></i></button>
                     <button type="button" class="btn btn-icon btn-outline-danger" style="margin-right: 10px;" (click)="deleteDebit(item)"><i class="feather icon-trash"></i></button>
                   </td>
                 </tr>
@@ -74,6 +86,11 @@
               <!-- <control-messages [control]="makebyme.get('account_number_debit')"></control-messages> -->
             </div>
             <div class="form-group">
+              <label for="amount">Amount</label>
+              <input type="text" class="form-control" formControlName="amount" id="amount" placeholder="VND">
+              <!-- <control-messages [control]="makebyme.get('message')"></control-messages> -->
+            </div>
+            <div class="form-group">
               <label for="message">Message</label>
               <input type="text" class="form-control" formControlName="message" id="message" placeholder="Enter message">
               <!-- <control-messages [control]="makebyme.get('message')"></control-messages> -->
@@ -84,6 +101,29 @@
       <div class="app-modal-footer">
         <button type="button" style="margin-right: 10px;" id="closeBTN" class="btn btn-secondary" data-dismiss="modal" (click)="closeModal()">Close</button>
         <button type="button" [disabled]="!this.makebyme.valid" class="btn btn-primary" (click)="addDebit()">Insert</button>
+      </div>
+    </app-ui-modal>
+  </div>
+  <div class="col-xl-4 col-md-6">
+    <app-ui-modal #gridSystemModalOTP>
+      <div class="app-modal-header">
+        <h5 class="modal-title">Create Debt Reminder</h5>
+        <button type="button" class="close basic-close" data-dismiss="modal" aria-label="Close" (click)="gridSystemModalOTP.hide()"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="app-modal-body">
+        <div class="container-fluid bd-example-row">
+          <div action="javascript:">
+            <div class="form-group">
+              <label for="otp">OTP</label>
+              <input type="text" class="form-control" id="otp" aria-describedby="otpHelp" placeholder="Enter otp">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="app-modal-footer">
+        <button type="button" class="btn btn-primary" (click)="submitTransfer()">OK</button>
+        <button type="button" class="btn btn-primary" (click)="continue()">Reopen</button>
+        <button type="button" style="margin-right: 10px;" id="closeBTN" class="btn btn-secondary" data-dismiss="modal" (click)="gridSystemModalOTP.hide()">Close</button>
       </div>
     </app-ui-modal>
   </div>
