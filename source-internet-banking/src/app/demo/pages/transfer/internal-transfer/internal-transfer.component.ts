@@ -112,7 +112,7 @@ export class InternalTransferComponent implements OnInit {
     }
 
     this.transferService.transferInternal(data, otp).subscribe(res => {
-      if(confirm(res.message)){
+      if(confirm("Transfer successful.")){
         this.issendOTP = false;
         this.intrabankForm.reset();
       }
@@ -123,7 +123,7 @@ export class InternalTransferComponent implements OnInit {
             result => {
               if (result) {
                 this.transferService.transferInternal(data, otp).subscribe(res2 => {
-                  if(confirm(res2.message)){
+                  if(confirm("Transfer successful.")){
                     this.issendOTP = false;
                     this.intrabankForm.reset();
                   }
@@ -207,10 +207,14 @@ export class InternalTransferComponent implements OnInit {
   focusoutAccNumber(evt) {
     this.userService.getUserByAccNumber(this.intrabankForm.controls['beneficiaryAccount'].value).subscribe(res => {
       if (res) {
-        this.intrabankForm.controls['accountname'].setValue(res[0].full_name);
-        this.isExist = !this.isExist;
+        if(res[0].status == 1){
+          this.intrabankForm.controls['accountname'].setValue(res[0].full_name);
+          this.isExist = true;
+        } else if(res[0].status == 0){
+          alert("Account is blocked. Please try again.");
+        }
       } else {
-        this.isExist = !this.isExist;
+        this.isExist = false;
         this.intrabankForm.controls['accountname'].setValue('');
       }
     },
@@ -222,9 +226,9 @@ export class InternalTransferComponent implements OnInit {
                 this.userService.getUserByAccNumber(this.intrabankForm.controls['beneficiaryAccount'].value).subscribe(res2 => {
                   if (res2) {
                     this.intrabankForm.controls['accountname'].setValue(res2[0].full_name);
-                    this.isExist = !this.isExist;
+                    this.isExist = true;
                   } else {
-                    this.isExist = !this.isExist;
+                    this.isExist = false;
                     this.intrabankForm.controls['accountname'].setValue('');
                   }
                 });

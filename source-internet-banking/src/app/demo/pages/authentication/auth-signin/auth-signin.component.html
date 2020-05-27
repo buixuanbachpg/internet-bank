@@ -9,7 +9,7 @@
           <div class="card-body" [formGroup]="userForm">
             <h4 class="mb-3 f-w-400 text-center">Signin</h4>
             <div class="mb-3">
-              <input type="text" formControlName="username" class="form-control" placeholder="Username">
+              <input type="text" formControlName="username" (focusout)="focusoutAccNumber($event)" class="form-control" placeholder="Username">
               <control-messages [control]="userForm.get('username')"></control-messages>
             </div>
             <div class="mb-4">

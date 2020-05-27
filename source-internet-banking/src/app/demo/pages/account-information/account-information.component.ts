@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from 'src/app/api/user.service';
 import { Observable, Observer } from 'rxjs';
 import { Router } from '@angular/router';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UiModalComponent } from 'src/app/theme/shared/components/modal/ui-modal/ui-modal.component';
 
 @Component({
   selector: 'app-account-information',
@@ -10,11 +12,27 @@ import { Router } from '@angular/router';
 })
 export class AccountInformationComponent implements OnInit {
   public userIfo: any;
+  UserInfoForm: FormGroup;
+
+  @ViewChild ("gridSystemModal") gridSystemModal: UiModalComponent;
 
   constructor(
+    private formBuilder: FormBuilder,
     private userService: UserService,
     private router: Router,
   ) {
+
+    this.UserInfoForm = this.formBuilder.group({
+      account_number: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      full_name: ['', [Validators.required]],
+      phone: ['', [Validators.required]],
+      sex: ['', [Validators.required]],
+      username: ['', [Validators.required]],
+      status: [1],
+    });
+
     this.userService.getUserByAccNumber(JSON.parse(localStorage.getItem('USER_ifo')).account_number).subscribe(res => {
       if (res) {
         const user = {
@@ -25,7 +43,7 @@ export class AccountInformationComponent implements OnInit {
           email: res[0].email,
           phone: res[0].phone,
           sex: res[0].sex,
-          address: res[0].address
+          address: res[0].address,
         }
         localStorage.setItem('USER_ifo', JSON.stringify(user));
       }
@@ -81,6 +99,95 @@ export class AccountInformationComponent implements OnInit {
         }
       );
     });
+  }
+
+  showInfo() {
+    this.UserInfoForm.controls['username'].setValue(this.userIfo.username);
+    this.UserInfoForm.controls['account_number'].setValue(this.userIfo.account_number);
+    this.UserInfoForm.controls['full_name'].setValue(this.userIfo.full_name);
+    this.UserInfoForm.controls['email'].setValue(this.userIfo.email);
+    this.UserInfoForm.controls['phone'].setValue(this.userIfo.phone);
+    this.UserInfoForm.controls['address'].setValue(this.userIfo.address);
+    const val = this.userIfo.sex == 'nu'? 1:0;
+    this.UserInfoForm.controls['sex'].setValue(val);
+    this.gridSystemModal.show()
+  }
+
+  updateUser() {
+    const gt = this.UserInfoForm.controls['sex'].value == 1?'nu':'nam';
+    this.UserInfoForm.controls['sex'].setValue(gt);
+    this.updateInfo(this.UserInfoForm.value).subscribe(
+      (res) => {
+        if(res){
+          if(this.UserInfoForm.controls['status'].value == 0) {
+            this.router.navigateByUrl("/auth/signin");
+            localStorage.clear();
+          } else if(confirm("Update successful")){
+            this.gridSystemModal.hide();
+          }
+        } else {
+          alert("Update error. Please try again.");
+        }
+      },
+      error => {
+        if (error.status === 401) {
+          this.Renew_Token().subscribe(
+            result => {
+              if (result) {
+                this.updateInfo(this.UserInfoForm.value).subscribe(
+                  (res) => {
+                    if(res){
+                      if(confirm("Update successful")){
+                        this.gridSystemModal.hide();
+                      }
+                    } else {
+                      alert("Update error. Please try again.");
+                    }
+                  },
+                  errors => {
+                    alert('Error. Please again!!');
+                  });
+              } else {
+                if(confirm('Session has been expired. Please re-login.')){
+                  this.router.navigateByUrl("/auth/signin");
+                  localStorage.clear();
+                }
+              }
+            }
+          );
+        } else {
+          alert('Error. Please again!!');
+        }
+      }
+    );
+  }
+
+  updateInfo(data) {
+    return Observable.create((observer: Observer<boolean>) => {
+      this.userService.updateUserInfo(data).subscribe(
+        result => {
+          console.log(result);
+          
+          if (result) {
+            observer.next(true); // tra ve thanh cong
+            observer.complete();
+          }
+        },
+        error => {
+          console.log(error);
+          
+          observer.next(false); // co loi tra ve  khong thanh cong
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  blockUser() {
+    if(confirm("Are you sure to close yours account?")) {
+      this.UserInfoForm.controls['status'].setValue(0);
+      this.updateUser();
+    }
   }
 
 }

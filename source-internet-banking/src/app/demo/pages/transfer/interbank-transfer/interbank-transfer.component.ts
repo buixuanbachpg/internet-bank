@@ -14,6 +14,7 @@ export class InterbankTransferComponent implements OnInit {
   public user_info;
   public issendOTP = false;
   interbankForm: FormGroup;
+  public isExist = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -27,7 +28,8 @@ export class InterbankTransferComponent implements OnInit {
       bank: ['', [Validators.required]],
       accountname: ['', [Validators.required]],
       currency: ['', [Validators.required]],
-      transactionDetail: ['', [Validators.required]]
+      transactionDetail: ['', [Validators.required]],
+      email: ['', [Validators.required]]
     });
 
     this.user_info = JSON.parse(localStorage.getItem("USER_ifo"));
@@ -48,10 +50,29 @@ export class InterbankTransferComponent implements OnInit {
     }
     this.userService.queryInfo(data).subscribe(res =>{
       if(res){
-        if (this.interbankForm.controls['bank'].value == 'bkt.bank')
-          this.interbankForm.controls['accountname'].setValue(res.data.full_name); 
-        else if (this.interbankForm.controls['bank'].value == 'ta.bank')
-          this.interbankForm.controls['accountname'].setValue(res.full_name); 
+        this.isExist = true;
+        if (this.interbankForm.controls['bank'].value == 'bkt.bank'){
+          if(res.data) {
+            this.interbankForm.controls['accountname'].setValue(res.data.full_name); 
+            this.interbankForm.controls['email'].setValue(res.data.email);
+          } else {
+            alert(res.message);
+            this.interbankForm.controls['accountname'].setValue(''); 
+          }
+        } else if (this.interbankForm.controls['bank'].value == 'ta.bank') {
+          if(res.statusCode == 400) {
+            alert(res.message);
+            this.interbankForm.controls['accountname'].setValue(''); 
+          } else {
+            this.interbankForm.controls['accountname'].setValue(res.full_name); 
+            this.interbankForm.controls['email'].setValue(res.email);
+          }
+        } else if (res.statusCode == 500) {
+          alert(res.message);
+          this.interbankForm.controls['accountname'].setValue(''); 
+        }
+      } else {
+        this.isExist = false;
       }
     },
     err =>{
@@ -60,8 +81,28 @@ export class InterbankTransferComponent implements OnInit {
           result => {
             if (result) {
               this.userService.queryInfo(data).subscribe(res =>{
-                if(res && res.messageCode === 'QUERY_ACCOUNT_SUCCESSFULLY'){
-                  this.interbankForm.controls['accountname'].setValue(res.data.full_name);  
+                if(res){
+                  this.isExist = true;
+                  if (this.interbankForm.controls['bank'].value == 'bkt.bank'){
+                    if(res.data) {
+                      this.interbankForm.controls['accountname'].setValue(res.data.full_name); 
+                    } else {
+                      alert(res.message);
+                      this.interbankForm.controls['accountname'].setValue(''); 
+                    }
+                  } else if (this.interbankForm.controls['bank'].value == 'ta.bank') {
+                    if(res.statusCode == 400) {
+                      alert(res.message);
+                      this.interbankForm.controls['accountname'].setValue(''); 
+                    } else {
+                      this.interbankForm.controls['accountname'].setValue(res.full_name); 
+                    }
+                  } else if (res.statusCode == 500) {
+                    alert(res.message);
+                    this.interbankForm.controls['accountname'].setValue(''); 
+                  }
+                } else {
+                  this.isExist = false;
                 }
               });
             } else {
@@ -142,7 +183,7 @@ export class InterbankTransferComponent implements OnInit {
     const bank = this.interbankForm.controls['bank'].value;
 
     this.transferService.transferInterbank(data, bank, otp).subscribe(res => {
-      if(confirm(res.message)){
+      if(confirm("Transfer successful.")){
         this.issendOTP = false;
         this.interbankForm.reset();
       }
@@ -152,8 +193,8 @@ export class InterbankTransferComponent implements OnInit {
           this.Renew_Token().subscribe(
             result => {
               if (result) {
-                this.transferService.transferInternal(data, otp).subscribe(res2 => {
-                  if(confirm(res2.message)){
+                this.transferService.transferInterbank(data,bank,otp).subscribe(res2 => {
+                  if(confirm("Transfer successful.")){
                     this.issendOTP = false;
                     this.interbankForm.reset();
                   }
