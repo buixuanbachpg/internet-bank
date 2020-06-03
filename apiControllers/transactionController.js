@@ -1,12 +1,12 @@
 var express = require('express'),
     opts = require('../fn/opts');
 var tranRepo = require('../repos/transactionRepo'),
-    userRepo = require('../repos/userRepo');
-    
+    userRepo = require('../repos/userRepo'),
+    employeeRepo= require('../repos/employeeRepo');
 
 var router = express.Router();
 
-router.post('transactions/query_info', (req, res) => {
+router.post('/transactions/query_info', (req, res) => {
     const {partner_code, timestamp, hash} = req.query;
     const {account_number} =req.body;
     let currenttimestamp = +new Date();
@@ -16,7 +16,7 @@ router.post('transactions/query_info', (req, res) => {
        res.status(400).json({
            "statusCode": 400,
            "error": "Bad request",
-           "message": "partner_code, timestamphash, account_number,hash is required"
+           "message": "partner_code, timestamphash, account_number, hash is required"
        })
    }
    else if(tranRepo.checkpartnercode(partner_code)== ""){
@@ -39,9 +39,17 @@ router.post('transactions/query_info', (req, res) => {
    else if (tranRepo.checkHash(partner_code,timestamp,account_number,hash,tranRepo.checkpartnercode(partner_code)))
    {
     userRepo.loadDetail(account_number).then(rows => {
-        if (rows.length > 0) {
+        if (rows.length > 0 && 1==rows[0].status) {
             res.json(rows[0]);
-        } else {
+        }
+        else if(rows.length > 0 && 0==rows[0].status)
+        {
+            res.json({
+                "statusCode": 400,
+                "message": "Account is closed"
+            })
+        }
+        else {
             res.json({
                 "statusCode": 204,
                 "message": "no data"
@@ -56,7 +64,7 @@ router.post('transactions/query_info', (req, res) => {
    else{
     res.status(400).json({
         "statusCode": 400,
-        "message": " Wrong hash"
+        "message": "  hash invalid"
     })
    }
 });
@@ -68,7 +76,7 @@ router.post('/transactions/receive_external', (req, res) => {
     let currenttimestamp = +new Date();
    if(!partner_code || !timestamp || !signature || !from_account_number || !to_account_number || !amount || !message || !hash)
    {
-       console.log("1");
+       console.log("CHÚ Ý DÒNG NÀY NÈ :" +from_account_number + "-to" +message);
        res.status(400).json({
            "statusCode": 400,
            "error": "Bad request",
@@ -92,20 +100,26 @@ router.post('/transactions/receive_external', (req, res) => {
         "message": "timestamp is out of date"
     })
    }
+   else if(!tranRepo.checkHashs(partner_code,timestamp,from_account_number,to_account_number,amount,message,hash,tranRepo.checkpartnercode(partner_code)))
+   {
+    console.log("4");
+    res.status(400).json({
+        "statusCode": 400,
+        "error": "Bad request",
+        "message": "hash invalid"
+    })
+   }
    else if (tranRepo.verifyPGP(opts.PGPKEY.publicKeyArmored,signature,hash))
    {
        signatures=tranRepo.pgptoString(signature);
-       poco={
-           account_number:to_account_number
-       }
-       userRepo.loadAccount(poco).then(rows=>
+       userRepo.loadAccount(to_account_number).then(rows=>
         {
-            if(rows.length>0)
+            if(rows.length>0 && 1==rows[0].status)
             {
                 var user_old_amount=JSON.stringify(rows[0]);
                 var user_json_amount=JSON.parse(user_old_amount);
                 var new_amount=Number(user_json_amount.account_balance)+Number(amount);
-                userRepo.updateAccountBalance(to_account_number,new_amount)
+                employeeRepo.updateAccountBalance(to_account_number,new_amount)
                 .then(() => {
                     tranRepo.add(from_account_number,to_account_number,amount,message,timestamp,signatures,partner_code).then(rows => {
                         res.json({
@@ -118,6 +132,16 @@ router.post('/transactions/receive_external', (req, res) => {
                     });
                 })
                 
+            }
+            else if(0==rows[0].status)
+            {
+                res.status(400).json(
+                    {
+                        "statusCode": 400,
+                        "error": "No data",
+                        "message": "Account has blocked"
+                    }
+                );
             }
            else{
             res.status(400).json({
@@ -133,7 +157,6 @@ router.post('/transactions/receive_external', (req, res) => {
     })
    }
 });
-
 
 router.post('/add', (req, res) => {
     const {partner_code, timestamp, hash, signature} = req.query;

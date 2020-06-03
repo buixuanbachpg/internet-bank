@@ -63,7 +63,7 @@ exports.deleteNotify = function (username) {
     return db.delete(sql);
 }
 exports.loadNotify = function (username) {
-        var sql = `select * from notify where username = '${username}' `;
+    var sql = `select * from notify where username = '${username}' `;
     return db.load(sql);
 }
 exports.updateNotify = async function (username) {
@@ -169,7 +169,10 @@ exports.resetPassword = async function (poco) {
     var sql = `update khach_hang SET password= '${bcryptPassword}'  where username ='${poco.username}' `;
     return db.update(sql);
 }
-exports.loadAccounts = function(id) {
+exports.loadAccounts = function (id) {
     var sql = `select username, account_number, account_balance, full_name, email, phone, sex, address from khach_hang where username='${id}' or account_number='${id}' or email='${id}'`;
     return db.load(sql);
 }
+
+
+

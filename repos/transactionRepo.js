@@ -1,47 +1,32 @@
-var crypto= require('crypto');	
-var OpenPGP = require('OpenPGP');
-var db = require('../fn/mysql-db'),
-fs = require('fs');
+const crypto = require('crypto');				
+var openpgp = require('openpgp'),
+ opts = require('../fn/opts');
+var db = require('../fn/mysql-db');
+openpgp.initWorker({ path:'openpgp.worker.js' })
 
-OpenPGP.initWorker({ path:'OpenPGP.worker.js' })
+   exports.signPGP=( async (privateKeyArmored, data) =>{
+       try {
+        const { keys: [privateKey] } = await openpgp.key.readArmored(privateKeyArmored);
+        await privateKey.decrypt("xuanbach");
+    
+        const { signature: detachedSignature } = await openpgp.sign({
+            message: openpgp.cleartext.fromText(data), // CleartextMessage or Message object
+            privateKeys: [privateKey],                            // for signing
+            detached: true
+        });
+        return detachedSignature;
+       }catch(error)
+       {
+        console.log(error);        
+       }  
+    })
 
-// exports.signPGP1= async (data) => {
-//     const privateKeyArmored = fs.readFileSync('./fn/0xC4BDB84C-sec.asc', 'utf8');
-//     const { keys: [privateKey] } = await OpenPGP.key.readArmored(privateKeyArmored);
-//     await privateKey.decrypt("p7gMVCAVStC9c3mMKhEuxspS21UfhCS8");
-
-//     const { signature: detachedSignature } = await OpenPGP.sign({
-//         message: OpenPGP.cleartext.fromText(data), // CleartextMessage or Message object
-//         privateKeys: [privateKey],                            // for signing
-//         detached: true
-//     });
-
-//     return detachedSignature;
-// }
-exports.signPGP=( async (privateKeyArmored,passphrase,data) =>{
-    try {
-     const { keys: [privateKey] } = await OpenPGP.key.readArmored(privateKeyArmored);
-     await privateKey.decrypt(passphrase);
- 
-     const { signature: detachedSignature } = await OpenPGP.sign({
-         message: OpenPGP.cleartext.fromText(data), // CleartextMessage or Message object
-         privateKeys: [privateKey],                            // for signing
-         detached: true
-     });
-     return detachedSignature;
-    }catch(error)
-    {
-     console.log(error);        
-    }  
- })
-
-			
     exports.verifyPGP=( async(publicKeyArmored, detachedSignature, data) =>{
         try{
-            const { signatures } = await OpenPGP.verify({
-                message: OpenPGP.cleartext.fromText(data),              // CleartextMessage or Message object
-                signature: await OpenPGP.signature.readArmored(detachedSignature), // parse detached signature
-                publicKeys: (await OpenPGP.key.readArmored(publicKeyArmored)).keys // for verification
+            const { signatures } = await openpgp.verify({
+                message: openpgp.cleartext.fromText(data),              // CleartextMessage or Message object
+                signature: await openpgp.signature.readArmored(detachedSignature), // parse detached signature
+                publicKeys: (await openpgp.key.readArmored(publicKeyArmored)).keys // for verification
             });
             const { valid } = signatures[0];
             console.log("CHÚ Ý DÒNG NÀY "+ valid);
@@ -59,28 +44,13 @@ exports.signPGP=( async (privateKeyArmored,passphrase,data) =>{
     const genHmac = content.digest('hex');							
     return genHmac;							
     }							
-    exports.signRSA= async (privateKey, data) =>{
-        try {
-            const signer = crypto.createSign('md5');
-           await signer.update(data);
-           return signer.sign(Buffer.from(privateKey, "utf8"), 'hex');
-            
-        }catch(error)
-        {
-         console.log(error);
-         
-        }
-     }	
+    							
     
 exports.add = function(from_account_number,to_account_number,amount,message,timestamp,signature,partner_code) {
     var sql = `insert into doi_soat( from_account_number, to_account_number, amount,message,time,signature,partner_code) values('${from_account_number}',  '${to_account_number}', '${amount}', '${message}', '${timestamp}','${signature}','${partner_code}')`;
     return db.insert(sql);
 }
-exports.addLocal= function (from_account_number, to_account_number, amount, message, time, pay_debit)
-{
-    var sql = `insert into doi_soat_noi_bo( from_account_number, to_account_number, amount, message, time, pay_debit) values('${from_account_number}', '${to_account_number}', '${amount}','${message}','${time}',${pay_debit})`;
-    return db.insert(sql);
-}
+
 
 exports.load = function(id) {
     var sql = `select * from chi_tiet_tai_khoan `;
@@ -88,6 +58,14 @@ exports.load = function(id) {
 }
 exports.checkHash = function(partner_code,timestamp,account_number,hash,secretKey){
     let strToHash = `${partner_code}|${timestamp}|${account_number}`;
+    let genHmac = this.hashMd5(strToHash, secretKey);
+    if(genHmac === hash)
+    return true;
+    else
+    return false;
+}
+exports.checkHashs = function(partner_code,timestamp,from_account_number,to_account_number,amount,message,hash,secretKey){
+    let strToHash = `${partner_code}|${timestamp}|${from_account_number}|${to_account_number}|${amount}|${message}`;
     let genHmac = this.hashMd5(strToHash, secretKey);
     if(genHmac === hash)
     return true;
@@ -113,7 +91,6 @@ for (word in words)
 }
 return text;
 }
-
 // var account_number=123456789;
 // var partner_code="vankhue";
 // let timestamp = 1585248460999;
